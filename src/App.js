@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import Create from "./Create";
+import Display from './Display';
+import Edit from "./Edit";
 class App extends Component {
   render() {
     return (
@@ -18,12 +20,17 @@ class App extends Component {
                 <li className="nav-item">
                   <Link to={'/create'} className="nav-link">Create</Link>
                 </li>
+                <li className="nav-item">
+                  <Link to={'/display'} className="nav-link">Display</Link>
+                </li>
               </ul>
             </div>
           </nav> <br />
           <h2>Welcome to React CRUD Tutorial</h2> <br />
           <Switch>
             <Route exact path='/create' component={Create} />
+            <Route path='/edit/:id' component={Edit} />
+            <Route exact path='/display' component={Display} />
           </Switch>
         </div>
       </Router>
