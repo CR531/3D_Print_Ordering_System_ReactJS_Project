@@ -11,7 +11,7 @@ import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
 import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
-
+import RequestForm from "./RequestForm";
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -24,6 +24,7 @@ const styles = theme => ({
     drawer: {
         width: drawerWidth,
         flexShrink: 0,
+        position: "sticky",
     },
     drawerPaper: {
         width: drawerWidth,
@@ -34,15 +35,19 @@ const styles = theme => ({
         padding: theme.spacing(3),
     },
     menu_list: {
-        background: "#D3D3D3",
+        background: "#3f51b5",
         textAlign: "center",
     },
     menu_text: {
+        color: "white",
         fontSize: "larger",
         fontWeight: "700",
     },
     card_css: {
         marginTop: "5%",
+        marginLeft: "3%",
+        marginRight: "3%",
+        width: "77%",
     },
     div_css: {
         height: "100vh"
@@ -86,14 +91,17 @@ class Dash extends Component {
                             <ListItemText className={classes.menu_text} primary="Menu" />
                         </ListItem>
                         <Divider />
-                        <ListItem button onClick={this.form_button_change}>
+                        <ListItem
+                            button
+                            onClick={this.form_button_change}
+                            selected={this.state.form_selected}>
                             <ListItemIcon>
                                 <SendIcon />
                             </ListItemIcon>
                             <ListItemText primary="Request Form" />
                         </ListItem>
                         <Divider />
-                        <ListItem button onClick={this.history_button_change}>
+                        <ListItem button onClick={this.history_button_change} selected={this.state.history_selected}>
                             <ListItemIcon>
                                 <DraftsIcon />
                             </ListItemIcon>
@@ -104,8 +112,8 @@ class Dash extends Component {
                 </Drawer>
                 <Card className={classes.card_css}>
                     {this.state.form_selected && <Typography paragraph>
-                        This is Request Form page
-                            </Typography>}
+                        <RequestForm />
+                    </Typography>}
                     {this.state.history_selected && <Typography paragraph>
                         This is History page
                            </Typography>}

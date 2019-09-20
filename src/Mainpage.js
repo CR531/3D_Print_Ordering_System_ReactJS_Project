@@ -6,43 +6,47 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Dash from './Dash';
 import Divider from '@material-ui/core/Divider';
+import AppBar from '@material-ui/core/AppBar';
 const styles = theme => ({
-    root1: {
-        flexGrow: 1,
-    },
     title1: {
         flexGrow: 1,
-        color: "black",
+        color: "white",
         marginLeft: "22%",
         fontSize: "165%",
         fontWeight: "500",
     },
-    paper: {
-        padding: "2%",
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
+    root: {
+        flexGrow: 1,
     },
+    appbar_css: {
+        // height: "11%",
+    },
+    grid_css: {
+        marginTop: "1%",
+    }
 });
 
 class Mainpage extends Component {
+
     render() {
         const { classes } = this.props;
         return (
             <React.Fragment>
-                <div className={classes.root1} >
-                    <Grid container>
+                <AppBar position="fixed" className={classes.appbar_css}>
+                    <Grid container className={classes.grid_css}>
                         <Grid item xs><img
                             className="wsu_logo_css"
                             src={wsu_logo}
                             alt="WSU Logo"
                         >
-                        </img></Grid>
+                        </img>
+                        </Grid>
                         <Grid item xs><Typography variant="h6" className={classes.title1}>
                             3D Print Ordering System
                       </Typography></Grid>
                         <Grid item xs></Grid>
                     </Grid>
-                </div>
+                </AppBar>
                 <Divider />
                 <div>
                     <Dash />
