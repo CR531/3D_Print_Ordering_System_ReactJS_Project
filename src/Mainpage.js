@@ -12,8 +12,9 @@ const styles = theme => ({
         flexGrow: 1,
         color: "white",
         marginLeft: "22%",
-        fontSize: "165%",
+        fontSize: "200%",
         fontWeight: "500",
+        fontVariant: "all-petite-caps",
     },
     root: {
         flexGrow: 1,
@@ -23,7 +24,7 @@ const styles = theme => ({
     },
     grid_css: {
         marginTop: "1%",
-    }
+    },
 });
 
 class Mainpage extends Component {

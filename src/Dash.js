@@ -12,6 +12,7 @@ import SendIcon from '@material-ui/icons/Send';
 import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
 import RequestForm from "./RequestForm";
+import Orders from "./Orders";
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -59,8 +60,8 @@ class Dash extends Component {
     constructor() {
         super();
         this.state = {
-            form_selected: true,
-            history_selected: false
+            form_selected: false,
+            history_selected: true
         }
         this.form_button_change = this.form_button_change.bind(this);
         this.history_button_change = this.history_button_change.bind(this);
@@ -105,7 +106,7 @@ class Dash extends Component {
                             <ListItemIcon>
                                 <DraftsIcon />
                             </ListItemIcon>
-                            <ListItemText primary="History" />
+                            <ListItemText primary="Orders" />
                         </ListItem>
                     </List>
                     <Divider />
@@ -115,8 +116,8 @@ class Dash extends Component {
                         <RequestForm />
                     </Typography>}
                     {this.state.history_selected && <Typography paragraph>
-                        This is History page
-                           </Typography>}
+                        <Orders />
+                    </Typography>}
                 </Card>
             </div>
         );
