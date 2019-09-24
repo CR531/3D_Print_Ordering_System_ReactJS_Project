@@ -9,11 +9,14 @@ import TextField from '@material-ui/core/TextField';
 import DateFnsUtils from '@date-io/date-fns';
 import { withStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
+import Checkbox from '@material-ui/core/Checkbox';
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 const styles = theme => ({
     root: {
         width: '90%',
@@ -38,7 +41,10 @@ const styles = theme => ({
     },
     grid_margin: {
         marginBottom: "-2%",
-    }
+    },
+    column: {
+        flexBasis: '33.33%',
+    },
 });
 class RequestForm extends Component {
     constructor(props) {
@@ -47,7 +53,9 @@ class RequestForm extends Component {
             steps: ['3D Print Request Form', '3D Print Statement', 'Remarks'],
             activeStep: 0,
             selectedDate: '2019-01-01T21:11:54',
-            snackbarStatus: false
+            snackbarStatus: false,
+            completedCheck: false,
+            deliveredCheck: false,
         }
     }
     handleSnackbarClose = () => {
@@ -77,6 +85,16 @@ class RequestForm extends Component {
         this.wait(2000);
         this.setState({ activeStep: 0 })
         //need to save to db
+    }
+    handleCompletedChange = () => {
+        this.setState({
+            ...this.state,
+            completedCheck: !(this.state.completedCheck),
+            deliveredCheck: (this.state.completedCheck ? false : false)
+        });
+    }
+    handleDeliveredChange = () => {
+        this.setState({ ...this.state, deliveredCheck: !(this.state.deliveredCheck) });
     }
     render() {
         const { classes } = this.props;
@@ -280,9 +298,9 @@ class RequestForm extends Component {
                 {(this.state.activeStep === 2) && <div className={classes.form_css}>
                     <Typography variant="h6" gutterBottom>
                         Remarks( For Office use only)
-      </Typography>
+                        </Typography>
                     <Grid container spacing={3}>
-                        <Grid item xs={12} sm={12} style={{ "marginBottom": "-3%" }}>
+                        <Grid item xs={12} sm={12} style={{ "marginLeft": "-1%" }} >
                             <TextField
                                 id="notes"
                                 multiline
@@ -293,6 +311,98 @@ class RequestForm extends Component {
                                 variant="outlined"
                             />
                         </Grid>
+                        <Grid item xs={12} sm={3} className={classes.grid_margin}>
+                            <FormGroup row>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={this.state.completedCheck}
+                                            onChange={() => this.handleCompletedChange()}
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Job Completed"
+                                />
+                            </FormGroup>
+                        </Grid>
+                        <Grid item xs={12} sm={9} className={classes.grid_margin} />
+                        {this.state.completedCheck ?
+                            <Grid item xs={12} sm={6} className={classes.grid_margin}>
+                                <TextField
+                                    id="cGA"
+                                    label="Completed GA"
+                                    placeholder="Completed GA"
+                                    style={{ "width": "90%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
+                        {this.state.completedCheck ?
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
+                                    <KeyboardDatePicker
+                                        disableToolbar
+                                        variant="inline"
+                                        format="MM/dd/yyyy"
+                                        margin="normal"
+                                        id="job_completion_date"
+                                        label="Job Completion Date"
+                                        value={this.state.selectedDate}
+                                        onChange={this.handleDateChange}
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date',
+                                        }}
+                                    />
+                                </Grid>
+                            </MuiPickersUtilsProvider> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
+                        <Grid item xs={12} sm={3} className={classes.grid_margin}>
+                            <FormGroup row>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            disabled={this.state.completedCheck ? false : true}
+                                            checked={(this.state.completedCheck && this.state.deliveredCheck) ? true : false}
+                                            onChange={() => this.handleDeliveredChange()}
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Job Delivered"
+                                />
+                            </FormGroup>
+                        </Grid>
+                        <Grid item xs={12} sm={9} className={classes.grid_margin}></Grid>
+                        {this.state.deliveredCheck ?
+                            <Grid item xs={12} sm={6} className={classes.grid_margin}>
+                                <TextField
+                                    id="dGA"
+                                    label="Delivered GA"
+                                    placeholder="Delivered GA"
+                                    style={{ "width": "90%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
+                        {this.state.deliveredCheck ?
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
+                                    <KeyboardDatePicker
+                                        disableToolbar
+                                        variant="inline"
+                                        format="MM/dd/yyyy"
+                                        margin="normal"
+                                        id="job_delivery_date"
+                                        label="Job Delivery Date"
+                                        value={this.state.selectedDate}
+                                        onChange={this.handleDateChange}
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date',
+                                        }}
+                                    />
+                                </Grid>
+                            </MuiPickersUtilsProvider> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
+                        <Grid item xs={12} sm={3} />
                     </Grid>
                 </div>}
                 <div className={classes.stepper_buttons}>
@@ -320,7 +430,7 @@ class RequestForm extends Component {
                     onClose={() => this.handleSnackbarClose()}
                     message={<span id="message-id">Saved Successfully...!</span>}
                 />
-            </div>
+            </div >
         );
     }
 }

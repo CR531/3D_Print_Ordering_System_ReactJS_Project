@@ -8,17 +8,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import { withStyles } from '@material-ui/core/styles';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import TextField from '@material-ui/core/TextField';
 import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 const styles = theme => ({
     root: {
         width: '91%',
@@ -26,17 +17,16 @@ const styles = theme => ({
         marginRight: "4%",
         marginTop: "3%",
     },
-    heading: {
-        fontSize: theme.typography.pxToRem(15),
-    },
     main_heading: {
         fontSize: "x-large",
         fontWeight: "500",
         fontVariant: "all-petite-caps",
     },
     secondaryHeading: {
-        fontSize: theme.typography.pxToRem(15),
-        color: theme.palette.text.secondary,
+        fontSize: "large",
+        fontWeight: "500",
+        fontVariant: "all-petite-caps",
+        color: "black",
     },
     icon: {
         verticalAlign: 'bottom',
@@ -45,6 +35,8 @@ const styles = theme => ({
     },
     details: {
         alignItems: 'center',
+        marginTop: "1%",
+        marginBottom: "-2%",
     },
     column: {
         flexBasis: '33.33%',
@@ -52,6 +44,9 @@ const styles = theme => ({
     column1: {
         flexBasis: '33.33%',
         marginBottom: "-1%"
+    },
+    column2: {
+        flexBasis: '50%',
     },
     helper: {
         borderLeft: `2px solid ${theme.palette.divider}`,
@@ -82,68 +77,22 @@ class Orders extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            completedCheck: false,
-            deliveredCheck: false,
             chipStatus: false,
-            expand_Exp: false,
-            openSaveDialog: false
+            expand_Exp: false
         }
     }
-    handleDialogClose = () => {
-        this.setState({ ...this.state, openSaveDialog: false })
-    };
-    handleDialogOpen = () => {
-        console.log("We are in open dialog method");
-        console.log("We are in open dialog method " + this.state.openSaveDialog);
-        this.setState({ ...this.state, openSaveDialog: true })
-        console.log("We are in open dialog method " + this.state.openSaveDialog);
 
-    };
-    handleCompletedChange = () => {
-        this.setState({
-            ...this.state,
-            completedCheck: !(this.state.completedCheck),
-            deliveredCheck: (this.state.completedCheck ? false : false)
-        });
-    }
-    handleDeliveredChange = () => {
-        this.setState({ ...this.state, deliveredCheck: !(this.state.deliveredCheck) });
-    }
+
     handleExpChange = () => {
         this.setState({ ...this.state, expand_Exp: !(this.state.expand_Exp) })
     }
-    handleOrderSave = () => {
-        console.log("entered order save");
-        this.handleDialogOpen();
-        console.log("entered order save" + this.state.openSaveDialog);
-        this.handleExpChange();
+    handleOrderOpen = () => {
+        console.log("We are in Order open");
     }
     render() {
         const { classes } = this.props;
         return (
             <div>
-                <div>
-                    <Dialog
-                        open={this.state.openSaveDialog}
-                        // open={true}
-                        onClose={() => this.handleDialogClose()}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                    >
-                        <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                Let Google help apps determine location. This means sending anonymous location data to
-                                Google, even when no apps are running.
-                        </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => this.handleDialogClose()} color="primary">
-                                Close
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                </div>
                 <div className={classes.root} >
                     <Typography className={classes.main_heading}><b>Order History</b></Typography>
                     <br />
@@ -153,7 +102,7 @@ class Orders extends Component {
                             id="panel1c-header"
                         >
                             <div className={classes.column1}>
-                                <Typography className={classes.heading}>Name : </Typography>
+                                <Typography className={classes.secondaryHeading}>Name : </Typography>
                             </div>
 
                             <div className={classes.column1}>
@@ -171,73 +120,66 @@ class Orders extends Component {
                                     <Grid item xs={12} sm={6}>
                                     </Grid>
                                 </Grid>
-
                             </div>
                         </ExpansionPanelSummary>
+                        <Divider />
                         <ExpansionPanelDetails className={classes.details}>
-                            <div className={classes.column}>
-                                <FormGroup row>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={this.state.completedCheck}
-                                                onChange={() => this.handleCompletedChange()}
-                                                color="primary"
-                                            />
-                                        }
-                                        label="Job Completed"
-                                    />
-                                </FormGroup>
+                            <div className={classes.column2}>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography className={classes.secondaryHeading}>Job Completed by : </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography className={classes.secondaryHeading}>Chakri </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                    </Grid>
+                                </Grid>
                             </div>
-                            {this.state.completedCheck &&
-                                <div className={classes.column}>
-                                    <TextField
-                                        id="cGA"
-                                        label="Completed GA"
-                                        placeholder="Completed GA"
-                                        style={{ "width": "100%" }}
-                                        className={classes.textField}
-                                        margin="normal"
-                                        variant="outlined"
-                                    />
-                                </div>
-                            }
+                            <div className={classes.column2}>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography className={classes.secondaryHeading}>Job Completion Date : </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography className={classes.secondaryHeading}>09/19/2019 </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                    </Grid>
+                                </Grid>
+                            </div>
                         </ExpansionPanelDetails>
-                        <ExpansionPanelDetails>
-                            <div className={classes.column}>
-                                <FormGroup row>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                disabled={this.state.completedCheck ? false : true}
-                                                checked={(this.state.completedCheck && this.state.deliveredCheck) ? true : false}
-                                                onChange={() => this.handleDeliveredChange()}
-                                                color="primary"
-                                            />
-                                        }
-                                        label="Job Delivered"
-                                    />
-                                </FormGroup>
+                        <ExpansionPanelDetails className={classes.details}>
+                            <div className={classes.column2}>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography className={classes.secondaryHeading}>Job Completed by : </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography className={classes.secondaryHeading}>Chakri </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                    </Grid>
+                                </Grid>
                             </div>
-                            {(this.state.completedCheck && this.state.deliveredCheck) &&
-                                <div className={classes.column}>
-                                    <TextField
-                                        id="dGA"
-                                        label="Delivered GA"
-                                        placeholder="Delivered GA"
-                                        style={{ "width": "100%" }}
-                                        className={classes.textField}
-                                        margin="normal"
-                                        variant="outlined"
-                                    />
-                                </div>
-                            }
+                            <div className={classes.column2}>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography className={classes.secondaryHeading}>Job Completion Date : </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography className={classes.secondaryHeading}>09/19/2019 </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                    </Grid>
+                                </Grid>
+                            </div>
                         </ExpansionPanelDetails>
                         <Divider />
                         <ExpansionPanelActions>
-                            <Button size="small">Cancel</Button>
-                            <Button size="small" color="primary" onClick={() => this.handleOrderSave()}>
-                                Save
+                            <Button size="small" onClick={() => this.handleExpChange()}>Cancel</Button>
+                            <Button size="small" color="primary" onClick={() => this.handleOrderOpen()}>
+                                Open Order
           </Button>
                         </ExpansionPanelActions>
                     </ExpansionPanel>
