@@ -27,19 +27,36 @@ class Display extends Component {
         return (
             <div>
                 <h3 align="center">Business List</h3>
-                <table className="table table-striped" style={{ marginTop: 20 }}>
-                    <thead>
-                        <tr>
-                            <th>Person</th>
-                            <th>Business</th>
-                            <th>GST Number</th>
-                            <th colSpan="2">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.tabRow()}
-                    </tbody>
-                </table>
+                {true && console.log("Hello : " + this.state.business.length)}
+                {this.state.business.length > 0 &&
+                    this.state.business[0] &&
+                    <table className="table table-striped" style={{ marginTop: 20 }}>
+                        <thead>
+                            <tr>
+                                <th>Person</th>
+                                <th>Business</th>
+                                <th>GST Number</th>
+                                <th colSpan="2">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.tabRow()}
+                        </tbody>
+                    </table>
+                }
+                {this.state.business.map((listValue, index) => {
+                    return (
+                        <table className="table table-striped" style={{ marginTop: 20 }}>
+                            <tbody>
+                                <tr key={index}>
+                                    <td>{listValue.person_name}</td>
+                                    {/* <td>{listValue.title}</td> */}
+                                    {/* <td>{listValue.price}</td> */}
+                                </tr>
+                            </tbody>
+                        </table>
+                    );
+                })}
             </div>
         );
     }

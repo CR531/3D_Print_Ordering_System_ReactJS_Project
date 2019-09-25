@@ -153,10 +153,10 @@ class Orders extends Component {
                             <div className={classes.column2}>
                                 <Grid container spacing={3}>
                                     <Grid item xs={12} sm={6}>
-                                        <Typography className={classes.secondaryHeading}>Job Completed by : </Typography>
+                                        <Typography className={classes.secondaryHeading}>Job Delivered by : </Typography>
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
-                                        <Typography className={classes.secondaryHeading}>Chakri </Typography>
+                                        <Typography className={classes.secondaryHeading}>Harsha </Typography>
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                     </Grid>
@@ -165,10 +165,10 @@ class Orders extends Component {
                             <div className={classes.column2}>
                                 <Grid container spacing={3}>
                                     <Grid item xs={12} sm={6}>
-                                        <Typography className={classes.secondaryHeading}>Job Completion Date : </Typography>
+                                        <Typography className={classes.secondaryHeading}>Job Delivery Date : </Typography>
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
-                                        <Typography className={classes.secondaryHeading}>09/19/2019 </Typography>
+                                        <Typography className={classes.secondaryHeading}>09/21/2019 </Typography>
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                     </Grid>

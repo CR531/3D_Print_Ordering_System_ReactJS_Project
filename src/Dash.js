@@ -60,8 +60,8 @@ class Dash extends Component {
     constructor() {
         super();
         this.state = {
-            form_selected: false,
-            history_selected: true
+            form_selected: true,
+            history_selected: false
         }
         this.form_button_change = this.form_button_change.bind(this);
         this.history_button_change = this.history_button_change.bind(this);

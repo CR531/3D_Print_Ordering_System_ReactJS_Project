@@ -10,6 +10,8 @@ import DateFnsUtils from '@date-io/date-fns';
 import { withStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import Checkbox from '@material-ui/core/Checkbox';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
@@ -20,6 +22,15 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 const styles = theme => ({
     root: {
         width: '90%',
+    },
+    close: {
+        padding: theme.spacing(0.5),
+    },
+    saved_heading: {
+        fontSize: "large",
+        fontWeight: "500",
+        fontVariant: "all-petite-caps",
+        color: "white",
     },
     backButton: {
         marginRight: theme.spacing(1),
@@ -56,20 +67,83 @@ class RequestForm extends Component {
             snackbarStatus: false,
             completedCheck: false,
             deliveredCheck: false,
+            name: '',
+            wsuid: '',
+            phone: '',
+            email: '',
+            filament_color: '',
+            notes: '',
+            cspace_rep_name: '',
+            order_date: '1-11-2019',
+            grams_used: '',
+            amount_due: '',
+            expected_date: '',
+            receipt_number: '',
+            remark_notes: '',
+            job_completed_check: false,
+            job_completed_GA: '',
+            job_completion_date: '',
+            job_delivered_check: false,
+            job_delivered_GA: '',
+            job_delivery_date: '',
         }
     }
+    onNameChange = (e) => {
+        this.setState({ ...this.state, name: e.target.value });
+        // console.log("State is :" + this.state.name)
+    }
+    onWsuIDChange = (e) => {
+        this.setState({ ...this.state, wsuid: e.target.value });
+    }
+    onPhoneChange = (e) => {
+        this.setState({ ...this.state, phone: e.target.value });
+    }
+    onEmailChange = (e) => {
+        this.setState({ ...this.state, email: e.target.value });
+    }
+    onFilamentColorChange = (e) => {
+        this.setState({ ...this.state, filament_color: e.target.value });
+    }
+    onNotesChange = (e) => {
+        this.setState({ ...this.state, notes: e.target.value });
+    }
+    onCSpaceRepChange = (e) => {
+        this.setState({ ...this.state, cspace_rep_name: e.target.value });
+    }
+    onGramsUsedChange = (e) => {
+        this.setState({ ...this.state, grams_used: e.target.value });
+    }
+    onAmountDueChange = (e) => {
+        this.setState({ ...this.state, amount_due: e.target.value });
+    }
+    onReceiptNumberChange = (e) => {
+        this.setState({ ...this.state, receipt_number: e.target.value });
+    }
+    onRemarkNotesChange = (e) => {
+        this.setState({ ...this.state, remark_notes: e.target.value });
+    }
+    onJobCompletedGAChange = (e) => {
+        this.setState({ ...this.state, job_completed_GA: e.target.value });
+    }
+    onJobDeliveredGAChange = (e) => {
+        this.setState({ ...this.state, job_delivered_GA: e.target.value });
+    }
+
+    handleOrderDateChange = date => {
+        this.setState({ ...this.state, order_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
+    }
+
+
     handleSnackbarClose = () => {
         this.setState({ ...this.state, snackbarStatus: false })
     }
     handleDateChange = (date) => {
         this.setState({ selectedDate: date });
     }
-
     handleNext = (x) => {
         this.setState({ activeStep: x + 1 });
         // console.log(this.state.activeStep);
     }
-
     handleBack = (x) => {
         this.setState({ activeStep: x - 1 });
     }
@@ -80,11 +154,12 @@ class RequestForm extends Component {
             end = new Date().getTime();
         }
     }
-    handleSave() {
-        this.setState({ snackbarStatus: true })
-        this.wait(2000);
-        this.setState({ activeStep: 0 })
+    handleSave = async () => {
+        this.setState({ ...this.state, snackbarStatus: true })
+        await this.wait(2000);
+        this.setState({ ...this.state, activeStep: 0 })
         //need to save to db
+
     }
     handleCompletedChange = () => {
         this.setState({
@@ -121,6 +196,8 @@ class RequestForm extends Component {
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                value={this.state.name}
+                                onChange={(value) => this.onNameChange(value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} className={classes.grid_margin}>
@@ -132,6 +209,8 @@ class RequestForm extends Component {
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                value={this.state.wsuid}
+                                onChange={(value) => this.onWsuIDChange(value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} className={classes.grid_margin}>
@@ -143,6 +222,8 @@ class RequestForm extends Component {
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                value={this.state.phone}
+                                onChange={(value) => this.onPhoneChange(value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} className={classes.grid_margin}>
@@ -154,6 +235,8 @@ class RequestForm extends Component {
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                value={this.state.email}
+                                onChange={(value) => this.onEmailChange(value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} className={classes.grid_margin}>
@@ -165,6 +248,8 @@ class RequestForm extends Component {
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                value={this.state.filament_color}
+                                onChange={(value) => this.onFilamentColorChange(value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} className={classes.grid_margin}>
@@ -182,6 +267,8 @@ class RequestForm extends Component {
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                value={this.state.notes}
+                                onChange={(value) => this.onNotesChange(value)}
                             />
                         </Grid>
                     </Grid>
@@ -194,17 +281,6 @@ class RequestForm extends Component {
                         3D Printing Statement
       </Typography>
                     <Grid container spacing={3}>
-                        <Grid item xs={12} sm={12} className={classes.grid_margin}>
-                            <TextField
-                                id="pname"
-                                label="Name"
-                                placeholder="Name"
-                                style={{ "width": "90%" }}
-                                className={classes.textField}
-                                margin="normal"
-                                variant="outlined"
-                            />
-                        </Grid>
                         <Grid item xs={12} sm={6} className={classes.grid_margin}>
                             <TextField
                                 id="cspace_rep"
@@ -214,6 +290,8 @@ class RequestForm extends Component {
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                value={this.state.cspace_rep_name}
+                                onChange={(value) => this.onCSpaceRepChange(value)}
                             />
                         </Grid>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -223,10 +301,10 @@ class RequestForm extends Component {
                                     variant="inline"
                                     format="MM/dd/yyyy"
                                     margin="normal"
-                                    id="date"
-                                    label="Date"
-                                    value={this.state.selectedDate}
-                                    onChange={this.handleDateChange}
+                                    id="order_date"
+                                    label="Order Date"
+                                    value={new Date(this.state.order_date)}
+                                    onChange={this.handleOrderDateChange}
                                     KeyboardButtonProps={{
                                         'aria-label': 'change date',
                                     }}
@@ -242,6 +320,8 @@ class RequestForm extends Component {
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                value={this.state.grams_used}
+                                onChange={(value) => this.onGramsUsedChange(value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} className={classes.grid_margin}>
@@ -256,6 +336,8 @@ class RequestForm extends Component {
                                 }}
                                 margin="normal"
                                 variant="outlined"
+                                value={this.state.amount_due}
+                                onChange={(value) => this.onAmountDueChange(value)}
                             />
                         </Grid>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -288,6 +370,8 @@ class RequestForm extends Component {
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                value={this.state.receipt_number}
+                                onChange={(value) => this.onReceiptNumberChange(value)}
                             />
                         </Grid>
                     </Grid>
@@ -302,13 +386,15 @@ class RequestForm extends Component {
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={12} style={{ "marginLeft": "-1%" }} >
                             <TextField
-                                id="notes"
+                                id="remark_notes"
                                 multiline
                                 rows="10"
                                 style={{ "width": "90%" }}
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                value={this.state.remark_notes}
+                                onChange={(value) => this.onRemarkNotesChange(value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={3} className={classes.grid_margin}>
@@ -316,9 +402,11 @@ class RequestForm extends Component {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
+                                            id="job_completed_check"
                                             checked={this.state.completedCheck}
                                             onChange={() => this.handleCompletedChange()}
                                             color="primary"
+                                            value={this.state.job_completed_check}
                                         />
                                     }
                                     label="Job Completed"
@@ -329,13 +417,15 @@ class RequestForm extends Component {
                         {this.state.completedCheck ?
                             <Grid item xs={12} sm={6} className={classes.grid_margin}>
                                 <TextField
-                                    id="cGA"
+                                    id="job_completed_GA"
                                     label="Completed GA"
                                     placeholder="Completed GA"
                                     style={{ "width": "90%" }}
                                     className={classes.textField}
                                     margin="normal"
                                     variant="outlined"
+                                    value={this.state.job_completed_GA}
+                                    onChange={(value) => this.onJobCompletedGAChange(value)}
                                 />
                             </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
                         {this.state.completedCheck ?
@@ -361,10 +451,12 @@ class RequestForm extends Component {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
+                                            id="job_delivered_check"
                                             disabled={this.state.completedCheck ? false : true}
                                             checked={(this.state.completedCheck && this.state.deliveredCheck) ? true : false}
                                             onChange={() => this.handleDeliveredChange()}
                                             color="primary"
+                                            value={this.state.job_delivered_check}
                                         />
                                     }
                                     label="Job Delivered"
@@ -375,13 +467,15 @@ class RequestForm extends Component {
                         {this.state.deliveredCheck ?
                             <Grid item xs={12} sm={6} className={classes.grid_margin}>
                                 <TextField
-                                    id="dGA"
+                                    id="job_delivered_GA"
                                     label="Delivered GA"
                                     placeholder="Delivered GA"
                                     style={{ "width": "90%" }}
                                     className={classes.textField}
                                     margin="normal"
                                     variant="outlined"
+                                    value={this.state.job_delivered_GA}
+                                    onChange={(value) => this.onJobDeliveredGAChange(value)}
                                 />
                             </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
                         {this.state.deliveredCheck ?
@@ -428,7 +522,18 @@ class RequestForm extends Component {
                 <Snackbar
                     open={this.state.snackbarStatus}
                     onClose={() => this.handleSnackbarClose()}
-                    message={<span id="message-id">Saved Successfully...!</span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="close"
+                            color="inherit"
+                            className={classes.close}
+                            onClick={() => this.handleSnackbarClose()}
+                        >
+                            <CloseIcon />
+                        </IconButton>,
+                    ]}
+                    message={<span id="message-id" className={classes.saved_heading}>Data Saved Successfully...!</span>}
                 />
             </div >
         );
