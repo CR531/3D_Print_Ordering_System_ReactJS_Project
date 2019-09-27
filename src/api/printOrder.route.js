@@ -13,4 +13,16 @@ printOrderRoutes.route('/add').post(function (req, res) {
             res.status(400).send("unable to save to database");
         });
 });
+
+printOrderRoutes.route('/').get(function (req, res) {
+    PrintOrder.find(function (err, printOrders) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.json(printOrders);
+        }
+    });
+});
+
 module.exports = printOrderRoutes;
