@@ -19,6 +19,8 @@ import {
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import axios from 'axios';
+
 const styles = theme => ({
     root: {
         width: '90%',
@@ -74,18 +76,18 @@ class RequestForm extends Component {
             filament_color: '',
             notes: '',
             cspace_rep_name: '',
-            order_date: '1-11-2019',
+            order_date: null,
             grams_used: '',
             amount_due: '',
-            expected_date: '',
+            pickup_date: '2-11-2019',
             receipt_number: '',
             remark_notes: '',
             job_completed_check: false,
             job_completed_GA: '',
-            job_completion_date: '',
+            job_completion_date: '11-11-2019',
             job_delivered_check: false,
             job_delivered_GA: '',
-            job_delivery_date: '',
+            job_delivery_date: '12-11-2019',
         }
     }
     onNameChange = (e) => {
@@ -132,7 +134,15 @@ class RequestForm extends Component {
     handleOrderDateChange = date => {
         this.setState({ ...this.state, order_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
     }
-
+    handlePickUpDateChange = date => {
+        this.setState({ ...this.state, pickup_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
+    }
+    handleCompletedDateChange = date => {
+        this.setState({ ...this.state, job_completion_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
+    }
+    handleDeliveredDateChange = date => {
+        this.setState({ ...this.state, job_delivery_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
+    }
 
     handleSnackbarClose = () => {
         this.setState({ ...this.state, snackbarStatus: false })
@@ -155,9 +165,55 @@ class RequestForm extends Component {
         }
     }
     handleSave = async () => {
+        const obj = {
+            name: this.state.name,
+            wsuid: this.state.wsuid,
+            phone: this.state.phone,
+            email: this.state.email,
+            filament_color: this.state.filament_color,
+            notes: this.state.notes,
+            cspace_rep_name: this.state.cspace_rep_name,
+            order_date: this.state.order_date,
+            grams_used: this.state.grams_used,
+            amount_due: this.state.amount_due,
+            pickup_date: this.state.pickup_date,
+            receipt_number: this.state.receipt_number,
+            remark_notes: this.state.remark_notes,
+            job_completed_check: this.state.job_completed_check,
+            job_completed_GA: this.state.job_completed_GA,
+            job_completion_date: this.state.job_completion_date,
+            job_delivered_check: this.state.job_delivered_check,
+            job_delivered_GA: this.state.job_delivered_GA,
+            job_delivery_date: this.state.job_delivery_date,
+        }
+        axios.post('http://localhost:4000/printOrder/add', obj)
+            .then(res => console.log(res.data));
+
         this.setState({ ...this.state, snackbarStatus: true })
         await this.wait(2000);
         this.setState({ ...this.state, activeStep: 0 })
+        this.setState({
+            ...this.state,
+            name: '',
+            wsuid: '',
+            phone: '',
+            email: '',
+            filament_color: '',
+            notes: '',
+            cspace_rep_name: '',
+            order_date: null,
+            grams_used: '',
+            amount_due: '',
+            pickup_date: null,
+            receipt_number: '',
+            remark_notes: '',
+            job_completed_check: false,
+            job_completed_GA: '',
+            job_completion_date: null,
+            job_delivered_check: false,
+            job_delivered_GA: '',
+            job_delivery_date: null,
+        })
         //need to save to db
 
     }
@@ -303,7 +359,8 @@ class RequestForm extends Component {
                                     margin="normal"
                                     id="order_date"
                                     label="Order Date"
-                                    value={new Date(this.state.order_date)}
+                                    placeholder='mm/dd/yyyy'
+                                    value={this.state.order_date}
                                     onChange={this.handleOrderDateChange}
                                     KeyboardButtonProps={{
                                         'aria-label': 'change date',
@@ -346,11 +403,12 @@ class RequestForm extends Component {
                                     disableToolbar
                                     variant="inline"
                                     format="MM/dd/yyyy"
+                                    placeholder='mm/dd/yyyy'
                                     margin="normal"
                                     id="expected_date"
                                     label="Expected Pick-Up Date"
-                                    value={this.state.selectedDate}
-                                    onChange={this.handleDateChange}
+                                    value={this.state.pickup_date}
+                                    onChange={this.handlePickUpDateChange}
                                     KeyboardButtonProps={{
                                         'aria-label': 'change date',
                                     }}
@@ -435,11 +493,12 @@ class RequestForm extends Component {
                                         disableToolbar
                                         variant="inline"
                                         format="MM/dd/yyyy"
+                                        placeholder='mm/dd/yyyy'
                                         margin="normal"
                                         id="job_completion_date"
                                         label="Job Completion Date"
-                                        value={this.state.selectedDate}
-                                        onChange={this.handleDateChange}
+                                        value={this.state.job_completion_date}
+                                        onChange={this.handleCompletedDateChange}
                                         KeyboardButtonProps={{
                                             'aria-label': 'change date',
                                         }}
@@ -485,11 +544,12 @@ class RequestForm extends Component {
                                         disableToolbar
                                         variant="inline"
                                         format="MM/dd/yyyy"
+                                        placeholder='mm/dd/yyyy'
                                         margin="normal"
                                         id="job_delivery_date"
                                         label="Job Delivery Date"
-                                        value={this.state.selectedDate}
-                                        onChange={this.handleDateChange}
+                                        value={this.state.job_delivery_date}
+                                        onChange={this.handleDeliveredDateChange}
                                         KeyboardButtonProps={{
                                             'aria-label': 'change date',
                                         }}
