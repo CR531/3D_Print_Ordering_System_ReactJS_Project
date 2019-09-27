@@ -98,15 +98,15 @@ class RequestForm extends Component {
             order_date: null,
             grams_used: '',
             amount_due: '',
-            pickup_date: '2-11-2019',
+            pickup_date: null,
             receipt_number: '',
             remark_notes: '',
             job_completed_check: false,
             job_completed_GA: '',
-            job_completion_date: '11-11-2019',
+            job_completion_date: null,
             job_delivered_check: false,
             job_delivered_GA: '',
-            job_delivery_date: '12-11-2019',
+            job_delivery_date: null,
         }
     }
     onNameChange = (e) => {
@@ -249,12 +249,16 @@ class RequestForm extends Component {
     handleCompletedChange = () => {
         this.setState({
             ...this.state,
-            completedCheck: !(this.state.completedCheck),
-            deliveredCheck: (this.state.completedCheck ? false : false)
+            job_completed_check: !(this.state.job_completed_check),
+            job_delivered_check: (this.state.job_completed_check ? false : false)
         });
+        console.log("****************************");
+        console.log("Completed check value is : " + this.state.completedCheck);
+        console.log("****************************");
+
     }
     handleDeliveredChange = () => {
-        this.setState({ ...this.state, deliveredCheck: !(this.state.deliveredCheck) });
+        this.setState({ ...this.state, job_delivered_check: !(this.state.job_delivered_check) });
     }
     render() {
         const { classes } = this.props;
@@ -490,7 +494,7 @@ class RequestForm extends Component {
                                     control={
                                         <Checkbox
                                             id="job_completed_check"
-                                            checked={this.state.completedCheck}
+                                            checked={this.state.job_completed_check}
                                             onChange={() => this.handleCompletedChange()}
                                             color="primary"
                                             value={this.state.job_completed_check}
@@ -501,7 +505,7 @@ class RequestForm extends Component {
                             </FormGroup>
                         </Grid>
                         <Grid item xs={12} sm={9} className={classes.grid_margin} />
-                        {this.state.completedCheck ?
+                        {this.state.job_completed_check ?
                             <Grid item xs={12} sm={6} className={classes.grid_margin}>
                                 <TextField
                                     id="job_completed_GA"
@@ -515,7 +519,7 @@ class RequestForm extends Component {
                                     onChange={(value) => this.onJobCompletedGAChange(value)}
                                 />
                             </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
-                        {this.state.completedCheck ?
+                        {this.state.job_completed_check ?
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
                                     <KeyboardDatePicker
@@ -540,8 +544,8 @@ class RequestForm extends Component {
                                     control={
                                         <Checkbox
                                             id="job_delivered_check"
-                                            disabled={this.state.completedCheck ? false : true}
-                                            checked={(this.state.completedCheck && this.state.deliveredCheck) ? true : false}
+                                            disabled={this.state.job_completed_check ? false : true}
+                                            checked={(this.state.job_completed_check && this.state.job_delivered_check) ? true : false}
                                             onChange={() => this.handleDeliveredChange()}
                                             color="primary"
                                             value={this.state.job_delivered_check}
@@ -552,7 +556,7 @@ class RequestForm extends Component {
                             </FormGroup>
                         </Grid>
                         <Grid item xs={12} sm={9} className={classes.grid_margin}></Grid>
-                        {this.state.deliveredCheck ?
+                        {this.state.job_delivered_check ?
                             <Grid item xs={12} sm={6} className={classes.grid_margin}>
                                 <TextField
                                     id="job_delivered_GA"
@@ -566,7 +570,7 @@ class RequestForm extends Component {
                                     onChange={(value) => this.onJobDeliveredGAChange(value)}
                                 />
                             </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
-                        {this.state.deliveredCheck ?
+                        {this.state.job_delivered_check ?
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
                                     <KeyboardDatePicker

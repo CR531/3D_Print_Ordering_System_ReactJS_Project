@@ -28,6 +28,12 @@ const styles = theme => ({
         fontSize: "large",
         fontWeight: "500",
         fontVariant: "all-petite-caps",
+        color: "gray",
+    },
+    dataHeading: {
+        fontSize: "large",
+        fontWeight: "500",
+        fontVariant: "all-petite-caps",
         color: "black",
     },
     icon: {
@@ -65,10 +71,6 @@ const styles = theme => ({
         margin: theme.spacing(1),
         width: "150%",
         backgroundColor: "#FFFF66"
-    },
-    exp_summary_css: {
-        marginTop: "3%",
-        marginBottom: "0%",
     },
     chip_css: {
         marginTop: "-3%",
@@ -124,7 +126,7 @@ class Orders extends Component {
                                                 <Typography className={classes.secondaryHeading}>Name : </Typography>
                                             </Grid>
                                             <Grid item xs={12} sm={9}>
-                                                <Typography className={classes.secondaryHeading}>{listValue.name} </Typography>
+                                                <Typography className={classes.dataHeading}>{listValue.name} </Typography>
                                             </Grid>
                                         </Grid>
                                     </div>
@@ -134,7 +136,7 @@ class Orders extends Component {
                                                 <Typography className={classes.secondaryHeading}>Receipt # </Typography>
                                             </Grid>
                                             <Grid item xs={12} sm={8}>
-                                                <Typography className={classes.secondaryHeading}>{listValue.receipt_number} </Typography>
+                                                <Typography className={classes.dataHeading}>{listValue.receipt_number} </Typography>
                                             </Grid>
                                         </Grid>
                                     </div>
@@ -160,7 +162,7 @@ class Orders extends Component {
                                                 <Typography className={classes.secondaryHeading}>Job Completed by : </Typography>
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.secondaryHeading}>{listValue.job_completed_GA}</Typography>
+                                                <Typography className={classes.dataHeading}>{listValue.job_completed_GA}</Typography>
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
                                             </Grid>
@@ -172,7 +174,7 @@ class Orders extends Component {
                                                 <Typography className={classes.secondaryHeading}>Job Completion Date : </Typography>
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.secondaryHeading}>{listValue.job_completion_date}</Typography>
+                                                <Typography className={classes.dataHeading}>{listValue.job_completion_date}</Typography>
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
                                             </Grid>
@@ -186,7 +188,7 @@ class Orders extends Component {
                                                 <Typography className={classes.secondaryHeading}>Job Delivered by : </Typography>
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.secondaryHeading}>{listValue.job_delivered_GA} </Typography>
+                                                <Typography className={classes.dataHeading}>{listValue.job_delivered_GA} </Typography>
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
                                             </Grid>
@@ -198,7 +200,7 @@ class Orders extends Component {
                                                 <Typography className={classes.secondaryHeading}>Job Delivery Date : </Typography>
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
-                                                <Typography className={classes.secondaryHeading}>{listValue.job_delivery_date}</Typography>
+                                                <Typography className={classes.dataHeading}>{listValue.job_delivery_date}</Typography>
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
                                             </Grid>
