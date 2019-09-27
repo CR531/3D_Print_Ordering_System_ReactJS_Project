@@ -9,9 +9,13 @@ import TextField from '@material-ui/core/TextField';
 import DateFnsUtils from '@date-io/date-fns';
 import { withStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
 import Checkbox from '@material-ui/core/Checkbox';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
+import clsx from 'clsx';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
@@ -56,6 +60,20 @@ const styles = theme => ({
     },
     column: {
         flexBasis: '33.33%',
+    },
+    icon: {
+        fontSize: 20,
+    },
+    iconVariant: {
+        opacity: 0.9,
+        marginRight: theme.spacing(1),
+    },
+    message: {
+        display: 'flex',
+        alignItems: 'center',
+        fontWeight: "500",
+        fontSize: "large",
+        fontVariant: "all-petite-caps",
     },
 });
 class RequestForm extends Component {
@@ -593,35 +611,57 @@ class RequestForm extends Component {
                 <Snackbar
                     open={this.state.snackbarSuccessStatus}
                     onClose={() => this.handleSuccessSnackbarClose()}
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="close"
-                            color="inherit"
-                            className={classes.close}
-                            onClick={() => this.handleSuccessSnackbarClose()}
-                        >
-                            <CloseIcon />
-                        </IconButton>,
-                    ]}
-                    message={<span id="message-id" className={classes.saved_heading}>Data Saved Successfully...!</span>}
-                />
+                    autoHideDuration={10000}
+                >
+                    <SnackbarContent
+                        style={{ "background": "green" }}
+                        aria-describedby="client-snackbar"
+                        message={
+                            <span id="client-snackbar" className={classes.message}>
+                                <CheckCircleIcon className={clsx(classes.icon, classes.iconVariant)} />
+                                Data Saved Successfully...!
+                            </span>
+                        }
+                        action={[
+                            <IconButton
+                                key="close"
+                                aria-label="close"
+                                color="inherit"
+                                className={classes.close}
+                                onClick={() => this.handleSuccessSnackbarClose()}
+                            >
+                                <CloseIcon />
+                            </IconButton>,
+                        ]}
+                    />
+                </Snackbar>
                 <Snackbar
                     open={this.state.snackbarFailStatus}
                     onClose={() => this.handleFailSnackbarClose()}
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="close"
-                            color="inherit"
-                            className={classes.close}
-                            onClick={() => this.handleFailSnackbarClose()}
-                        >
-                            <CloseIcon />
-                        </IconButton>,
-                    ]}
-                    message={<span id="message-id" className={classes.saved_heading}>Unable to save please try again</span>}
-                />
+                    autoHideDuration={10000}
+                >
+                    <SnackbarContent
+                        style={{ "background": "red" }}
+                        aria-describedby="client-snackbar"
+                        message={
+                            <span id="client-snackbar" className={classes.message}>
+                                <ErrorIcon className={clsx(classes.icon, classes.iconVariant)} />
+                                Unable to save, please try again
+                            </span>
+                        }
+                        action={[
+                            <IconButton
+                                key="close"
+                                aria-label="close"
+                                color="inherit"
+                                className={classes.close}
+                                onClick={() => this.handleFailSnackbarClose()}
+                            >
+                                <CloseIcon />
+                            </IconButton>,
+                        ]}
+                    />
+                </Snackbar>
             </div >
         );
     }
