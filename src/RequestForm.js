@@ -20,7 +20,6 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import axios from 'axios';
-
 const styles = theme => ({
     root: {
         width: '90%',
@@ -66,9 +65,11 @@ class RequestForm extends Component {
             steps: ['3D Print Request Form', '3D Print Statement', 'Remarks'],
             activeStep: 0,
             selectedDate: '2019-01-01T21:11:54',
-            snackbarStatus: false,
+            snackbarSuccessStatus: false,
+            snackbarFailStatus: false,
             completedCheck: false,
             deliveredCheck: false,
+            response: {},
             name: '',
             wsuid: '',
             phone: '',
@@ -144,8 +145,11 @@ class RequestForm extends Component {
         this.setState({ ...this.state, job_delivery_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
     }
 
-    handleSnackbarClose = () => {
-        this.setState({ ...this.state, snackbarStatus: false })
+    handleSuccessSnackbarClose = () => {
+        this.setState({ ...this.state, snackbarSuccessStatus: false })
+    }
+    handleFailSnackbarClose = () => {
+        this.setState({ ...this.state, snackbarFailStatus: false })
     }
     handleDateChange = (date) => {
         this.setState({ selectedDate: date });
@@ -186,14 +190,23 @@ class RequestForm extends Component {
             job_delivered_GA: this.state.job_delivered_GA,
             job_delivery_date: this.state.job_delivery_date,
         }
-        axios.post('http://localhost:4000/printOrder/add', obj)
-            .then(res => console.log(res.data));
-
-        this.setState({ ...this.state, snackbarStatus: true })
-        await this.wait(2000);
+        await axios.post('http://localhost:4000/printOrder/add', obj)
+            .then((res) => {
+                this.setState({ response: res.data });
+                console.log("response is :" + this.state.response.printOrder);
+            });
+        if (this.state.response.printOrder === "printOrder in added successfully") {
+            this.setState({ ...this.state, snackbarSuccessStatus: true })
+            await this.wait(1000);
+        }
+        if (this.state.response.printOrder !== "printOrder in added successfully") {
+            this.setState({ ...this.state, snackbarFailStatus: true })
+            await this.wait(1000);
+        }
         this.setState({ ...this.state, activeStep: 0 })
         this.setState({
             ...this.state,
+            response: {},
             name: '',
             wsuid: '',
             phone: '',
@@ -214,8 +227,6 @@ class RequestForm extends Component {
             job_delivered_GA: '',
             job_delivery_date: null,
         })
-        //need to save to db
-
     }
     handleCompletedChange = () => {
         this.setState({
@@ -580,20 +591,36 @@ class RequestForm extends Component {
                         )}
                 </div>
                 <Snackbar
-                    open={this.state.snackbarStatus}
-                    onClose={() => this.handleSnackbarClose()}
+                    open={this.state.snackbarSuccessStatus}
+                    onClose={() => this.handleSuccessSnackbarClose()}
                     action={[
                         <IconButton
                             key="close"
                             aria-label="close"
                             color="inherit"
                             className={classes.close}
-                            onClick={() => this.handleSnackbarClose()}
+                            onClick={() => this.handleSuccessSnackbarClose()}
                         >
                             <CloseIcon />
                         </IconButton>,
                     ]}
                     message={<span id="message-id" className={classes.saved_heading}>Data Saved Successfully...!</span>}
+                />
+                <Snackbar
+                    open={this.state.snackbarFailStatus}
+                    onClose={() => this.handleFailSnackbarClose()}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="close"
+                            color="inherit"
+                            className={classes.close}
+                            onClick={() => this.handleFailSnackbarClose()}
+                        >
+                            <CloseIcon />
+                        </IconButton>,
+                    ]}
+                    message={<span id="message-id" className={classes.saved_heading}>Unable to save please try again</span>}
                 />
             </div >
         );
