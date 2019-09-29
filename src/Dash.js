@@ -13,6 +13,8 @@ import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
 import RequestForm from "./RequestForm";
 import Orders from "./Orders";
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -77,49 +79,60 @@ class Dash extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.root}>
-                <CssBaseline />
-                <Drawer
-                    className={classes.drawer}
-                    variant="permanent"
-                    classes={{
-                        paper: classes.drawerPaper,
-                    }}
-                >
-                    <div className={classes.toolbar} />
-                    <List>
-                        <ListItem className={classes.menu_list}>
-                            <ListItemText className={classes.menu_text} primary="Menu" />
-                        </ListItem>
+            <Router>
+                <div className={classes.root}>
+                    <CssBaseline />
+                    <Drawer
+                        className={classes.drawer}
+                        variant="permanent"
+                        classes={{
+                            paper: classes.drawerPaper,
+                        }}
+                    >
+                        <div className={classes.toolbar} />
+                        <List>
+                            <ListItem className={classes.menu_list}>
+                                <ListItemText className={classes.menu_text} primary="Menu" />
+                            </ListItem>
+                            <Divider />
+                            <ListItem
+                                button
+                                onClick={this.form_button_change}
+                                selected={this.state.form_selected}
+                                component={Link} to="/request_form"
+                            >
+                                <ListItemIcon>
+                                    <SendIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Request Form" />
+                            </ListItem>
+                            <Divider />
+                            <ListItem button
+                                onClick={this.history_button_change}
+                                component={Link} to="/orders"
+                                selected={this.state.history_selected}>
+                                <ListItemIcon>
+                                    <DraftsIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Orders" />
+                            </ListItem>
+                        </List>
                         <Divider />
-                        <ListItem
-                            button
-                            onClick={this.form_button_change}
-                            selected={this.state.form_selected}>
-                            <ListItemIcon>
-                                <SendIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Request Form" />
-                        </ListItem>
-                        <Divider />
-                        <ListItem button onClick={this.history_button_change} selected={this.state.history_selected}>
-                            <ListItemIcon>
-                                <DraftsIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Orders" />
-                        </ListItem>
-                    </List>
-                    <Divider />
-                </Drawer>
-                <Card className={classes.card_css}>
-                    {this.state.form_selected && <Typography paragraph>
-                        <RequestForm />
-                    </Typography>}
-                    {this.state.history_selected && <Typography paragraph>
-                        <Orders />
-                    </Typography>}
-                </Card>
-            </div>
+                    </Drawer>
+                    <Switch>
+                        <Card className={classes.card_css}>
+                            {this.state.form_selected && <Typography paragraph>
+                                {/* <Route exact path='/request_form' component={RequestForm} /> */}
+                                <RequestForm />
+                            </Typography>}
+                            {this.state.history_selected && <Typography paragraph>
+                                {/* <Route path='/orders' component={Orders} /> */}
+                                <Orders />
+                            </Typography>}
+                        </Card>
+                    </Switch>
+                </div>
+            </Router>
         );
     }
 }

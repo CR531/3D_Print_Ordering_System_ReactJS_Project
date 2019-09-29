@@ -174,7 +174,6 @@ class RequestForm extends Component {
     }
     handleNext = (x) => {
         this.setState({ activeStep: x + 1 });
-        // console.log(this.state.activeStep);
     }
     handleBack = (x) => {
         this.setState({ activeStep: x - 1 });
@@ -252,10 +251,6 @@ class RequestForm extends Component {
             job_completed_check: !(this.state.job_completed_check),
             job_delivered_check: (this.state.job_completed_check ? false : false)
         });
-        console.log("****************************");
-        console.log("Completed check value is : " + this.state.completedCheck);
-        console.log("****************************");
-
     }
     handleDeliveredChange = () => {
         this.setState({ ...this.state, job_delivered_check: !(this.state.job_delivered_check) });
