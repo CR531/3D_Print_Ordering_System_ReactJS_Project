@@ -82,11 +82,8 @@ class RequestForm extends Component {
         this.state = {
             steps: ['3D Print Request Form', '3D Print Statement', 'Remarks'],
             activeStep: 0,
-            selectedDate: '2019-01-01T21:11:54',
             snackbarSuccessStatus: false,
             snackbarFailStatus: false,
-            completedCheck: false,
-            deliveredCheck: false,
             response: {},
             name: '',
             wsuid: '',
@@ -109,47 +106,10 @@ class RequestForm extends Component {
             job_delivery_date: null,
         }
     }
-    onNameChange = (e) => {
-        this.setState({ ...this.state, name: e.target.value });
-        // console.log("State is :" + this.state.name)
-    }
-    onWsuIDChange = (e) => {
-        this.setState({ ...this.state, wsuid: e.target.value });
-    }
-    onPhoneChange = (e) => {
-        this.setState({ ...this.state, phone: e.target.value });
-    }
-    onEmailChange = (e) => {
-        this.setState({ ...this.state, email: e.target.value });
-    }
-    onFilamentColorChange = (e) => {
-        this.setState({ ...this.state, filament_color: e.target.value });
-    }
-    onNotesChange = (e) => {
-        this.setState({ ...this.state, notes: e.target.value });
-    }
-    onCSpaceRepChange = (e) => {
-        this.setState({ ...this.state, cspace_rep_name: e.target.value });
-    }
-    onGramsUsedChange = (e) => {
-        this.setState({ ...this.state, grams_used: e.target.value });
-    }
-    onAmountDueChange = (e) => {
-        this.setState({ ...this.state, amount_due: e.target.value });
-    }
-    onReceiptNumberChange = (e) => {
-        this.setState({ ...this.state, receipt_number: e.target.value });
-    }
-    onRemarkNotesChange = (e) => {
-        this.setState({ ...this.state, remark_notes: e.target.value });
-    }
-    onJobCompletedGAChange = (e) => {
-        this.setState({ ...this.state, job_completed_GA: e.target.value });
-    }
-    onJobDeliveredGAChange = (e) => {
-        this.setState({ ...this.state, job_delivered_GA: e.target.value });
-    }
 
+    onGenericChange = (e) => {
+        this.setState({ ...this.state, [e.target.id]: e.target.value });
+    }
     handleOrderDateChange = date => {
         this.setState({ ...this.state, order_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
     }
@@ -168,9 +128,6 @@ class RequestForm extends Component {
     }
     handleFailSnackbarClose = () => {
         this.setState({ ...this.state, snackbarFailStatus: false })
-    }
-    handleDateChange = (date) => {
-        this.setState({ selectedDate: date });
     }
     handleNext = (x) => {
         this.setState({ activeStep: x + 1 });
@@ -281,7 +238,7 @@ class RequestForm extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 value={this.state.name}
-                                onChange={(value) => this.onNameChange(value)}
+                                onChange={(value) => this.onGenericChange(value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} className={classes.grid_margin}>
@@ -294,7 +251,7 @@ class RequestForm extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 value={this.state.wsuid}
-                                onChange={(value) => this.onWsuIDChange(value)}
+                                onChange={(value) => this.onGenericChange(value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} className={classes.grid_margin}>
@@ -307,7 +264,7 @@ class RequestForm extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 value={this.state.phone}
-                                onChange={(value) => this.onPhoneChange(value)}
+                                onChange={(value) => this.onGenericChange(value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} className={classes.grid_margin}>
@@ -320,7 +277,7 @@ class RequestForm extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 value={this.state.email}
-                                onChange={(value) => this.onEmailChange(value)}
+                                onChange={(value) => this.onGenericChange(value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} className={classes.grid_margin}>
@@ -333,7 +290,7 @@ class RequestForm extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 value={this.state.filament_color}
-                                onChange={(value) => this.onFilamentColorChange(value)}
+                                onChange={(value) => this.onGenericChange(value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} className={classes.grid_margin}>
@@ -352,7 +309,7 @@ class RequestForm extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 value={this.state.notes}
-                                onChange={(value) => this.onNotesChange(value)}
+                                onChange={(value) => this.onGenericChange(value)}
                             />
                         </Grid>
                     </Grid>
@@ -367,7 +324,7 @@ class RequestForm extends Component {
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={6} className={classes.grid_margin}>
                             <TextField
-                                id="cspace_rep"
+                                id="cspace_rep_name"
                                 label="C-Space Representative"
                                 placeholder="C-Space Representative"
                                 style={{ "width": "80%" }}
@@ -375,7 +332,7 @@ class RequestForm extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 value={this.state.cspace_rep_name}
-                                onChange={(value) => this.onCSpaceRepChange(value)}
+                                onChange={(value) => this.onGenericChange(value)}
                             />
                         </Grid>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -406,7 +363,7 @@ class RequestForm extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 value={this.state.grams_used}
-                                onChange={(value) => this.onGramsUsedChange(value)}
+                                onChange={(value) => this.onGenericChange(value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} className={classes.grid_margin}>
@@ -422,7 +379,7 @@ class RequestForm extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 value={this.state.amount_due}
-                                onChange={(value) => this.onAmountDueChange(value)}
+                                onChange={(value) => this.onGenericChange(value)}
                             />
                         </Grid>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -457,7 +414,7 @@ class RequestForm extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 value={this.state.receipt_number}
-                                onChange={(value) => this.onReceiptNumberChange(value)}
+                                onChange={(value) => this.onGenericChange(value)}
                             />
                         </Grid>
                     </Grid>
@@ -480,7 +437,7 @@ class RequestForm extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 value={this.state.remark_notes}
-                                onChange={(value) => this.onRemarkNotesChange(value)}
+                                onChange={(value) => this.onGenericChange(value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={3} className={classes.grid_margin}>
@@ -511,7 +468,7 @@ class RequestForm extends Component {
                                     margin="normal"
                                     variant="outlined"
                                     value={this.state.job_completed_GA}
-                                    onChange={(value) => this.onJobCompletedGAChange(value)}
+                                    onChange={(value) => this.onGenericChange(value)}
                                 />
                             </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
                         {this.state.job_completed_check ?
@@ -562,7 +519,7 @@ class RequestForm extends Component {
                                     margin="normal"
                                     variant="outlined"
                                     value={this.state.job_delivered_GA}
-                                    onChange={(value) => this.onJobDeliveredGAChange(value)}
+                                    onChange={(value) => this.onGenericChange(value)}
                                 />
                             </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
                         {this.state.job_delivered_check ?
