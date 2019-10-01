@@ -25,4 +25,21 @@ printOrderRoutes.route('/').get(function (req, res) {
     });
 });
 
+//Update
+printOrderRoutes.route('/update/:id').post(function (req, res) {
+    PrintOrder.findById(req.params.id, function (err, printOrder) {
+        if (!printOrder)
+            res.status(404).send("data is not found");
+        else {
+            printOrder.name = req.body.name;
+
+            printOrder.save().then(printOrder => {
+                res.json('Update complete');
+            })
+                .catch(err => {
+                    res.status(400).send("unable to update the database");
+                });
+        }
+    });
+});
 module.exports = printOrderRoutes;

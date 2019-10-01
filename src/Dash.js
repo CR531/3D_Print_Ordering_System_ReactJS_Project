@@ -13,7 +13,7 @@ import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
 import RequestForm from "./RequestForm";
 import Orders from "./Orders";
-import { BrowserRouter as Router, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -119,6 +119,15 @@ class Dash extends Component {
                         </List>
                         <Divider />
                     </Drawer>
+                    {/* <Switch>
+                        <Card className={classes.card_css}>
+                            <Typography paragraph>
+                                {this.state.form_selected && <Route exact path='/request_form' component={RequestForm} />}
+                                <Route path='/edit/:id' component={} />
+                                {this.state.history_selected && <Route path='/orders' component={Orders} />}
+                            </Typography>
+                        </Card>
+                    </Switch> */}
                     <Switch>
                         <Card className={classes.card_css}>
                             {this.state.form_selected && <Typography paragraph>

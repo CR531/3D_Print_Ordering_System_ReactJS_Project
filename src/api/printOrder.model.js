@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// Define collection and schema for Business
+const autoIncrementModelID = require('./counter.model');
 let PrintOrder = new Schema({
+    id: { type: Number, unique: true, min: 1 },
     name: {
         type: String
     },
@@ -64,4 +65,12 @@ let PrintOrder = new Schema({
     collection: 'printOrder'
 });
 
+PrintOrder.pre('save', function (next) {
+    if (!this.isNew) {
+        next();
+        return;
+    }
+
+    autoIncrementModelID('activities', this, next);
+});
 module.exports = mongoose.model('printOrder', PrintOrder);

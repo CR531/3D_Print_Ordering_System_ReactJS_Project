@@ -74,7 +74,8 @@ class FormEdit extends Component {
             job_completion_date: (this.props.selected_Order.job_completed_check === true ? this.props.selected_Order.job_completion_date : null),
             job_delivered_check: this.props.selected_Order.job_delivered_check,
             job_delivered_GA: (this.props.selected_Order.job_delivered_check ? this.props.selected_Order.job_delivered_GA : ""),
-            job_delivery_date: (this.props.selected_Order.job_delivered_check ? this.props.selected_Order.job_delivery_date : null)
+            job_delivery_date: (this.props.selected_Order.job_delivered_check ? this.props.selected_Order.job_delivery_date : null),
+            id: this.props.selected_Order.id
         });
     }
     handleCompletedChange = () => {
@@ -116,6 +117,7 @@ class FormEdit extends Component {
             job_delivered_check: false,
             job_delivered_GA: '',
             job_delivery_date: null,
+            id: null
         }
     }
     onGenericChange = (e) => {
@@ -133,6 +135,32 @@ class FormEdit extends Component {
     handleDeliveredDateChange = date => {
         this.setState({ ...this.state, job_delivery_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
     }
+    handleUpdate = async () => {
+        const obj = {
+            name: this.state.name,
+            wsuid: this.state.wsuid,
+            phone: this.state.phone,
+            email: this.state.email,
+            filament_color: this.state.filament_color,
+            notes: this.state.notes,
+            cspace_rep_name: this.state.cspace_rep_name,
+            order_date: this.state.order_date,
+            grams_used: this.state.grams_used,
+            amount_due: this.state.amount_due,
+            pickup_date: this.state.pickup_date,
+            receipt_number: this.state.receipt_number,
+            remark_notes: this.state.remark_notes,
+            job_completed_check: this.state.job_completed_check,
+            job_completed_GA: this.state.job_completed_GA,
+            job_completion_date: this.state.job_completion_date,
+            job_delivered_check: this.state.job_delivered_check,
+            job_delivered_GA: this.state.job_delivered_GA,
+            job_delivery_date: this.state.job_delivery_date,
+            id: this.state.id
+        };
+        await axios.put('http://localhost:4000/printOrder/update/' + this.state.id, obj)
+            .then(res => console.log(res.data));
+    }
 
     render() {
         const { classes } = this.props;
@@ -147,8 +175,8 @@ class FormEdit extends Component {
                             <Typography variant="h6" className={classes.title}>
                                 Order Details
                         </Typography>
-                            <Button color="inherit" onClick={() => this.handleClose()}>
-                                save
+                            <Button color="inherit" onClick={() => this.handleUpdate()}>
+                                Update
                         </Button>
                         </Toolbar>
                     </AppBar>
