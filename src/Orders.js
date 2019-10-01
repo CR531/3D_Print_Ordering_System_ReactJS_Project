@@ -96,7 +96,7 @@ class Orders extends Component {
             chipStatus: false,
             active_index: -1,
             open_Dialog: false,
-            selected_Order: null,
+            selected_Order: {},
             orders: []
         }
     }
@@ -115,12 +115,16 @@ class Orders extends Component {
         this.setState({ ...this.state, active_index: this.state.active_index === index ? -1 : index })
         console.log("Expanded panel is :" + this.state.active_index)
     }
+    handleOrderOpen1 = async (list, val) => {
+        const type = list.find(el => el.receipt_number === val);
+        await this.setState({ ...this.state, selected_Order: type });
+        this.handleOrderOpen();
+    }
     handleOrderOpen = async (val) => {
-        await this.setState({ ...this.state, open_Dialog: true, selected_Order: val });
-        console.log("Order opening is :" + this.state.open_Dialog)
+        await this.setState({ ...this.state, open_Dialog: true });
     }
     dialog_close = (value) => {
-        this.setState({ ...this.state, open_Dialog: value, active_index: -1 })
+        this.setState({ ...this.state, open_Dialog: value })
     }
     render() {
         const { classes } = this.props;
@@ -129,9 +133,11 @@ class Orders extends Component {
                 {this.state.open_Dialog && <div>
                     <FormEdit
                         open_Dialog={this.state.open_Dialog}
-                        receipt_number={this.state.selected_Order}
-                        onDialogClose={this.dialog_close} />
+                        selected_Order={this.state.selected_Order}
+                        onDialogClose={this.dialog_close}
+                    />
                 </div>}
+
                 {!(this.state.open_Dialog) &&
                     <div className={classes.root} >
                         <Typography className={classes.main_heading}><b>Order History</b></Typography>
@@ -249,13 +255,14 @@ class Orders extends Component {
                                         <Divider />
                                         <ExpansionPanelActions>
                                             <Button size="small" onClick={() => this.handleExpChange()}>Cancel</Button>
-                                            <Button size="small" color="primary" onClick={() => this.handleOrderOpen(listValue.receipt_number)}>
+                                            <Button size="small" color="primary" onClick={() => this.handleOrderOpen1(this.state.orders, listValue.receipt_number)}>
                                                 Open Order
                                     </Button>
                                         </ExpansionPanelActions>
                                     </ExpansionPanel>
                                 );
                             })}
+
                     </div >
                 }</div>
         );

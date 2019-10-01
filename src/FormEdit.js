@@ -21,6 +21,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import axios from 'axios';
 
 const styles = theme => ({
     appBar: {
@@ -52,7 +53,40 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 class FormEdit extends Component {
-
+    async componentDidMount() {
+        await this.setState({
+            ...this.state, open_Dialog: this.props.open_Dialog,
+            name: this.props.selected_Order.name,
+            wsuid: this.props.selected_Order.wsuid,
+            phone: this.props.selected_Order.phone,
+            email: this.props.selected_Order.email,
+            filament_color: this.props.selected_Order.filament_color,
+            notes: this.props.selected_Order.notes,
+            cspace_rep_name: this.props.selected_Order.cspace_rep_name,
+            order_date: this.props.selected_Order.order_date,
+            grams_used: this.props.selected_Order.grams_used,
+            amount_due: this.props.selected_Order.amount_due,
+            pickup_date: this.props.selected_Order.pickup_date,
+            receipt_number: this.props.selected_Order.receipt_number,
+            remark_notes: this.props.selected_Order.remark_notes,
+            job_completed_check: this.props.selected_Order.job_completed_check,
+            job_completed_GA: (this.props.selected_Order.job_completed_check === true ? this.props.selected_Order.job_completed_GA : ""),
+            job_completion_date: (this.props.selected_Order.job_completed_check === true ? this.props.selected_Order.job_completion_date : null),
+            job_delivered_check: this.props.selected_Order.job_delivered_check,
+            job_delivered_GA: (this.props.selected_Order.job_delivered_check ? this.props.selected_Order.job_delivered_GA : ""),
+            job_delivery_date: (this.props.selected_Order.job_delivered_check ? this.props.selected_Order.job_delivery_date : null)
+        });
+    }
+    handleCompletedChange = () => {
+        this.setState({
+            ...this.state,
+            job_completed_check: !(this.state.job_completed_check),
+            job_delivered_check: (this.state.job_completed_check ? false : false),
+        });
+    }
+    handleDeliveredChange = () => {
+        this.setState({ ...this.state, job_delivered_check: !(this.state.job_delivered_check) });
+    }
     handleClose = () => {
         this.setState({ ...this.state, open_Dialog: false })
         this.props.onDialogClose(false);
@@ -62,6 +96,7 @@ class FormEdit extends Component {
         super(props);
         this.state = {
             open_Dialog: false,
+            orders: [],
             name: '',
             wsuid: '',
             phone: '',
@@ -98,9 +133,7 @@ class FormEdit extends Component {
     handleDeliveredDateChange = date => {
         this.setState({ ...this.state, job_delivery_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
     }
-    async componentDidMount() {
-        await this.setState({ ...this.state, open_Dialog: this.props.open_Dialog });
-    }
+
     render() {
         const { classes } = this.props;
         return (
@@ -288,40 +321,39 @@ class FormEdit extends Component {
                                 </FormGroup>
                             </Grid>
                         </ListItem>
+
                         <ListItem className={classes.listItem}>
-                            {/* {this.state.job_completed_check ? */}
-                            {1 ?
-                                <TextField
-                                    id="job_completed_GA"
-                                    label="Completed GA"
-                                    placeholder="Completed GA"
-                                    style={{ "width": "30%" }}
-                                    className={classes.textField}
-                                    margin="normal"
-                                    variant="outlined"
-                                    value={this.state.job_completed_GA}
-                                    onChange={(value) => this.onGenericChange(value)}
-                                /> : ""}
-                            {/* {this.state.job_completed_check ? */}
-                            {1 ?
-                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
-                                        <KeyboardDatePicker
-                                            disableToolbar
-                                            variant="inline"
-                                            format="MM/dd/yyyy"
-                                            placeholder='mm/dd/yyyy'
-                                            margin="normal"
-                                            id="job_completion_date"
-                                            label="Job Completion Date"
-                                            value={this.state.job_completion_date}
-                                            onChange={this.handleCompletedDateChange}
-                                            KeyboardButtonProps={{
-                                                'aria-label': 'change date',
-                                            }}
-                                        />
-                                    </Grid>
-                                </MuiPickersUtilsProvider> : ""}
+                            <TextField
+                                id="job_completed_GA"
+                                label="Completed GA"
+                                placeholder="Completed GA"
+                                style={{ "width": "30%" }}
+                                className={classes.textField}
+                                margin="normal"
+                                disabled={this.state.job_completed_check === false ? true : false}
+                                variant="outlined"
+                                value={this.state.job_completed_GA}
+                                onChange={(value) => this.onGenericChange(value)}
+                            />
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
+                                    <KeyboardDatePicker
+                                        disableToolbar
+                                        variant="inline"
+                                        format="MM/dd/yyyy"
+                                        placeholder='mm/dd/yyyy'
+                                        margin="normal"
+                                        id="job_completion_date"
+                                        disabled={this.state.job_completed_check === false ? true : false}
+                                        label="Job Completion Date"
+                                        value={this.state.job_completion_date}
+                                        onChange={this.handleCompletedDateChange}
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date',
+                                        }}
+                                    />
+                                </Grid>
+                            </MuiPickersUtilsProvider>
                         </ListItem>
                         <ListItem className={classes.listItem}>
                             <Grid item xs={12} sm={3} style={{ "marginLeft": "1%", "marginTop": "1.5%" }}>
@@ -342,6 +374,7 @@ class FormEdit extends Component {
                                 </FormGroup>
                             </Grid>
                         </ListItem>
+
                         <ListItem className={classes.listItem}>
                             <TextField
                                 id="job_delivered_GA"
@@ -351,10 +384,11 @@ class FormEdit extends Component {
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                disabled={this.state.job_delivered_check === false ? true : false}
                                 value={this.state.job_delivered_GA}
                                 onChange={(value) => this.onGenericChange(value)}
                             />
-                            {1 ? <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
                                     <KeyboardDatePicker
                                         disableToolbar
@@ -364,6 +398,7 @@ class FormEdit extends Component {
                                         margin="normal"
                                         id="job_delivery_date"
                                         label="Job Delivery Date"
+                                        disabled={this.state.job_delivered_check === false ? true : false}
                                         value={this.state.job_delivery_date}
                                         onChange={this.handleDeliveredDateChange}
                                         KeyboardButtonProps={{
@@ -371,7 +406,7 @@ class FormEdit extends Component {
                                         }}
                                     />
                                 </Grid>
-                            </MuiPickersUtilsProvider> : ""}
+                            </MuiPickersUtilsProvider>
                         </ListItem>
                     </List>
                 </Dialog>
