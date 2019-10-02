@@ -14,6 +14,7 @@ import axios from 'axios';
 import { Card } from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import FormEdit from "./FormEdit";
+
 const styles = theme => ({
     root: {
         width: '91%',
@@ -72,7 +73,7 @@ const styles = theme => ({
     chip2: {
         margin: theme.spacing(1),
         width: "150%",
-        backgroundColor: "#FFFF66"
+        background: "rgba(255, 194, 23, 0.95)",
     },
     chip_css: {
         marginTop: "-3%",

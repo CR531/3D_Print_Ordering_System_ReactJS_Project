@@ -33,8 +33,8 @@ class Mainpage extends Component {
         const { classes } = this.props;
         return (
             <React.Fragment>
-                <AppBar position="fixed" className={classes.appbar_css}>
-                    <Grid container className={classes.grid_css}>
+                <AppBar position="fixed" className={classes.appbar_css} style={{ "background": "#3b3b3b" }}>
+                    <Grid container className={classes.grid_css} style={{ "background": "#3b3b3b" }}>
                         <Grid item xs><img
                             className="wsu_logo_css"
                             src={wsu_logo}

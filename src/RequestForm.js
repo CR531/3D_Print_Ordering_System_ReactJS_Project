@@ -547,7 +547,7 @@ class RequestForm extends Component {
                 <div className={classes.stepper_buttons}>
                     {this.state.activeStep === this.state.steps.length ? (
                         <div>
-                            <Button variant="contained" color="primary" onClick={() => this.handleSave({ vertical: 'bottom', horizontal: 'center' })}>Save</Button>
+                            <Button variant="contained" color="primary" style={{ "background": "#3b3b3b" }} onClick={() => this.handleSave({ vertical: 'bottom', horizontal: 'center' })}>Save</Button>
                         </div>
                     ) : (
                             <div>
@@ -558,7 +558,7 @@ class RequestForm extends Component {
                                 >
                                     Back
               </Button>
-                                <Button variant="contained" color="primary" onClick={() => this.handleNext(this.state.activeStep)}>
+                                <Button variant="contained" color="primary" style={{ "background": "#3b3b3b" }} onClick={() => this.handleNext(this.state.activeStep)}>
                                     {this.state.activeStep === this.state.steps.length - 1 ? 'Finish' : 'Next'}
                                 </Button>
                             </div>

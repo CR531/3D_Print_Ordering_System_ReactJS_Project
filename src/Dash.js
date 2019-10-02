@@ -32,13 +32,14 @@ const styles = theme => ({
     drawerPaper: {
         width: drawerWidth,
         marginTop: "5%",
+        background: "rgba(255, 194, 23, 0.95)",
     },
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
     },
     menu_list: {
-        background: "#3f51b5",
+        background: "#3b3b3b",
         textAlign: "center",
     },
     menu_text: {
