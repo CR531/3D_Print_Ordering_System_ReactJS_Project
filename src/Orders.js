@@ -87,6 +87,10 @@ const styles = theme => ({
         fontVariant: "all-petite-caps",
         color: "black",
         textAlign: "center"
+    },
+    openOrderLabel: {
+        color: "white",
+        background: "#3b3b3b"
     }
 });
 
@@ -165,6 +169,7 @@ class Orders extends Component {
                                         <ExpansionPanelSummary
                                             expandIcon={<ExpandMoreIcon />}
                                             id={index}
+                                            style={{ "background": "lightgrey" }}
                                         >
                                             <div className={classes.column1}>
                                                 <Grid container spacing={3}>
@@ -256,7 +261,7 @@ class Orders extends Component {
                                         <Divider />
                                         <ExpansionPanelActions>
                                             <Button size="small" onClick={() => this.handleExpChange()}>Cancel</Button>
-                                            <Button size="small" color="primary" onClick={() => this.handleOrderOpen1(this.state.orders, listValue.receipt_number)}>
+                                            <Button size="small" variant="contained" color="#3b3b3b" className={classes.openOrderLabel} onClick={() => this.handleOrderOpen1(this.state.orders, listValue.receipt_number)}>
                                                 Open Order
                                     </Button>
                                         </ExpansionPanelActions>

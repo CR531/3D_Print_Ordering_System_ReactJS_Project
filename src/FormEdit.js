@@ -169,7 +169,7 @@ class FormEdit extends Component {
         return (
             <div>
                 <Dialog fullScreen open={this.state.open_Dialog} onClose={() => this.handleClose()} TransitionComponent={Transition}>
-                    <AppBar className={classes.appBar}>
+                    <AppBar className={classes.appBar} style={{ "background": "#3b3b3b" }}>
                         <Toolbar>
                             <IconButton edge="start" color="inherit" onClick={() => this.handleClose()} aria-label="close">
                                 <CloseIcon />
