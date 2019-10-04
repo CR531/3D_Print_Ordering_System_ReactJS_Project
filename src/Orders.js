@@ -14,7 +14,6 @@ import axios from 'axios';
 import { Card } from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import FormEdit from "./FormEdit";
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 
 const styles = theme => ({
     root: {

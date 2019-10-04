@@ -13,7 +13,7 @@ import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
 import RequestForm from "./RequestForm";
 import Orders from "./Orders";
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 

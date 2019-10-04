@@ -22,8 +22,29 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import axios from 'axios';
-
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import clsx from 'clsx';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 const styles = theme => ({
+    close: {
+        padding: theme.spacing(0.5),
+    },
+    icon: {
+        fontSize: 20,
+    },
+    iconVariant: {
+        opacity: 0.9,
+        marginRight: theme.spacing(1),
+    },
+    message: {
+        display: 'flex',
+        alignItems: 'center',
+        fontWeight: "500",
+        fontSize: "large",
+        fontVariant: "all-petite-caps",
+    },
     appBar: {
         position: 'relative',
     },
@@ -54,6 +75,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 class FormEdit extends Component {
     async componentDidMount() {
+        axios.get('http://localhost:4000/printOrder/edit/' + this.props.selected_Order._id)
+            .then(response => {
+                console.log("Response is given as :" + response)
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
         await this.setState({
             ...this.state, open_Dialog: this.props.open_Dialog,
             name: this.props.selected_Order.name,
@@ -92,10 +120,18 @@ class FormEdit extends Component {
         this.setState({ ...this.state, open_Dialog: false })
         this.props.onDialogClose(false);
     }
-
+    handleUpdateSuccessSnackbarClose = () => {
+        this.setState({ ...this.state, updateSnackbarSuccessStatus: false })
+    }
+    handleUpdateFailSnackbarClose = () => {
+        this.setState({ ...this.state, updateSnackbarFailStatus: false })
+    }
     constructor(props) {
         super(props);
         this.state = {
+            updateSnackbarSuccessStatus: false,
+            updateSnackbarFailStatus: false,
+            update_response: {},
             open_Dialog: false,
             orders: [],
             name: '',
@@ -135,6 +171,13 @@ class FormEdit extends Component {
     handleDeliveredDateChange = date => {
         this.setState({ ...this.state, job_delivery_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
     }
+    wait = (ms) => {
+        var start = new Date().getTime();
+        var end = start;
+        while (end < start + ms) {
+            end = new Date().getTime();
+        }
+    }
     handleUpdate = async () => {
         const obj = {
             name: this.state.name,
@@ -158,291 +201,357 @@ class FormEdit extends Component {
             job_delivery_date: this.state.job_delivery_date,
             id: this.state.id
         };
-
-        // await axios.post('http://localhost:4000/printOrder/update1', obj)
-        //     .then((res) => {
-        //         console.log("response is :" + res);
-        //     });
-
+        axios.post('http://localhost:4000/printOrder/update/' + this.props.selected_Order._id, obj)
+            .then((res) => {
+                console.log("outcome response is :" + res.data);
+                this.setState({ update_response: res.data });
+                console.log("response is :" + this.state.update_response.printOrder);
+            });
+        if (this.state.update_response.printOrder === "printOrder updated successfully") {
+            await this.setState({ updateSnackbarSuccessStatus: true })
+            console.log("Status are :" + this.state.updateSnackbarSuccessStatus + " and " + this.state.updateSnackbarFailStatus);
+            await this.wait(1000);
+        }
+        if (this.state.update_response.printOrder !== "printOrder updated successfully") {
+            await this.setState({ updateSnackbarFailStatus: true })
+            console.log("Status are :" + this.state.updateSnackbarSuccessStatus + " and " + this.state.updateSnackbarFailStatus);
+            await this.wait(1000);
+        }
     }
 
     render() {
         const { classes } = this.props;
         return (
             <div>
-                <Dialog fullScreen open={this.state.open_Dialog} onClose={() => this.handleClose()} TransitionComponent={Transition}>
-                    <AppBar className={classes.appBar} style={{ "background": "#3b3b3b" }}>
-                        <Toolbar>
-                            <IconButton edge="start" color="inherit" onClick={() => this.handleClose()} aria-label="close">
-                                <CloseIcon />
-                            </IconButton>
-                            <Typography variant="h6" className={classes.title}>
-                                Order Details
+                <div>
+                    <Dialog fullScreen open={this.state.open_Dialog} onClose={() => this.handleClose()} TransitionComponent={Transition}>
+                        <AppBar className={classes.appBar} style={{ "background": "#3b3b3b" }}>
+                            <Toolbar>
+                                <IconButton edge="start" color="inherit" onClick={() => this.handleClose()} aria-label="close">
+                                    <CloseIcon />
+                                </IconButton>
+                                <Typography variant="h6" className={classes.title}>
+                                    Order Details
                         </Typography>
-                            <Button color="inherit" onClick={() => this.handleUpdate()}>
-                                Update
+                                <Button color="inherit" onClick={() => this.handleUpdate()}>
+                                    Update
                         </Button>
-                        </Toolbar>
-                    </AppBar>
-                    <List className={classes.list}>
-                        <ListItem className={classes.listItem}>
-                            <TextField
-                                id="name"
-                                label="Name"
-                                placeholder="Name"
-                                style={{ "width": "30%" }}
-                                className={classes.textField}
-                                margin="normal"
-                                variant="outlined"
-                                value={this.state.name}
-                                onChange={(value) => this.onGenericChange(value)}
-                            />
-                            <TextField
-                                id="wsuid"
-                                label="WSU ID"
-                                placeholder="WSU ID"
-                                style={{ "width": "30%" }}
-                                className={classes.textField}
-                                margin="normal"
-                                variant="outlined"
-                                value={this.state.wsuid}
-                                onChange={(value) => this.onGenericChange(value)}
-                            />
-                        </ListItem>
-                        <ListItem className={classes.listItem}>
-                            <TextField
-                                id="email"
-                                label="Email"
-                                placeholder="Email"
-                                style={{ "width": "61%" }}
-                                className={classes.textField}
-                                margin="normal"
-                                variant="outlined"
-                                value={this.state.email}
-                                onChange={(value) => this.onGenericChange(value)}
-                            />
-                        </ListItem>
-                        <ListItem className={classes.listItem}>
-                            <TextField
-                                id="phone"
-                                label="Phone"
-                                placeholder="Phone"
-                                style={{ "width": "30%" }}
-                                className={classes.textField}
-                                margin="normal"
-                                variant="outlined"
-                                value={this.state.phone}
-                                onChange={(value) => this.onGenericChange(value)}
-                            />
-                            <TextField
-                                id="filament_color"
-                                label="Filament Color"
-                                placeholder="Filament Color"
-                                style={{ "width": "30%" }}
-                                className={classes.textField}
-                                margin="normal"
-                                variant="outlined"
-                                value={this.state.filament_color}
-                                onChange={(value) => this.onGenericChange(value)}
-                            />
-                        </ListItem>
-                        <ListItem className={classes.listItem}>
-                            <TextField
-                                id="cspace_rep_name"
-                                label="C-Space Representative"
-                                placeholder="C-Space Representative"
-                                style={{ "width": "30%" }}
-                                className={classes.textField}
-                                margin="normal"
-                                variant="outlined"
-                                value={this.state.cspace_rep_name}
-                                onChange={(value) => this.onGenericChange(value)}
-                            />
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
-                                    <KeyboardDatePicker
-                                        disableToolbar
-                                        variant="inline"
-                                        format="MM/dd/yyyy"
-                                        margin="normal"
-                                        id="order_date"
-                                        label="Order Date"
-                                        placeholder='mm/dd/yyyy'
-                                        value={this.state.order_date}
-                                        onChange={this.handleOrderDateChange}
-                                        KeyboardButtonProps={{
-                                            'aria-label': 'change date',
-                                        }}
-                                    />
+                            </Toolbar>
+                        </AppBar>
+                        <List className={classes.list}>
+                            <ListItem className={classes.listItem}>
+                                <TextField
+                                    id="name"
+                                    label="Name"
+                                    placeholder="Name"
+                                    style={{ "width": "30%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    value={this.state.name}
+                                    onChange={(value) => this.onGenericChange(value)}
+                                />
+                                <TextField
+                                    id="wsuid"
+                                    label="WSU ID"
+                                    placeholder="WSU ID"
+                                    style={{ "width": "30%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    value={this.state.wsuid}
+                                    onChange={(value) => this.onGenericChange(value)}
+                                />
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
+                                <TextField
+                                    id="email"
+                                    label="Email"
+                                    placeholder="Email"
+                                    style={{ "width": "61%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    value={this.state.email}
+                                    onChange={(value) => this.onGenericChange(value)}
+                                />
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
+                                <TextField
+                                    id="phone"
+                                    label="Phone"
+                                    placeholder="Phone"
+                                    style={{ "width": "30%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    value={this.state.phone}
+                                    onChange={(value) => this.onGenericChange(value)}
+                                />
+                                <TextField
+                                    id="filament_color"
+                                    label="Filament Color"
+                                    placeholder="Filament Color"
+                                    style={{ "width": "30%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    value={this.state.filament_color}
+                                    onChange={(value) => this.onGenericChange(value)}
+                                />
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
+                                <TextField
+                                    id="cspace_rep_name"
+                                    label="C-Space Representative"
+                                    placeholder="C-Space Representative"
+                                    style={{ "width": "30%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    value={this.state.cspace_rep_name}
+                                    onChange={(value) => this.onGenericChange(value)}
+                                />
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
+                                        <KeyboardDatePicker
+                                            disableToolbar
+                                            variant="inline"
+                                            format="MM/dd/yyyy"
+                                            margin="normal"
+                                            id="order_date"
+                                            label="Order Date"
+                                            placeholder='mm/dd/yyyy'
+                                            value={this.state.order_date}
+                                            onChange={this.handleOrderDateChange}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date',
+                                            }}
+                                        />
+                                    </Grid>
+                                </MuiPickersUtilsProvider>
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
+                                <TextField
+                                    id="grams_used"
+                                    label="Total Grams Used"
+                                    placeholder="Total Grams Used"
+                                    style={{ "width": "30%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    value={this.state.grams_used}
+                                    onChange={(value) => this.onGenericChange(value)}
+                                />
+                                <TextField
+                                    id="amount_due"
+                                    label="Total Amount Due"
+                                    placeholder="Total Amount Due"
+                                    style={{ "width": "30%" }}
+                                    className={classes.textField}
+                                    InputProps={{
+                                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                    }}
+                                    margin="normal"
+                                    variant="outlined"
+                                    value={this.state.amount_due}
+                                    onChange={(value) => this.onGenericChange(value)}
+                                />
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
+                                <TextField
+                                    id="receipt_number"
+                                    label="Receipt #"
+                                    placeholder="Receipt #"
+                                    style={{ "width": "30%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    value={this.state.receipt_number}
+                                    onChange={(value) => this.onGenericChange(value)}
+                                />
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
+                                        <KeyboardDatePicker
+                                            disableToolbar
+                                            variant="inline"
+                                            format="MM/dd/yyyy"
+                                            placeholder='mm/dd/yyyy'
+                                            margin="normal"
+                                            id="expected_date"
+                                            label="Expected Pick-Up Date"
+                                            value={this.state.pickup_date}
+                                            onChange={this.handlePickUpDateChange}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date',
+                                            }}
+                                        />
+                                    </Grid>
+                                </MuiPickersUtilsProvider>
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
+                                <Grid item xs={12} sm={3} style={{ "marginLeft": "1%", "marginTop": "1.5%" }}>
+                                    <FormGroup row>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    id="job_completed_check"
+                                                    checked={this.state.job_completed_check}
+                                                    onChange={() => this.handleCompletedChange()}
+                                                    color="primary"
+                                                    value={this.state.job_completed_check}
+                                                />
+                                            }
+                                            label="Job Completed"
+                                        />
+                                    </FormGroup>
                                 </Grid>
-                            </MuiPickersUtilsProvider>
-                        </ListItem>
-                        <ListItem className={classes.listItem}>
-                            <TextField
-                                id="grams_used"
-                                label="Total Grams Used"
-                                placeholder="Total Grams Used"
-                                style={{ "width": "30%" }}
-                                className={classes.textField}
-                                margin="normal"
-                                variant="outlined"
-                                value={this.state.grams_used}
-                                onChange={(value) => this.onGenericChange(value)}
-                            />
-                            <TextField
-                                id="amount_due"
-                                label="Total Amount Due"
-                                placeholder="Total Amount Due"
-                                style={{ "width": "30%" }}
-                                className={classes.textField}
-                                InputProps={{
-                                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                                }}
-                                margin="normal"
-                                variant="outlined"
-                                value={this.state.amount_due}
-                                onChange={(value) => this.onGenericChange(value)}
-                            />
-                        </ListItem>
-                        <ListItem className={classes.listItem}>
-                            <TextField
-                                id="receipt_number"
-                                label="Receipt #"
-                                placeholder="Receipt #"
-                                style={{ "width": "30%" }}
-                                className={classes.textField}
-                                margin="normal"
-                                variant="outlined"
-                                value={this.state.receipt_number}
-                                onChange={(value) => this.onGenericChange(value)}
-                            />
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
-                                    <KeyboardDatePicker
-                                        disableToolbar
-                                        variant="inline"
-                                        format="MM/dd/yyyy"
-                                        placeholder='mm/dd/yyyy'
-                                        margin="normal"
-                                        id="expected_date"
-                                        label="Expected Pick-Up Date"
-                                        value={this.state.pickup_date}
-                                        onChange={this.handlePickUpDateChange}
-                                        KeyboardButtonProps={{
-                                            'aria-label': 'change date',
-                                        }}
-                                    />
-                                </Grid>
-                            </MuiPickersUtilsProvider>
-                        </ListItem>
-                        <ListItem className={classes.listItem}>
-                            <Grid item xs={12} sm={3} style={{ "marginLeft": "1%", "marginTop": "1.5%" }}>
-                                <FormGroup row>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                id="job_completed_check"
-                                                checked={this.state.job_completed_check}
-                                                onChange={() => this.handleCompletedChange()}
-                                                color="primary"
-                                                value={this.state.job_completed_check}
-                                            />
-                                        }
-                                        label="Job Completed"
-                                    />
-                                </FormGroup>
-                            </Grid>
-                        </ListItem>
+                            </ListItem>
 
-                        <ListItem className={classes.listItem}>
-                            <TextField
-                                id="job_completed_GA"
-                                label="Completed GA"
-                                placeholder="Completed GA"
-                                style={{ "width": "30%" }}
-                                className={classes.textField}
-                                margin="normal"
-                                disabled={this.state.job_completed_check === false ? true : false}
-                                variant="outlined"
-                                value={this.state.job_completed_GA}
-                                onChange={(value) => this.onGenericChange(value)}
-                            />
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
-                                    <KeyboardDatePicker
-                                        disableToolbar
-                                        variant="inline"
-                                        format="MM/dd/yyyy"
-                                        placeholder='mm/dd/yyyy'
-                                        margin="normal"
-                                        id="job_completion_date"
-                                        disabled={this.state.job_completed_check === false ? true : false}
-                                        label="Job Completion Date"
-                                        value={this.state.job_completion_date}
-                                        onChange={this.handleCompletedDateChange}
-                                        KeyboardButtonProps={{
-                                            'aria-label': 'change date',
-                                        }}
-                                    />
+                            <ListItem className={classes.listItem}>
+                                <TextField
+                                    id="job_completed_GA"
+                                    label="Completed GA"
+                                    placeholder="Completed GA"
+                                    style={{ "width": "30%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    disabled={this.state.job_completed_check === false ? true : false}
+                                    variant="outlined"
+                                    value={this.state.job_completed_GA}
+                                    onChange={(value) => this.onGenericChange(value)}
+                                />
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
+                                        <KeyboardDatePicker
+                                            disableToolbar
+                                            variant="inline"
+                                            format="MM/dd/yyyy"
+                                            placeholder='mm/dd/yyyy'
+                                            margin="normal"
+                                            id="job_completion_date"
+                                            disabled={this.state.job_completed_check === false ? true : false}
+                                            label="Job Completion Date"
+                                            value={this.state.job_completion_date}
+                                            onChange={this.handleCompletedDateChange}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date',
+                                            }}
+                                        />
+                                    </Grid>
+                                </MuiPickersUtilsProvider>
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
+                                <Grid item xs={12} sm={3} style={{ "marginLeft": "1%", "marginTop": "1.5%" }}>
+                                    <FormGroup row>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    id="job_delivered_check"
+                                                    disabled={this.state.job_completed_check ? false : true}
+                                                    checked={(this.state.job_completed_check && this.state.job_delivered_check) ? true : false}
+                                                    onChange={() => this.handleDeliveredChange()}
+                                                    color="primary"
+                                                    value={this.state.job_delivered_check}
+                                                />
+                                            }
+                                            label="Job Delivered"
+                                        />
+                                    </FormGroup>
                                 </Grid>
-                            </MuiPickersUtilsProvider>
-                        </ListItem>
-                        <ListItem className={classes.listItem}>
-                            <Grid item xs={12} sm={3} style={{ "marginLeft": "1%", "marginTop": "1.5%" }}>
-                                <FormGroup row>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                id="job_delivered_check"
-                                                disabled={this.state.job_completed_check ? false : true}
-                                                checked={(this.state.job_completed_check && this.state.job_delivered_check) ? true : false}
-                                                onChange={() => this.handleDeliveredChange()}
-                                                color="primary"
-                                                value={this.state.job_delivered_check}
-                                            />
-                                        }
-                                        label="Job Delivered"
-                                    />
-                                </FormGroup>
-                            </Grid>
-                        </ListItem>
+                            </ListItem>
 
-                        <ListItem className={classes.listItem}>
-                            <TextField
-                                id="job_delivered_GA"
-                                label="Delivered GA"
-                                placeholder="Delivered GA"
-                                style={{ "width": "30%" }}
-                                className={classes.textField}
-                                margin="normal"
-                                variant="outlined"
-                                disabled={this.state.job_delivered_check === false ? true : false}
-                                value={this.state.job_delivered_GA}
-                                onChange={(value) => this.onGenericChange(value)}
-                            />
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
-                                    <KeyboardDatePicker
-                                        disableToolbar
-                                        variant="inline"
-                                        format="MM/dd/yyyy"
-                                        placeholder='mm/dd/yyyy'
-                                        margin="normal"
-                                        id="job_delivery_date"
-                                        label="Job Delivery Date"
-                                        disabled={this.state.job_delivered_check === false ? true : false}
-                                        value={this.state.job_delivery_date}
-                                        onChange={this.handleDeliveredDateChange}
-                                        KeyboardButtonProps={{
-                                            'aria-label': 'change date',
-                                        }}
-                                    />
-                                </Grid>
-                            </MuiPickersUtilsProvider>
-                        </ListItem>
-                    </List>
-                </Dialog>
-            </div>
+                            <ListItem className={classes.listItem}>
+                                <TextField
+                                    id="job_delivered_GA"
+                                    label="Delivered GA"
+                                    placeholder="Delivered GA"
+                                    style={{ "width": "30%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    disabled={this.state.job_delivered_check === false ? true : false}
+                                    value={this.state.job_delivered_GA}
+                                    onChange={(value) => this.onGenericChange(value)}
+                                />
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
+                                        <KeyboardDatePicker
+                                            disableToolbar
+                                            variant="inline"
+                                            format="MM/dd/yyyy"
+                                            placeholder='mm/dd/yyyy'
+                                            margin="normal"
+                                            id="job_delivery_date"
+                                            label="Job Delivery Date"
+                                            disabled={this.state.job_delivered_check === false ? true : false}
+                                            value={this.state.job_delivery_date}
+                                            onChange={this.handleDeliveredDateChange}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date',
+                                            }}
+                                        />
+                                    </Grid>
+                                </MuiPickersUtilsProvider>
+                            </ListItem>
+                        </List>
+                    </Dialog>
+                </div>
+                <Snackbar
+                    open={this.state.updateSnackbarSuccessStatus}
+                    onClose={() => this.handleUpdateSuccessSnackbarClose()}
+                    autoHideDuration={5000}
+                >
+                    <SnackbarContent
+                        style={{ "background": "green" }}
+                        aria-describedby="client-snackbar"
+                        message={
+                            <span id="client-snackbar" className={classes.message}>
+                                <CheckCircleIcon className={clsx(classes.icon, classes.iconVariant)} />
+                                Updated Successfully...!
+                            </span>
+                        }
+                        action={[
+                            <IconButton
+                                key="close"
+                                aria-label="close"
+                                color="inherit"
+                                className={classes.close}
+                                onClick={() => this.handleUpdateSuccessSnackbarClose()}
+                            >
+                                <CloseIcon />
+                            </IconButton>,
+                        ]}
+                    />
+                </Snackbar>
+                <Snackbar
+                    open={this.state.updateSnackbarFailStatus}
+                    onClose={() => this.handleUpdateFailSnackbarClose()}
+                    autoHideDuration={5000}
+                >
+                    <SnackbarContent
+                        style={{ "background": "red" }}
+                        aria-describedby="client-snackbar"
+                        message={
+                            <span id="client-snackbar" className={classes.message}>
+                                <ErrorIcon className={clsx(classes.icon, classes.iconVariant)} />
+                                Unable to update, please try again
+                            </span>
+                        }
+                        action={[
+                            <IconButton
+                                key="close"
+                                aria-label="close"
+                                color="inherit"
+                                className={classes.close}
+                                onClick={() => this.handleUpdateFailSnackbarClose()}
+                            >
+                                <CloseIcon />
+                            </IconButton>,
+                        ]}
+                    />
+                </Snackbar>
+            </div >
         );
     }
 }
