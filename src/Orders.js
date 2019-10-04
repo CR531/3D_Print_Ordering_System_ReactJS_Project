@@ -136,20 +136,6 @@ class Orders extends Component {
         const { classes } = this.props;
         return (
             <div>
-                {/* {this.state.open_Dialog &&
-                    <Router>
-                        <Switch>
-
-                            <Route
-                                path='/dashboard'
-                                component={() => <FormEdit
-                                    open_Dialog={this.state.open_Dialog}
-                                    selected_Order={this.state.selected_Order}
-                                    onDialogClose={this.dialog_close} />}
-                            />
-                        </Switch>
-                    </Router>
-                } */}
                 {this.state.open_Dialog && <div>
                     <FormEdit
                         open_Dialog={this.state.open_Dialog}
