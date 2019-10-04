@@ -31,6 +31,11 @@ const styles = theme => ({
     close: {
         padding: theme.spacing(0.5),
     },
+    main_heading: {
+        fontSize: "x-large",
+        fontWeight: "500",
+        fontVariant: "all-petite-caps",
+    },
     saved_heading: {
         fontSize: "large",
         fontWeight: "500",
@@ -224,7 +229,7 @@ class RequestForm extends Component {
                     ))}
                 </Stepper>
                 {(this.state.activeStep === 0) && <div className={classes.form_css}>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6" gutterBottom className={classes.main_heading}>
                         Request Form
       </Typography>
                     <Grid container spacing={3}>

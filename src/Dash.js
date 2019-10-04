@@ -21,6 +21,11 @@ const styles = theme => ({
     root: {
         display: 'flex',
     },
+    main_heading: {
+        fontSize: "x-large",
+        fontWeight: "500",
+        fontVariant: "all-petite-caps",
+    },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
     },
@@ -91,7 +96,7 @@ class Dash extends Component {
                         }}
                     >
                         <div className={classes.toolbar} />
-                        <List>
+                        <List className={classes.main_heading}>
                             <ListItem className={classes.menu_list}>
                                 <ListItemText className={classes.menu_text} primary="Menu" />
                             </ListItem>

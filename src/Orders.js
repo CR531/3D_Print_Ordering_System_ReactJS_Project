@@ -14,6 +14,7 @@ import axios from 'axios';
 import { Card } from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import FormEdit from "./FormEdit";
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 
 const styles = theme => ({
     root: {
@@ -135,6 +136,20 @@ class Orders extends Component {
         const { classes } = this.props;
         return (
             <div>
+                {/* {this.state.open_Dialog &&
+                    <Router>
+                        <Switch>
+
+                            <Route
+                                path='/dashboard'
+                                component={() => <FormEdit
+                                    open_Dialog={this.state.open_Dialog}
+                                    selected_Order={this.state.selected_Order}
+                                    onDialogClose={this.dialog_close} />}
+                            />
+                        </Switch>
+                    </Router>
+                } */}
                 {this.state.open_Dialog && <div>
                     <FormEdit
                         open_Dialog={this.state.open_Dialog}
@@ -142,7 +157,6 @@ class Orders extends Component {
                         onDialogClose={this.dialog_close}
                     />
                 </div>}
-
                 {!(this.state.open_Dialog) &&
                     <div className={classes.root} >
                         <Typography className={classes.main_heading}><b>Order History</b></Typography>

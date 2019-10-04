@@ -158,6 +158,15 @@ class FormEdit extends Component {
             job_delivery_date: this.state.job_delivery_date,
             id: this.state.id
         };
+        // axios.put('https://localhost:4000/printOrder/1', {
+        //     name: 'Tophat Cat'
+        // })
+        //     .then(response => {
+        //         console.log(response);
+        //     })
+        //     .catch(error => {
+        //         console.log(err);
+        //     });
         const URL = "http://localhost:4000/printOrder/update/" + this.state.id;
         console.log("URL is :" + URL);
         await axios.post('http://localhost:4000/printOrder/update/' + this.state.id, obj)
