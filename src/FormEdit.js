@@ -207,15 +207,18 @@ class FormEdit extends Component {
                 this.setState({ update_response: res.data });
                 console.log("response is :" + this.state.update_response.printOrder);
             });
-        if (this.state.update_response.printOrder === "printOrder updated successfully") {
-            await this.setState({ updateSnackbarSuccessStatus: true })
+        await this.checkResponse(this.state.update_response.printOrder);
+    }
+    checkResponse = async (val) => {
+        if (val !== "update_success") {
+            this.setState({ ...this.state, updateSnackbarSuccessStatus: true, updateSnackbarFailStatus: false })
             console.log("Status are :" + this.state.updateSnackbarSuccessStatus + " and " + this.state.updateSnackbarFailStatus);
-            await this.wait(1000);
+            // await this.wait(1000);
         }
-        if (this.state.update_response.printOrder !== "printOrder updated successfully") {
-            await this.setState({ updateSnackbarFailStatus: true })
+        if (val === "update_success") {
+            this.setState({ ...this.state, updateSnackbarFailStatus: true, updateSnackbarSuccessStatus: false })
             console.log("Status are :" + this.state.updateSnackbarSuccessStatus + " and " + this.state.updateSnackbarFailStatus);
-            await this.wait(1000);
+            // await this.wait(1000);
         }
     }
 
