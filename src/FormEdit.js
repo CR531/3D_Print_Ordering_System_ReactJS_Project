@@ -101,8 +101,8 @@ class FormEdit extends Component {
             job_completed_GA: (this.props.selected_Order.job_completed_check === true ? this.props.selected_Order.job_completed_GA : ""),
             job_completion_date: (this.props.selected_Order.job_completed_check === true ? this.props.selected_Order.job_completion_date : null),
             job_delivered_check: this.props.selected_Order.job_delivered_check,
-            job_delivered_GA: (this.props.selected_Order.job_delivered_check ? this.props.selected_Order.job_delivered_GA : ""),
-            job_delivery_date: (this.props.selected_Order.job_delivered_check ? this.props.selected_Order.job_delivery_date : null),
+            job_delivered_GA: (this.props.selected_Order.job_delivered_check === true ? this.props.selected_Order.job_delivered_GA : ""),
+            job_delivery_date: (this.props.selected_Order.job_delivered_check === true ? this.props.selected_Order.job_delivery_date : null),
             id: this.props.selected_Order.id
         });
     }
@@ -110,11 +110,15 @@ class FormEdit extends Component {
         this.setState({
             ...this.state,
             job_completed_check: !(this.state.job_completed_check),
-            job_delivered_check: (this.state.job_completed_check ? false : false),
+            job_delivered_check: (this.state.job_completed_check === false ? false : ""),
         });
     }
     handleDeliveredChange = () => {
-        this.setState({ ...this.state, job_delivered_check: !(this.state.job_delivered_check) });
+
+        this.setState({
+            ...this.state,
+            job_delivered_check: !(this.state.job_delivered_check)
+        });
     }
     handleClose = () => {
         this.setState({ ...this.state, open_Dialog: false })
@@ -160,16 +164,16 @@ class FormEdit extends Component {
         this.setState({ ...this.state, [e.target.id]: e.target.value });
     }
     handleOrderDateChange = date => {
-        this.setState({ ...this.state, order_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
+        this.setState({ ...this.state, order_date: date });
     }
     handlePickUpDateChange = date => {
-        this.setState({ ...this.state, pickup_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
+        this.setState({ ...this.state, pickup_date: date });
     }
     handleCompletedDateChange = date => {
-        this.setState({ ...this.state, job_completion_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
+        this.setState({ ...this.state, job_completion_date: date });
     }
     handleDeliveredDateChange = date => {
-        this.setState({ ...this.state, job_delivery_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
+        this.setState({ ...this.state, job_delivery_date: date });
     }
     wait = (ms) => {
         var start = new Date().getTime();

@@ -6,7 +6,6 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import DateFnsUtils from '@date-io/date-fns';
 import { withStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
@@ -16,14 +15,12 @@ import IconButton from '@material-ui/core/IconButton';
 import clsx from 'clsx';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
-import {
-    MuiPickersUtilsProvider,
-    KeyboardDatePicker,
-} from '@material-ui/pickers';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import axios from 'axios';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 const styles = theme => ({
     root: {
         width: '90%',
@@ -49,6 +46,10 @@ const styles = theme => ({
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
         marginLeft: "1%",
+    },
+    date_instructions: {
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
     },
     stepper_buttons: {
         textAlign: "right",
@@ -79,7 +80,7 @@ const styles = theme => ({
         fontWeight: "500",
         fontSize: "large",
         fontVariant: "all-petite-caps",
-    },
+    }
 });
 class RequestForm extends Component {
     constructor(props) {
@@ -115,17 +116,18 @@ class RequestForm extends Component {
     onGenericChange = (e) => {
         this.setState({ ...this.state, [e.target.id]: e.target.value });
     }
+
     handleOrderDateChange = date => {
-        this.setState({ ...this.state, order_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
+        this.setState({ ...this.state, order_date: date });
     }
     handlePickUpDateChange = date => {
-        this.setState({ ...this.state, pickup_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
+        this.setState({ ...this.state, pickup_date: date });
     }
     handleCompletedDateChange = date => {
-        this.setState({ ...this.state, job_completion_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
+        this.setState({ ...this.state, job_completion_date: date });
     }
     handleDeliveredDateChange = date => {
-        this.setState({ ...this.state, job_delivery_date: (date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()) });
+        this.setState({ ...this.state, job_delivery_date: date });
     }
 
     handleSuccessSnackbarClose = () => {
@@ -211,11 +213,14 @@ class RequestForm extends Component {
         this.setState({
             ...this.state,
             job_completed_check: !(this.state.job_completed_check),
-            job_delivered_check: (this.state.job_completed_check ? false : false)
+            job_delivered_check: (this.state.job_completed_check === false ? false : ""),
         });
     }
     handleDeliveredChange = () => {
-        this.setState({ ...this.state, job_delivered_check: !(this.state.job_delivered_check) });
+        this.setState({
+            ...this.state,
+            job_delivered_check: !(this.state.job_delivered_check)
+        });
     }
     render() {
         const { classes } = this.props;
@@ -340,24 +345,16 @@ class RequestForm extends Component {
                                 onChange={(value) => this.onGenericChange(value)}
                             />
                         </Grid>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
-                                <KeyboardDatePicker
-                                    disableToolbar
-                                    variant="inline"
-                                    format="MM/dd/yyyy"
-                                    margin="normal"
-                                    id="order_date"
-                                    label="Order Date"
-                                    placeholder='mm/dd/yyyy'
-                                    value={this.state.order_date}
-                                    onChange={this.handleOrderDateChange}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
-                                />
-                            </Grid>
-                        </MuiPickersUtilsProvider>
+                        <Grid item xs={12} sm={6} className={classes.grid_margin}>
+                            <Typography style={{ "width": "90%" }} className={classes.date_instructions}><b>Order Date</b></Typography>
+                            <DatePicker
+                                id="order_date"
+                                label="Order Date"
+                                placeholderText="mm/dd/yyyy"
+                                selected={this.state.order_date}
+                                onChange={this.handleOrderDateChange}
+                            />
+                        </Grid>
                         <Grid item xs={12} sm={12} className={classes.grid_margin}>
                             <TextField
                                 id="grams_used"
@@ -387,24 +384,17 @@ class RequestForm extends Component {
                                 onChange={(value) => this.onGenericChange(value)}
                             />
                         </Grid>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
-                                <KeyboardDatePicker
-                                    disableToolbar
-                                    variant="inline"
-                                    format="MM/dd/yyyy"
-                                    placeholder='mm/dd/yyyy'
-                                    margin="normal"
-                                    id="expected_date"
-                                    label="Expected Pick-Up Date"
-                                    value={this.state.pickup_date}
-                                    onChange={this.handlePickUpDateChange}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
-                                />
-                            </Grid>
-                        </MuiPickersUtilsProvider>
+                        <Grid item xs={12} sm={6} className={classes.grid_margin}>
+                            <Typography style={{ "width": "90%" }} className={classes.date_instructions}><b>Expected Pick-Up Date</b></Typography>
+                            <DatePicker
+                                id="expected_date"
+                                label="Expected Pick-Up Date"
+                                placeholderText="mm/dd/yyyy"
+                                selected={this.state.pickup_date}
+                                onChange={this.handlePickUpDateChange}
+                            />
+                        </Grid>
+
                         <Grid item xs={12} sm={12} style={{ "marginBottom": "-3%", "marginTop": "-2%" }}>
                             <Typography style={{ "width": "90%" }} className={classes.instructions}><b>$0.20 per gram (minimum of $1.00) </b></Typography>
                         </Grid>
@@ -477,24 +467,17 @@ class RequestForm extends Component {
                                 />
                             </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
                         {this.state.job_completed_check ?
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
-                                    <KeyboardDatePicker
-                                        disableToolbar
-                                        variant="inline"
-                                        format="MM/dd/yyyy"
-                                        placeholder='mm/dd/yyyy'
-                                        margin="normal"
-                                        id="job_completion_date"
-                                        label="Job Completion Date"
-                                        value={this.state.job_completion_date}
-                                        onChange={this.handleCompletedDateChange}
-                                        KeyboardButtonProps={{
-                                            'aria-label': 'change date',
-                                        }}
-                                    />
-                                </Grid>
-                            </MuiPickersUtilsProvider> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
+                            <Grid item xs={12} sm={6} className={classes.grid_margin}>
+                                <Typography style={{ "width": "90%" }} className={classes.date_instructions}><b>Job Completion Date</b></Typography>
+                                <DatePicker
+                                    id="job_completion_date"
+                                    label="Job Completion Date"
+                                    placeholderText="mm/dd/yyyy"
+                                    selected={this.state.job_completion_date}
+                                    onChange={this.handleCompletedDateChange}
+                                />
+                            </Grid>
+                            : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
                         <Grid item xs={12} sm={3} className={classes.grid_margin}>
                             <FormGroup row>
                                 <FormControlLabel
@@ -528,24 +511,17 @@ class RequestForm extends Component {
                                 />
                             </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
                         {this.state.job_delivered_check ?
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
-                                    <KeyboardDatePicker
-                                        disableToolbar
-                                        variant="inline"
-                                        format="MM/dd/yyyy"
-                                        placeholder='mm/dd/yyyy'
-                                        margin="normal"
-                                        id="job_delivery_date"
-                                        label="Job Delivery Date"
-                                        value={this.state.job_delivery_date}
-                                        onChange={this.handleDeliveredDateChange}
-                                        KeyboardButtonProps={{
-                                            'aria-label': 'change date',
-                                        }}
-                                    />
-                                </Grid>
-                            </MuiPickersUtilsProvider> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
+                            <Grid item xs={12} sm={6} className={classes.grid_margin}>
+                                <Typography style={{ "width": "90%" }} className={classes.date_instructions}><b>Job Delivery Date</b></Typography>
+                                <DatePicker
+                                    id="job_delivery_date"
+                                    label="Job Delivery Date"
+                                    placeholderText="mm/dd/yyyy"
+                                    selected={this.state.job_delivery_date}
+                                    onChange={this.handleDeliveredDateChange}
+                                />
+                            </Grid>
+                            : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
                         <Grid item xs={12} sm={3} />
                     </Grid>
                 </div>}

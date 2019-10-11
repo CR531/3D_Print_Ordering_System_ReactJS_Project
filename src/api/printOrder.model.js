@@ -26,7 +26,7 @@ let PrintOrder = new Schema({
         type: String
     },
     order_date: {
-        type: String
+        type: Date
     },
     grams_used: {
         type: String
@@ -35,7 +35,7 @@ let PrintOrder = new Schema({
         type: String
     },
     pickup_date: {
-        type: String
+        type: Date
     },
     receipt_number: {
         type: String
@@ -50,7 +50,7 @@ let PrintOrder = new Schema({
         type: String
     },
     job_completion_date: {
-        type: String
+        type: Date
     },
     job_delivered_check: {
         type: Boolean
@@ -59,7 +59,7 @@ let PrintOrder = new Schema({
         type: String
     },
     job_delivery_date: {
-        type: String
+        type: Date
     }
 }, {
     collection: 'printOrder'
