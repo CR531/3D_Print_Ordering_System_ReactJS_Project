@@ -14,6 +14,7 @@ import axios from 'axios';
 import { Card } from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import FormEdit from "./FormEdit";
+import TextField from '@material-ui/core/TextField';
 
 const styles = theme => ({
     root: {
@@ -21,6 +22,10 @@ const styles = theme => ({
         marginLeft: "4%",
         marginRight: "4%",
         marginTop: "3%",
+    },
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
     },
     main_heading: {
         fontSize: "x-large",
@@ -102,14 +107,15 @@ class Orders extends Component {
             active_index: -1,
             open_Dialog: false,
             selected_Order: {},
-            orders: []
+            orders: [],
+            sorted_data: []
         }
     }
 
-    componentDidMount() {
-        axios.get('http://localhost:4000/printOrder')
+    async componentDidMount() {
+        await axios.get('http://localhost:4000/printOrder')
             .then(response => {
-                this.setState({ orders: response.data });
+                this.setState({ ...this.state, orders: response.data, sorted_data: response.data });
                 console.log(this.state.orders);
             })
             .catch(function (error) {
@@ -131,6 +137,24 @@ class Orders extends Component {
     dialog_close = (value) => {
         this.setState({ ...this.state, open_Dialog: value })
     }
+    filterData = (e) => {
+        var x = -1;
+        const updatedList = this.state.orders.filter(item => {
+            if (((item.name.toString().toLowerCase().search(e.target.value.toString().toLowerCase())) === 0)
+                || ((item.receipt_number.search(e.target.value) === 0))
+                || ((item.wsuid.toString().toLowerCase().search(e.target.value.toString().toLowerCase()) === 0))) {
+                console.log("Either Name or Receipt number or WSU ID Matched");
+                x = 0;
+            } else {
+                x = -1;
+            }
+            return (
+                x !== -1
+            );
+        });
+
+        this.setState({ ...this.state, sorted_data: updatedList });
+    };
     render() {
         const { classes } = this.props;
         return (
@@ -160,7 +184,32 @@ class Orders extends Component {
                         }
                         {this.state.orders &&
                             this.state.orders.length > 0 &&
-                            this.state.orders.map((listValue, index) => {
+                            <TextField
+                                id="search"
+                                label="Search...."
+                                placeholder="Name, Wsu ID, Receipt Number"
+                                style={{ "width": "98%" }}
+                                className={classes.textField}
+                                margin="normal"
+                                variant="outlined"
+                                onChange={(value) => this.filterData(value)}
+                            />
+                        }
+                        {this.state.sorted_data &&
+                            this.state.sorted_data.length === 0 &&
+                            <div>
+                                <Card className={classes.card}>
+                                    <CardContent>
+                                        <Typography className={classes.card_data} color="textSecondary" gutterBottom>
+                                            There are no matching Orders
+                                    </Typography>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        }
+                        {this.state.sorted_data &&
+                            this.state.sorted_data.length > 0 &&
+                            this.state.sorted_data.map((listValue, index) => {
                                 return (
                                     <ExpansionPanel expanded={this.state.active_index === index}
                                         onChange={() => this.handleExpChange(index)}
@@ -267,7 +316,6 @@ class Orders extends Component {
                                     </ExpansionPanel>
                                 );
                             })}
-
                     </div >
                 }</div>
         );
