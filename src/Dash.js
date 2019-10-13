@@ -13,8 +13,8 @@ import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
 import RequestForm from "./RequestForm";
 import Orders from "./Orders";
-import { BrowserRouter as Router, Switch, Link } from 'react-router-dom';
-
+import Home from "./Home";
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -68,19 +68,19 @@ class Dash extends Component {
     constructor() {
         super();
         this.state = {
-            form_selected: false,
-            history_selected: true
+            home_selected: true,
+            req_form_selected: false,
+            orders_selected: false
         }
-        this.form_button_change = this.form_button_change.bind(this);
-        this.history_button_change = this.history_button_change.bind(this);
     }
-    form_button_change = e => {
-        this.setState({ history_selected: false, form_selected: true });
-        console.log(`form Selected value is :`, this.state.form_selected);
+    handleHome = () => {
+        this.setState({ ...this.state, home_selected: true, req_form_selected: false, orders_selected: false });
     };
-    history_button_change = e => {
-        this.setState({ form_selected: false, history_selected: true });
-        console.log(`History Selected value is :`, this.state.history_selected);
+    handleRequestForm = () => {
+        this.setState({ ...this.state, home_selected: false, req_form_selected: true, orders_selected: false });
+    };
+    handleOrders = () => {
+        this.setState({ ...this.state, home_selected: false, req_form_selected: false, orders_selected: true });
     };
     render() {
         const { classes } = this.props;
@@ -96,59 +96,59 @@ class Dash extends Component {
                         }}
                     >
                         <div className={classes.toolbar} />
+
                         <List className={classes.main_heading}>
                             <ListItem className={classes.menu_list}>
                                 <ListItemText className={classes.menu_text} primary="Menu" />
                             </ListItem>
                             <Divider />
-                            <ListItem
-                                button
-                                onClick={this.form_button_change}
-                                selected={this.state.form_selected}
-                                component={Link} to="/request_form"
-                            >
-                                <ListItemIcon>
-                                    <SendIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Request Form" />
-                            </ListItem>
+                            <Link to="/">
+                                <ListItem
+                                    button
+                                    onClick={() => this.handleHome()}
+                                    selected={this.state.home_selected}
+                                >
+                                    <ListItemIcon>
+                                        <SendIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Home" />
+                                </ListItem>
+                            </Link>
                             <Divider />
-                            <ListItem button
-                                onClick={this.history_button_change}
-                                component={Link} to="/orders"
-                                selected={this.state.history_selected}>
-                                <ListItemIcon>
-                                    <DraftsIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Orders" />
-                            </ListItem>
+                            <Link to="/request_form">
+                                <ListItem
+                                    button
+                                    onClick={() => this.handleRequestForm()}
+                                    selected={this.state.req_form_selected}
+                                >
+                                    <ListItemIcon>
+                                        <SendIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Request Form" />
+                                </ListItem>
+                            </Link>
+                            <Divider />
+                            <Link to="/orders">
+                                <ListItem button
+                                    onClick={() => this.handleOrders()}
+                                    selected={this.state.orders_selected}>
+                                    <ListItemIcon>
+                                        <DraftsIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Orders" />
+                                </ListItem>
+                            </Link>
                         </List>
                         <Divider />
                     </Drawer>
-                    {/* <Switch>
-                        <Card className={classes.card_css}>
-                            <Typography paragraph>
-                                {this.state.form_selected && <Route exact path='/request_form' component={RequestForm} />}
-                                <Route path='/edit/:id' component={} />
-                                {this.state.history_selected && <Route path='/orders' component={Orders} />}
-                            </Typography>
-                        </Card>
-                    </Switch> */}
-                    <Switch>
-                        <Card className={classes.card_css}>
-                            {this.state.form_selected && <Typography paragraph>
-                                {/* <Route exact path='/request_form' component={RequestForm} /> */}
-                                <RequestForm />
-                            </Typography>}
-                            {this.state.history_selected && <Typography paragraph>
-                                {/* <Route path='/orders' component={Orders} /> */}
-                                <Orders />
-                            </Typography>}
-                        </Card>
-                    </Switch>
-                </div>
+                    <Card className={classes.card_css}>
+                        <Route exact path='/' component={Home} />
+                        <Route path='/request_form' component={RequestForm} />
+                        <Route path='/orders' component={Orders} />
+                    </Card>
+                </div >
             </Router>
         );
     }
 }
-export default withStyles(styles)(Dash);
+export default withStyles(styles)(Dash)

@@ -225,7 +225,7 @@ class RequestForm extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.root}>
+            <div className={classes.root} style={{ "marginBottom": "2%" }}>
                 <Stepper activeStep={this.state.activeStep} alternativeLabel>
                     {this.state.steps.map(label => (
                         <Step key={label}>
