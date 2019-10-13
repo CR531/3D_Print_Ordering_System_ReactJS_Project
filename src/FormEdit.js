@@ -22,14 +22,21 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import axios from 'axios';
-import Snackbar from '@material-ui/core/Snackbar';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
-import clsx from 'clsx';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
+
 const styles = theme => ({
     close: {
         padding: theme.spacing(0.5),
+    },
+    response_dialog_css: {
+        width: "30%",
+    },
+    response_dialog_header_css: {
+        background: "rgba(255, 194, 23, 0.95)",
     },
     icon: {
         fontSize: 20,
@@ -100,7 +107,7 @@ class FormEdit extends Component {
             job_completed_check: this.props.selected_Order.job_completed_check,
             job_completed_GA: (this.props.selected_Order.job_completed_check === true ? this.props.selected_Order.job_completed_GA : ""),
             job_completion_date: (this.props.selected_Order.job_completed_check === true ? this.props.selected_Order.job_completion_date : null),
-            job_delivered_check: this.props.selected_Order.job_delivered_check,
+            job_delivered_check: (this.props.selected_Order.job_completed_check === true ? this.props.selected_Order.job_delivered_check : false),
             job_delivered_GA: (this.props.selected_Order.job_delivered_check === true ? this.props.selected_Order.job_delivered_GA : ""),
             job_delivery_date: (this.props.selected_Order.job_delivered_check === true ? this.props.selected_Order.job_delivery_date : null),
             id: this.props.selected_Order.id
@@ -109,8 +116,8 @@ class FormEdit extends Component {
     handleCompletedChange = () => {
         this.setState({
             ...this.state,
-            job_completed_check: !(this.state.job_completed_check),
-            job_delivered_check: (this.state.job_completed_check === false ? false : ""),
+            job_completed_check: !(this.state.job_completed_check)
+            // job_delivered_check: (this.state.job_completed_check === false ? false : this.state.job_delivered_check),
         });
     }
     handleDeliveredChange = () => {
@@ -124,17 +131,14 @@ class FormEdit extends Component {
         this.setState({ ...this.state, open_Dialog: false })
         this.props.onDialogClose(false);
     }
-    handleUpdateSuccessSnackbarClose = () => {
-        this.setState({ ...this.state, updateSnackbarSuccessStatus: false })
-    }
-    handleUpdateFailSnackbarClose = () => {
-        this.setState({ ...this.state, updateSnackbarFailStatus: false })
+    handleResponseClose = () => {
+        this.setState({ ...this.state, open_new_dialog: false, open_Dialog: false })
+        this.props.onDialogClose(false);
     }
     constructor(props) {
         super(props);
         this.state = {
-            updateSnackbarSuccessStatus: false,
-            updateSnackbarFailStatus: false,
+            open_new_dialog: false,
             update_response: {},
             open_Dialog: false,
             orders: [],
@@ -198,11 +202,11 @@ class FormEdit extends Component {
             receipt_number: this.state.receipt_number,
             remark_notes: this.state.remark_notes,
             job_completed_check: this.state.job_completed_check,
-            job_completed_GA: this.state.job_completed_GA,
-            job_completion_date: this.state.job_completion_date,
-            job_delivered_check: this.state.job_delivered_check,
-            job_delivered_GA: this.state.job_delivered_GA,
-            job_delivery_date: this.state.job_delivery_date,
+            job_completed_GA: (this.state.job_completed_check === false ? "" : this.state.job_completed_GA),
+            job_completion_date: (this.state.job_completed_check === false ? null : this.state.job_completion_date),
+            job_delivered_check: (this.state.job_completed_check === false ? false : this.state.job_delivered_check),
+            job_delivered_GA: (((this.state.job_completed_check === false) || (this.state.job_delivered_check === false)) ? "" : this.state.job_delivered_GA),
+            job_delivery_date: (((this.state.job_completed_check === false) || (this.state.job_delivered_check === false)) ? null : this.state.job_delivery_date),
             id: this.state.id
         };
         axios.post('http://localhost:4000/printOrder/update/' + this.props.selected_Order._id, obj)
@@ -210,26 +214,37 @@ class FormEdit extends Component {
                 console.log("outcome response is :" + res.data);
                 this.setState({ update_response: res.data });
                 console.log("response is :" + this.state.update_response.printOrder);
+                console.log("response is :" + this.state.update_response);
             });
         await this.checkResponse(this.state.update_response.printOrder);
     }
     checkResponse = async (val) => {
-        if (val !== "update_success") {
-            this.setState({ ...this.state, updateSnackbarSuccessStatus: true, updateSnackbarFailStatus: false })
-            console.log("Status are :" + this.state.updateSnackbarSuccessStatus + " and " + this.state.updateSnackbarFailStatus);
-            // await this.wait(1000);
-        }
-        if (val === "update_success") {
-            this.setState({ ...this.state, updateSnackbarFailStatus: true, updateSnackbarSuccessStatus: false })
-            console.log("Status are :" + this.state.updateSnackbarSuccessStatus + " and " + this.state.updateSnackbarFailStatus);
-            // await this.wait(1000);
-        }
+        this.setState({ ...this.state, open_new_dialog: true })
     }
 
     render() {
         const { classes } = this.props;
         return (
-            <div>
+            <div>{this.state.open_new_dialog && <div className={classes.response_dialog_css}>
+                <Dialog
+                    open={true}
+                    onClose={() => this.handleResponseClose()}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle className={classes.response_dialog_header_css} id="alert-dialog-title">{"Update Status"}</DialogTitle>
+                    <Divider />
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            {this.state.update_response.printOrder}
+                        </DialogContentText>
+                    </DialogContent>
+                    <Divider />
+                    <DialogActions>
+                        <Button onClick={() => this.handleResponseClose()} color="primary" autoFocus>Ok</Button>
+                    </DialogActions>
+                </Dialog>
+            </div>}
                 <div>
                     <Dialog fullScreen open={this.state.open_Dialog} onClose={() => this.handleClose()} TransitionComponent={Transition}>
                         <AppBar className={classes.appBar} style={{ "background": "#3b3b3b" }}>
@@ -403,7 +418,7 @@ class FormEdit extends Component {
                                             control={
                                                 <Checkbox
                                                     id="job_completed_check"
-                                                    checked={this.state.job_completed_check}
+                                                    checked={this.state.job_completed_check === true ? true : false}
                                                     onChange={() => this.handleCompletedChange()}
                                                     color="primary"
                                                     value={this.state.job_completed_check}
@@ -455,8 +470,8 @@ class FormEdit extends Component {
                                             control={
                                                 <Checkbox
                                                     id="job_delivered_check"
-                                                    disabled={this.state.job_completed_check ? false : true}
-                                                    checked={(this.state.job_completed_check && this.state.job_delivered_check) ? true : false}
+                                                    disabled={this.state.job_completed_check === false ? true : false}
+                                                    checked={(this.state.job_delivered_check === true) ? true : false}
                                                     onChange={() => this.handleDeliveredChange()}
                                                     color="primary"
                                                     value={this.state.job_delivered_check}
@@ -477,7 +492,7 @@ class FormEdit extends Component {
                                     className={classes.textField}
                                     margin="normal"
                                     variant="outlined"
-                                    disabled={this.state.job_delivered_check === false ? true : false}
+                                    disabled={((this.state.job_completed_check === false) || (this.state.job_delivered_check === false)) ? true : false}
                                     value={this.state.job_delivered_GA}
                                     onChange={(value) => this.onGenericChange(value)}
                                 />
@@ -491,7 +506,7 @@ class FormEdit extends Component {
                                             margin="normal"
                                             id="job_delivery_date"
                                             label="Job Delivery Date"
-                                            disabled={this.state.job_delivered_check === false ? true : false}
+                                            disabled={((this.state.job_completed_check === false) || (this.state.job_delivered_check === false)) ? true : false}
                                             value={this.state.job_delivery_date}
                                             onChange={this.handleDeliveredDateChange}
                                             KeyboardButtonProps={{
@@ -504,60 +519,6 @@ class FormEdit extends Component {
                         </List>
                     </Dialog>
                 </div>
-                <Snackbar
-                    open={this.state.updateSnackbarSuccessStatus}
-                    onClose={() => this.handleUpdateSuccessSnackbarClose()}
-                    autoHideDuration={5000}
-                >
-                    <SnackbarContent
-                        style={{ "background": "green" }}
-                        aria-describedby="client-snackbar"
-                        message={
-                            <span id="client-snackbar" className={classes.message}>
-                                <CheckCircleIcon className={clsx(classes.icon, classes.iconVariant)} />
-                                Updated Successfully...!
-                            </span>
-                        }
-                        action={[
-                            <IconButton
-                                key="close"
-                                aria-label="close"
-                                color="inherit"
-                                className={classes.close}
-                                onClick={() => this.handleUpdateSuccessSnackbarClose()}
-                            >
-                                <CloseIcon />
-                            </IconButton>,
-                        ]}
-                    />
-                </Snackbar>
-                <Snackbar
-                    open={this.state.updateSnackbarFailStatus}
-                    onClose={() => this.handleUpdateFailSnackbarClose()}
-                    autoHideDuration={5000}
-                >
-                    <SnackbarContent
-                        style={{ "background": "red" }}
-                        aria-describedby="client-snackbar"
-                        message={
-                            <span id="client-snackbar" className={classes.message}>
-                                <ErrorIcon className={clsx(classes.icon, classes.iconVariant)} />
-                                Unable to update, please try again
-                            </span>
-                        }
-                        action={[
-                            <IconButton
-                                key="close"
-                                aria-label="close"
-                                color="inherit"
-                                className={classes.close}
-                                onClick={() => this.handleUpdateFailSnackbarClose()}
-                            >
-                                <CloseIcon />
-                            </IconButton>,
-                        ]}
-                    />
-                </Snackbar>
             </div >
         );
     }
