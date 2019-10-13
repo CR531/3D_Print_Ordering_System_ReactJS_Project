@@ -32,9 +32,6 @@ const styles = theme => ({
     close: {
         padding: theme.spacing(0.5),
     },
-    response_dialog_css: {
-        width: "30%",
-    },
     response_dialog_header_css: {
         background: "rgba(255, 194, 23, 0.95)",
     },
@@ -58,6 +55,9 @@ const styles = theme => ({
     title: {
         marginLeft: theme.spacing(2),
         flex: 1,
+        fontSize: "x-large",
+        fontWeight: "500",
+        fontVariant: "all-petite-caps",
     },
     textField: {
         marginLeft: theme.spacing(1),
@@ -116,12 +116,10 @@ class FormEdit extends Component {
     handleCompletedChange = () => {
         this.setState({
             ...this.state,
-            job_completed_check: !(this.state.job_completed_check)
-            // job_delivered_check: (this.state.job_completed_check === false ? false : this.state.job_delivered_check),
+            job_completed_check: !(this.state.job_completed_check),
         });
     }
     handleDeliveredChange = () => {
-
         this.setState({
             ...this.state,
             job_delivered_check: !(this.state.job_delivered_check)
@@ -130,10 +128,12 @@ class FormEdit extends Component {
     handleClose = () => {
         this.setState({ ...this.state, open_Dialog: false })
         this.props.onDialogClose(false);
+        window.location.reload(false);
     }
     handleResponseClose = () => {
         this.setState({ ...this.state, open_new_dialog: false, open_Dialog: false })
         this.props.onDialogClose(false);
+        window.location.reload(false);
     }
     constructor(props) {
         super(props);
@@ -225,7 +225,7 @@ class FormEdit extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <div>{this.state.open_new_dialog && <div className={classes.response_dialog_css}>
+            <div>{this.state.open_new_dialog &&
                 <Dialog
                     open={true}
                     onClose={() => this.handleResponseClose()}
@@ -236,7 +236,9 @@ class FormEdit extends Component {
                     <Divider />
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
+                            <br />
                             {this.state.update_response.printOrder}
+                            <br />
                         </DialogContentText>
                     </DialogContent>
                     <Divider />
@@ -244,7 +246,7 @@ class FormEdit extends Component {
                         <Button onClick={() => this.handleResponseClose()} color="primary" autoFocus>Ok</Button>
                     </DialogActions>
                 </Dialog>
-            </div>}
+            }
                 <div>
                     <Dialog fullScreen open={this.state.open_Dialog} onClose={() => this.handleClose()} TransitionComponent={Transition}>
                         <AppBar className={classes.appBar} style={{ "background": "#3b3b3b" }}>
@@ -255,7 +257,7 @@ class FormEdit extends Component {
                                 <Typography variant="h6" className={classes.title}>
                                     Order Details
                         </Typography>
-                                <Button color="inherit" onClick={() => this.handleUpdate()}>
+                                <Button color="inherit" onClick={() => this.handleUpdate()} style={{ "background": "rgba(255, 194, 23, 0.95)", "color": "black" }}>
                                     Update
                         </Button>
                             </Toolbar>

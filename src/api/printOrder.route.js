@@ -61,7 +61,12 @@ printOrderRoutes.route('/update/:id').post(function (req, res) {
             printOrder.id = req.body.id;
 
             printOrder.save().then(printOrder => {
-                res.status(200).json({ 'printOrder': 'update_success' });
+                if (res.status(200)) {
+                    res.status(200).json({ 'printOrder': 'Data Updated Successfully.' });
+                }
+                if (res.status(400)) {
+                    res.status(400).json({ 'printOrder': 'Unable to Update the Data. Please try again.' });
+                }
             })
                 .catch(err => {
                     res.status(400).send("unable to update the database");
