@@ -55,3 +55,9 @@ ul.header li a {
 .wsu_logo_css{
   width:50%;
 }
+
+.link_css{
+  /* text-underline-position:under; */
+  text-decoration: blink;
+  color: black;
+}

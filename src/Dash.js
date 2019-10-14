@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -14,6 +13,7 @@ import { withStyles } from '@material-ui/core/styles';
 import RequestForm from "./RequestForm";
 import Orders from "./Orders";
 import Home from "./Home";
+import "./index.css";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 const drawerWidth = 240;
 
@@ -61,6 +61,9 @@ const styles = theme => ({
     div_css: {
         height: "100vh"
     },
+    link_css: {
+        color: "black"
+    },
     toolbar: theme.mixins.toolbar,
 });
 
@@ -102,33 +105,33 @@ class Dash extends Component {
                                 <ListItemText className={classes.menu_text} primary="Menu" />
                             </ListItem>
                             <Divider />
-                            <Link to="/">
+                            <Link to="/" className="link_css">
                                 <ListItem
                                     button
                                     onClick={() => this.handleHome()}
                                     selected={this.state.home_selected}
                                 >
                                     <ListItemIcon>
-                                        <SendIcon />
+                                        {/* <HomeIcon /> */}
                                     </ListItemIcon>
                                     <ListItemText primary="Home" />
                                 </ListItem>
                             </Link>
                             <Divider />
-                            <Link to="/request_form">
+                            <Link to="/request_form" className="link_css">
                                 <ListItem
                                     button
                                     onClick={() => this.handleRequestForm()}
                                     selected={this.state.req_form_selected}
                                 >
                                     <ListItemIcon>
-                                        <SendIcon />
+                                        {/* <i class="material-icons md-18">face</i> */}
                                     </ListItemIcon>
                                     <ListItemText primary="Request Form" />
                                 </ListItem>
                             </Link>
                             <Divider />
-                            <Link to="/orders">
+                            <Link to="/orders" className="link_css">
                                 <ListItem button
                                     onClick={() => this.handleOrders()}
                                     selected={this.state.orders_selected}>

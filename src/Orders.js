@@ -158,7 +158,7 @@ class Orders extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <div>
+            <div style={{ "marginBottom": "2%" }}>
                 {this.state.open_Dialog && <div>
                     <FormEdit
                         open_Dialog={this.state.open_Dialog}
