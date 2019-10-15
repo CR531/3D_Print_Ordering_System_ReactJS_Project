@@ -71,7 +71,7 @@ class Dash extends Component {
     constructor() {
         super();
         this.state = {
-            home_selected: true,
+            home_selected: false,
             req_form_selected: false,
             orders_selected: false,
             export_selected: false
