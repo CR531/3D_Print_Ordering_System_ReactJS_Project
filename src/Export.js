@@ -50,7 +50,6 @@ const styles = theme => ({
         color: "dimgrey",
     },
     grid_margin: {
-        marginLeft: "4%",
         marginBottom: "-1%",
         marginRight: "-5%"
     },
@@ -64,9 +63,9 @@ const styles = theme => ({
         marginTop: "-0.5%",
     },
     date_grid_margin: {
-        marginLeft: "-1%",
+        marginLeft: "-2%",
         marginBottom: "-1%",
-        marginRight: "-5%",
+        // marginRight: "-5%",
     },
     date_instructions: {
         marginTop: theme.spacing(1),
@@ -103,6 +102,9 @@ const styles = theme => ({
     card: {
         minWidth: 275,
         height: "55px",
+    },
+    main_card: {
+        width: "100%",
     },
 });
 
@@ -169,48 +171,56 @@ class Export extends Component {
             <div className={classes.root} style={{ "marginBottom": "2%" }}>
                 <Typography className={classes.main_heading}><b>Export Data</b></Typography>
                 <br />
-                <Grid container spacing={3}>
-                    <Grid item xs={12} sm={12} className={classes.grid_margin}>
-                        <Typography className={classes.tableHeading}><b>Display Orders by dates :</b></Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={2} className={classes.grid_margin}>
-                        <Typography style={{ "marginTop": "-2%" }} className={classes.tableHeading}><b>Start Date :</b></Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={2} className={classes.date_grid_margin}>
-                        <DatePicker
-                            id="start_date"
-                            placeholderText="mm/dd/yyyy"
-                            selected={this.state.start_date}
-                            onChange={this.handleStartDateChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={2} className={classes.grid_margin}>
-                        <Typography style={{ "marginTop": "-2%" }} className={classes.tableHeading}><b>End Date :</b></Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={2} className={classes.date_grid_margin}>
-                        <DatePicker
-                            id="end_date"
-                            placeholderText="mm/dd/yyyy"
-                            selected={this.state.end_date}
-                            onChange={this.handleEndDateChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={2} className={classes.get_orders_button_grid_margin}>
-                        <Button size="small" variant="contained" color="#3b3b3b" className={classes.get_orders_label}
-                            onClick={() => this.getOrders()}
-                        >
-                            Get Orders
+                <Paper className={classes.root} style={{ "marginBottom": "0.5%" }}>
+                    <div>
+                        <Card className={classes.main_card}>
+                            <CardContent>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12} sm={12} className={classes.grid_margin}>
+                                        <Typography className={classes.tableHeading}><b>Display Orders by dates :</b></Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={2} className={classes.grid_margin}>
+                                        <Typography style={{ "marginTop": "-2%" }} className={classes.tableHeading}><b>Start Date :</b></Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={2} className={classes.date_grid_margin}>
+                                        <DatePicker
+                                            id="start_date"
+                                            placeholderText="mm/dd/yyyy"
+                                            selected={this.state.start_date}
+                                            onChange={this.handleStartDateChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={2} className={classes.grid_margin} style={{ "marginLeft": "2%" }}>
+                                        <Typography style={{ "marginTop": "-2%" }} className={classes.tableHeading}><b>End Date :</b></Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={2} className={classes.date_grid_margin}>
+                                        <DatePicker
+                                            id="end_date"
+                                            placeholderText="mm/dd/yyyy"
+                                            selected={this.state.end_date}
+                                            onChange={this.handleEndDateChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={2} className={classes.get_orders_button_grid_margin}>
+                                        <Button size="small" variant="contained" color="#3b3b3b" className={classes.get_orders_label}
+                                            onClick={() => this.getOrders()}
+                                        >
+                                            Get Orders
                                     </Button>
-                    </Grid>
-                    {(this.state.no_of_records && this.state.no_of_records > 0) ?
-                        <Grid item xs={12} sm={2} className={classes.export_button_grid_margin}>
-                            <Button size="small" variant="contained" color="#3b3b3b" className={classes.get_orders_label}
-                                onClick={() => this.exportData()}
-                            >
-                                Export Data
+                                    </Grid>
+                                    {(this.state.no_of_records && this.state.no_of_records > 0) ?
+                                        <Grid item xs={12} sm={2} className={classes.export_button_grid_margin}>
+                                            <Button size="small" variant="contained" color="#3b3b3b" className={classes.get_orders_label}
+                                                onClick={() => this.exportData()}
+                                            >
+                                                Export Data
                                     </Button>
-                        </Grid> : <Grid item xs={12} sm={2} className={classes.export_button_grid_margin}></Grid>}
-                </Grid>
+                                        </Grid> : <Grid item xs={12} sm={2} className={classes.export_button_grid_margin}></Grid>}
+                                </Grid>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </Paper>
                 <Paper className={classes.root} style={{ "marginBottom": "0.5%" }}>
                     <div>
                         <Card className={classes.card}>

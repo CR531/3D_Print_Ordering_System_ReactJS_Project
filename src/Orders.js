@@ -196,18 +196,6 @@ class Orders extends Component {
                             />
                         }
                         {this.state.sorted_data &&
-                            this.state.sorted_data.length === 0 &&
-                            <div>
-                                <Card className={classes.card}>
-                                    <CardContent>
-                                        <Typography className={classes.card_data} color="textSecondary" gutterBottom>
-                                            There are no matching Orders
-                                    </Typography>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        }
-                        {this.state.sorted_data &&
                             this.state.sorted_data.length > 0 &&
                             this.state.sorted_data.map((listValue, index) => {
                                 return (

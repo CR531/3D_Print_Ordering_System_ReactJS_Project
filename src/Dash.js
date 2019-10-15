@@ -10,6 +10,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import FormIcon from '@material-ui/icons/Note';
 import OrdersIcon from '@material-ui/icons/List';
 import ExportIcon from '@material-ui/icons/Launch';
+import EstimateIcon from '@material-ui/icons/Assessment';
 import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
 import RequestForm from "./RequestForm";
@@ -74,20 +75,39 @@ class Dash extends Component {
             home_selected: false,
             req_form_selected: false,
             orders_selected: false,
-            export_selected: false
+            export_selected: false,
+            estimate_selected: false
         }
     }
     handleHome = () => {
-        this.setState({ ...this.state, home_selected: true, req_form_selected: false, orders_selected: false, export_selected: false });
+        this.setState({
+            ...this.state, home_selected: true, req_form_selected: false,
+            orders_selected: false, export_selected: false, estimate_selected: false
+        });
     };
     handleRequestForm = () => {
-        this.setState({ ...this.state, home_selected: false, req_form_selected: true, orders_selected: false, export_selected: false });
+        this.setState({
+            ...this.state, home_selected: false, req_form_selected: true,
+            orders_selected: false, export_selected: false, estimate_selected: false
+        });
     };
     handleOrders = () => {
-        this.setState({ ...this.state, home_selected: false, req_form_selected: false, orders_selected: true, export_selected: false });
+        this.setState({
+            ...this.state, home_selected: false, req_form_selected: false,
+            orders_selected: true, export_selected: false, estimate_selected: false
+        });
     };
     handleExport = () => {
-        this.setState({ ...this.state, home_selected: false, req_form_selected: false, orders_selected: false, export_selected: true });
+        this.setState({
+            ...this.state, home_selected: false, req_form_selected: false,
+            orders_selected: false, export_selected: true, estimate_selected: false
+        });
+    };
+    handleEstimate = () => {
+        this.setState({
+            ...this.state, home_selected: false, req_form_selected: false,
+            orders_selected: false, export_selected: false, estimate_selected: true
+        });
     };
     render() {
         const { classes } = this.props;
@@ -119,6 +139,19 @@ class Dash extends Component {
                                         <HomeIcon />
                                     </ListItemIcon>
                                     <ListItemText primary="Home" />
+                                </ListItem>
+                            </Link>
+                            <Divider />
+                            <Link to="/estimate_cost" className="link_css">
+                                <ListItem
+                                    button
+                                    onClick={() => this.handleEstimate()}
+                                    selected={this.state.export_selected}
+                                >
+                                    <ListItemIcon>
+                                        <EstimateIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Estimate Cost" />
                                 </ListItem>
                             </Link>
                             <Divider />
@@ -159,6 +192,7 @@ class Dash extends Component {
                                 </ListItem>
                             </Link>
                             <Divider />
+
                         </List>
                     </Drawer>
                     <Card className={classes.card_css}>
@@ -166,6 +200,7 @@ class Dash extends Component {
                         <Route path='/request_form' component={RequestForm} />
                         <Route path='/orders' component={Orders} />
                         <Route path='/export_data' component={Export} />
+                        <Route path='/estimate_cost' to="http://156.26.97.138/3Destimate/index.html" />
                     </Card>
                 </div >
             </Router>

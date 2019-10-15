@@ -168,7 +168,7 @@ class RequestForm extends Component {
                 await this.setState({ activeStep: x + 1 });
             }
         }
-        if (this.state.activeStep !== 0 || this.state.activeStep !== 1) {
+        if (this.state.activeStep > 1) {
             await this.setState({ activeStep: x + 1 });
         }
     }
