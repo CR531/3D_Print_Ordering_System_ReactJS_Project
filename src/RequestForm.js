@@ -110,6 +110,14 @@ class RequestForm extends Component {
             job_delivered_check: false,
             job_delivered_GA: '',
             job_delivery_date: null,
+            name_flag: false,
+            wsuid_flag: false,
+            email_flag: false,
+            cspace_rep_flag: false,
+            grams_used_flag: false,
+            amount_due_flag: false,
+            receipt_number_flag: false,
+            required_snackbar: false
         }
     }
 
@@ -136,8 +144,33 @@ class RequestForm extends Component {
     handleFailSnackbarClose = () => {
         this.setState({ ...this.state, snackbarFailStatus: false })
     }
-    handleNext = (x) => {
-        this.setState({ activeStep: x + 1 });
+    handleRequiredSnackbarClose = () => {
+        this.setState({ ...this.state, required_snackbar: false })
+    }
+    handleNext = async (x) => {
+        if (this.state.activeStep === 0) {
+            if (this.state.name === "" || this.state.wsuid === "" || this.state.email === "") {
+                await this.setState({ ...this.state, required_snackbar: true });
+            }
+            if (this.state.name !== "" && this.state.wsuid !== "" && this.state.email !== "") {
+                await this.setState({ ...this.state, required_snackbar: false });
+                await this.setState({ activeStep: x + 1 });
+            }
+        }
+        if (this.state.activeStep === 1) {
+            if (this.state.cspace_rep_name === "" || this.state.grams_used === "" || this.state.amount_due === ""
+                || this.state.receipt_number === "" || this.state.order_date === null || this.state.pickup_date === null) {
+                await this.setState({ ...this.state, required_snackbar: true });
+            }
+            if (this.state.cspace_rep_name !== "" && this.state.grams_used !== "" && this.state.amount_due !== ""
+                && this.state.receipt_number !== "" && this.state.order_date !== null && this.state.pickup_date !== null) {
+                await this.setState({ ...this.state, required_snackbar: false });
+                await this.setState({ activeStep: x + 1 });
+            }
+        }
+        if (this.state.activeStep !== 0 || this.state.activeStep !== 1) {
+            await this.setState({ activeStep: x + 1 });
+        }
     }
     handleBack = (x) => {
         this.setState({ activeStep: x - 1 });
@@ -149,6 +182,65 @@ class RequestForm extends Component {
             end = new Date().getTime();
         }
     }
+    async componentDidMount() {
+        await this.setState({
+            ...this.state,
+            steps: ['3D Print Request Form', '3D Print Statement', 'Remarks'],
+            activeStep: 0,
+            snackbarSuccessStatus: false,
+            snackbarFailStatus: false,
+            response: {},
+            name: '',
+            wsuid: '',
+            phone: '',
+            email: '',
+            filament_color: '',
+            notes: '',
+            cspace_rep_name: '',
+            order_date: null,
+            grams_used: '',
+            amount_due: '',
+            pickup_date: null,
+            receipt_number: '',
+            remark_notes: '',
+            job_completed_check: false,
+            job_completed_GA: '',
+            job_completion_date: null,
+            job_delivered_check: false,
+            job_delivered_GA: '',
+            job_delivery_date: null,
+            name_flag: false,
+            wsuid_flag: false,
+            email_flag: false,
+            cspace_rep_flag: false,
+            grams_used_flag: false,
+            amount_due_flag: false,
+            receipt_number_flag: false,
+            required_snackbar: false
+        })
+        if (this.state.name === "") {
+            await this.setState({ ...this.state, name_flag: true })
+        }
+        if (this.state.wsuid === "") {
+            await this.setState({ ...this.state, wsuid_flag: true })
+        }
+        if (this.state.email === "") {
+            await this.setState({ ...this.state, email_flag: true })
+        }
+        if (this.state.cspace_rep_name === "") {
+            await this.setState({ ...this.state, cspace_rep_flag: true })
+        }
+        if (this.state.grams_used === "") {
+            await this.setState({ ...this.state, grams_used_flag: true })
+        }
+        if (this.state.amount_due === "") {
+            await this.setState({ ...this.state, amount_due_flag: true })
+        }
+        if (this.state.receipt_number === "") {
+            await this.setState({ ...this.state, receipt_number_flag: true })
+        }
+    }
+
     handleSave = async () => {
         const obj = {
             name: this.state.name,
@@ -184,9 +276,9 @@ class RequestForm extends Component {
             this.setState({ ...this.state, snackbarFailStatus: true })
             await this.wait(1000);
         }
-        this.setState({ ...this.state, activeStep: 0 })
         this.setState({
             ...this.state,
+            activeStep: 0,
             response: {},
             name: '',
             wsuid: '',
@@ -207,6 +299,14 @@ class RequestForm extends Component {
             job_delivered_check: false,
             job_delivered_GA: '',
             job_delivery_date: null,
+            name_flag: false,
+            wsuid_flag: false,
+            email_flag: false,
+            cspace_rep_flag: false,
+            grams_used_flag: false,
+            amount_due_flag: false,
+            receipt_number_flag: false,
+            required_snackbar: false
         })
     }
     handleCompletedChange = () => {
@@ -247,6 +347,7 @@ class RequestForm extends Component {
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                required={this.state.name_flag}
                                 value={this.state.name}
                                 onChange={(value) => this.onGenericChange(value)}
                             />
@@ -260,6 +361,7 @@ class RequestForm extends Component {
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                required={this.state.wsuid_flag}
                                 value={this.state.wsuid}
                                 onChange={(value) => this.onGenericChange(value)}
                             />
@@ -286,6 +388,7 @@ class RequestForm extends Component {
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                required={this.state.email_flag}
                                 value={this.state.email}
                                 onChange={(value) => this.onGenericChange(value)}
                             />
@@ -341,6 +444,7 @@ class RequestForm extends Component {
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                required={this.state.cspace_rep_flag}
                                 value={this.state.cspace_rep_name}
                                 onChange={(value) => this.onGenericChange(value)}
                             />
@@ -349,7 +453,7 @@ class RequestForm extends Component {
                             <Typography style={{ "width": "90%" }} className={classes.date_instructions}><b>Order Date</b></Typography>
                             <DatePicker
                                 id="order_date"
-                                label="Order Date"
+                                label="Order Date *"
                                 placeholderText="mm/dd/yyyy"
                                 selected={this.state.order_date}
                                 onChange={this.handleOrderDateChange}
@@ -364,6 +468,7 @@ class RequestForm extends Component {
                                 className={classes.textField}
                                 margin="normal"
                                 variant="outlined"
+                                required={this.state.grams_used_flag}
                                 value={this.state.grams_used}
                                 onChange={(value) => this.onGenericChange(value)}
                             />
@@ -374,6 +479,7 @@ class RequestForm extends Component {
                                 label="Total Amount Due"
                                 placeholder="Total Amount Due"
                                 style={{ "width": "80%" }}
+                                required={this.state.amount_due_flag}
                                 className={classes.textField}
                                 InputProps={{
                                     startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -388,7 +494,7 @@ class RequestForm extends Component {
                             <Typography style={{ "width": "90%" }} className={classes.date_instructions}><b>Expected Pick-Up Date</b></Typography>
                             <DatePicker
                                 id="expected_date"
-                                label="Expected Pick-Up Date"
+                                label="Expected Pick-Up Date *"
                                 placeholderText="mm/dd/yyyy"
                                 selected={this.state.pickup_date}
                                 onChange={this.handlePickUpDateChange}
@@ -402,8 +508,9 @@ class RequestForm extends Component {
                         <Grid item xs={12} sm={6} className={classes.grid_margin}>
                             <TextField
                                 id="receipt_number"
-                                label="Receipt #"
-                                placeholder="Receipt #"
+                                label="Receipt Number"
+                                required={this.state.receipt_number_flag}
+                                placeholder="Receipt Number"
                                 style={{ "width": "80%" }}
                                 className={classes.textField}
                                 margin="normal"
@@ -539,7 +646,11 @@ class RequestForm extends Component {
                                 >
                                     Back
               </Button>
-                                <Button variant="contained" color="primary" style={{ "background": "#3b3b3b" }} onClick={() => this.handleNext(this.state.activeStep)}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    style={{ "background": "#3b3b3b" }}
+                                    onClick={() => this.handleNext(this.state.activeStep)}>
                                     {this.state.activeStep === this.state.steps.length - 1 ? 'Finish' : 'Next'}
                                 </Button>
                             </div>
@@ -548,7 +659,7 @@ class RequestForm extends Component {
                 <Snackbar
                     open={this.state.snackbarSuccessStatus}
                     onClose={() => this.handleSuccessSnackbarClose()}
-                    autoHideDuration={10000}
+                    autoHideDuration={5000}
                 >
                     <SnackbarContent
                         style={{ "background": "green" }}
@@ -575,7 +686,7 @@ class RequestForm extends Component {
                 <Snackbar
                     open={this.state.snackbarFailStatus}
                     onClose={() => this.handleFailSnackbarClose()}
-                    autoHideDuration={10000}
+                    autoHideDuration={5000}
                 >
                     <SnackbarContent
                         style={{ "background": "red" }}
@@ -593,6 +704,33 @@ class RequestForm extends Component {
                                 color="inherit"
                                 className={classes.close}
                                 onClick={() => this.handleFailSnackbarClose()}
+                            >
+                                <CloseIcon />
+                            </IconButton>,
+                        ]}
+                    />
+                </Snackbar>
+                <Snackbar
+                    open={this.state.required_snackbar}
+                    onClose={() => this.handleRequiredSnackbarClose()}
+                    autoHideDuration={3000}
+                >
+                    <SnackbarContent
+                        style={{ "background": "black" }}
+                        aria-describedby="client-snackbar"
+                        message={
+                            <span id="client-snackbar" className={classes.message}>
+                                <ErrorIcon className={clsx(classes.icon, classes.iconVariant)} />
+                                Please Enter Required Fields
+                            </span>
+                        }
+                        action={[
+                            <IconButton
+                                key="close"
+                                aria-label="close"
+                                color="inherit"
+                                className={classes.close}
+                                onClick={() => this.handleRequiredSnackbarClose()}
                             >
                                 <CloseIcon />
                             </IconButton>,

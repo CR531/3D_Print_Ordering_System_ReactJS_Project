@@ -83,7 +83,9 @@ class Export extends Component {
                                             <Typography className={classes.dataHeading}>{listValue.wsuid} </Typography>
                                         </TableCell>
                                         <TableCell align="right">
-                                            <Typography className={classes.dataHeading}>{listValue.order_date} </Typography>
+                                            <Typography className={classes.dataHeading}>
+                                                {listValue.order_date !== null ? listValue.order_date.toString().split("T")[0] : null}
+                                            </Typography>
                                         </TableCell>
                                     </TableRow>
                                 ))}
