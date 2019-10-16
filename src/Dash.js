@@ -17,6 +17,7 @@ import RequestForm from "./RequestForm";
 import Orders from "./Orders";
 import Home from "./Home";
 import Export from "./Export";
+import Redirect from "./Redirect";
 import "./index.css";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 const drawerWidth = 240;
@@ -192,7 +193,6 @@ class Dash extends Component {
                                 </ListItem>
                             </Link>
                             <Divider />
-
                         </List>
                     </Drawer>
                     <Card className={classes.card_css}>
@@ -200,7 +200,7 @@ class Dash extends Component {
                         <Route path='/request_form' component={RequestForm} />
                         <Route path='/orders' component={Orders} />
                         <Route path='/export_data' component={Export} />
-                        <Route path='/estimate_cost' to="http://156.26.97.138/3Destimate/index.html" />
+                        <Route path='/estimate_cost' component={Redirect} />
                     </Card>
                 </div >
             </Router>
