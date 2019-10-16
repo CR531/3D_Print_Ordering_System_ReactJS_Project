@@ -20,6 +20,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import ErrorIcon from '@material-ui/icons/Error';
 import clsx from 'clsx';
+import ReactExport from 'react-data-export';
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 
 const styles = theme => ({
     root: {
@@ -118,7 +121,9 @@ class Export extends Component {
             end_date: null,
             sorted_Orders: [],
             required_snackbar: false,
-            no_of_records: 0
+            no_of_records: 0,
+            dataset: [],
+            converted_array: []
         }
     }
     async componentDidMount() {
@@ -160,11 +165,34 @@ class Export extends Component {
             }
         }
         await this.setState({ ...this.state, sorted_Orders: myList, no_of_records: x });
-        console.log("Sorted orders are :" + this.state.sorted_Orders)
+        console.log("Sorted orders are :" + this.state.sorted_Orders);
+        let globalArray = [];
+        if (this.state.sorted_Orders) {
+            if (this.state.sorted_Orders.length > 0) {
+                this.state.sorted_Orders.map(listValue => {
+                    let arr = [];
+                    arr.push(listValue.name);
+                    arr.push(listValue.wsuid);
+                    arr.push(listValue.email);
+                    console.log("pushed array is :" + arr);
+                    globalArray.push(arr);
+                    return globalArray;
+                })
+            }
+        }
+        console.log("global array is :" + globalArray);
+        await this.setState({ ...this.state, converted_array: globalArray })
+        let sample_dataset = [{
+            columns: [
+                { title: "Name", width: { wpx: 80 } },//pixels width 
+                { title: "WSU ID", width: { wch: 40 } },//char width 
+                { title: "Email", width: { wpx: 90 } },
+            ],
+            data: this.state.converted_array
+        }]
+        await this.setState({ ...this.state, dataset: sample_dataset })
     }
-    exportData = () => {
 
-    }
     render() {
         const { classes } = this.props;
         return (
@@ -210,11 +238,12 @@ class Export extends Component {
                                     </Grid>
                                     {(this.state.no_of_records && this.state.no_of_records > 0) ?
                                         <Grid item xs={12} sm={2} className={classes.export_button_grid_margin}>
-                                            <Button size="small" variant="contained" color="#3b3b3b" className={classes.get_orders_label}
-                                                onClick={() => this.exportData()}
+                                            <ExcelFile element={<Button size="small" variant="contained" color="#3b3b3b" className={classes.get_orders_label}
                                             >
                                                 Export Data
-                                    </Button>
+                                    </Button>}>
+                                                <ExcelSheet dataSet={(this.state.dataset && this.state.dataset.length > 0) ? this.state.dataset : []} name="3d_Print_Orders" />
+                                            </ExcelFile>
                                         </Grid> : <Grid item xs={12} sm={2} className={classes.export_button_grid_margin}></Grid>}
                                 </Grid>
                             </CardContent>
