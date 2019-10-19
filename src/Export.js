@@ -157,24 +157,34 @@ class Export extends Component {
                 this.state.orders.map((value) => {
                     var spec_date = new Date(value.order_date);
                     if ((spec_date >= sd) && (spec_date <= ed)) {
-                        x = x + 1;
-                        myList.push(value);
+                        if (value.job_completed_check === true && value.job_delivered_check === true) {
+                            x = x + 1;
+                            myList.push(value);
+                        }
                     }
                     return myList;
                 })
             }
         }
         await this.setState({ ...this.state, sorted_Orders: myList, no_of_records: x });
-        console.log("Sorted orders are :" + this.state.sorted_Orders);
         let globalArray = [];
         if (this.state.sorted_Orders) {
             if (this.state.sorted_Orders.length > 0) {
                 this.state.sorted_Orders.map(listValue => {
                     let arr = [];
                     arr.push(listValue.name);
-                    arr.push(listValue.wsuid);
-                    arr.push(listValue.email);
-                    console.log("pushed array is :" + arr);
+                    arr.push(listValue.receipt_number);
+                    arr.push(listValue.filament_color);
+                    arr.push(listValue.grams_used);
+                    arr.push(listValue.amount_due);
+                    arr.push("Material Cost");
+                    arr.push("Paid status");
+                    if (listValue.job_delivered_check === true) {
+                        arr.push("Delivered");
+                    }
+                    else {
+                        arr.push("Not Delivered");
+                    }
                     globalArray.push(arr);
                     return globalArray;
                 })
@@ -184,9 +194,14 @@ class Export extends Component {
         await this.setState({ ...this.state, converted_array: globalArray })
         let sample_dataset = [{
             columns: [
-                { title: "Name", width: { wpx: 80 } },//pixels width 
-                { title: "WSU ID", width: { wch: 40 } },//char width 
-                { title: "Email", width: { wpx: 90 } },
+                { title: "Name", width: { wch: 30 } },
+                { title: "Receipt Number #", width: { wch: 25 } },
+                { title: "Material Color", width: { wch: 20 } },
+                { title: "Weight (g)", width: { wch: 10 } },
+                { title: "Cost ($)", width: { wch: 10 } },
+                { title: "Material Cost ($)", width: { wch: 10 } },
+                { title: "Paid Status", width: { wch: 20 } },
+                { title: "Delivered Status", width: { wch: 20 } },
             ],
             data: this.state.converted_array
         }]
@@ -238,11 +253,16 @@ class Export extends Component {
                                     </Grid>
                                     {(this.state.no_of_records && this.state.no_of_records > 0) ?
                                         <Grid item xs={12} sm={2} className={classes.export_button_grid_margin}>
-                                            <ExcelFile element={<Button size="small" variant="contained" color="#3b3b3b" className={classes.get_orders_label}
-                                            >
-                                                Export Data
+                                            <ExcelFile
+                                                filename="3D_Print_Orders"
+                                                element={<Button size="small" variant="contained" color="#3b3b3b" className={classes.get_orders_label}
+                                                >
+                                                    Generate File
                                     </Button>}>
-                                                <ExcelSheet dataSet={(this.state.dataset && this.state.dataset.length > 0) ? this.state.dataset : []} name="3d_Print_Orders" />
+                                                <ExcelSheet
+                                                    name="3d Printing Details"
+                                                    dataSet={(this.state.dataset && this.state.dataset.length > 0) ? this.state.dataset : []}
+                                                />
                                             </ExcelFile>
                                         </Grid> : <Grid item xs={12} sm={2} className={classes.export_button_grid_margin}></Grid>}
                                 </Grid>
