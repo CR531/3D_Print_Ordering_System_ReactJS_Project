@@ -21,6 +21,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import axios from 'axios';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Card } from '@material-ui/core';
+import CardContent from '@material-ui/core/CardContent';
 const styles = theme => ({
     root: {
         width: '90%',
@@ -80,7 +82,25 @@ const styles = theme => ({
         fontWeight: "500",
         fontSize: "large",
         fontVariant: "all-petite-caps",
-    }
+    },
+    column2: {
+        flexBasis: '50%',
+    },
+    secondaryHeading: {
+        fontSize: "large",
+        fontWeight: "500",
+        fontVariant: "all-petite-caps",
+        color: "gray",
+    },
+    dataHeading: {
+        fontSize: "large",
+        fontWeight: "500",
+        fontVariant: "all-petite-caps",
+        color: "black",
+    },
+    main_card: {
+        width: "100%",
+    },
 });
 class RequestForm extends Component {
     constructor(props) {
@@ -125,27 +145,27 @@ class RequestForm extends Component {
         this.setState({ ...this.state, [e.target.id]: e.target.value });
     }
 
-    handleOrderDateChange = date => {
-        this.setState({ ...this.state, order_date: date });
+    handleOrderDateChange = async (date) => {
+        await this.setState({ ...this.state, order_date: date });
     }
-    handlePickUpDateChange = date => {
-        this.setState({ ...this.state, pickup_date: date });
+    handlePickUpDateChange = async (date) => {
+        await this.setState({ ...this.state, pickup_date: date });
     }
-    handleCompletedDateChange = date => {
-        this.setState({ ...this.state, job_completion_date: date });
+    handleCompletedDateChange = async (date) => {
+        await this.setState({ ...this.state, job_completion_date: date });
     }
-    handleDeliveredDateChange = date => {
-        this.setState({ ...this.state, job_delivery_date: date });
+    handleDeliveredDateChange = async (date) => {
+        await this.setState({ ...this.state, job_delivery_date: date });
     }
 
-    handleSuccessSnackbarClose = () => {
-        this.setState({ ...this.state, snackbarSuccessStatus: false })
+    handleSuccessSnackbarClose = async () => {
+        await this.setState({ ...this.state, snackbarSuccessStatus: false })
     }
-    handleFailSnackbarClose = () => {
-        this.setState({ ...this.state, snackbarFailStatus: false })
+    handleFailSnackbarClose = async () => {
+        await this.setState({ ...this.state, snackbarFailStatus: false })
     }
-    handleRequiredSnackbarClose = () => {
-        this.setState({ ...this.state, required_snackbar: false })
+    handleRequiredSnackbarClose = async () => {
+        await this.setState({ ...this.state, required_snackbar: false })
     }
     handleNext = async (x) => {
         if (this.state.activeStep === 0) {
@@ -172,8 +192,8 @@ class RequestForm extends Component {
             await this.setState({ activeStep: x + 1 });
         }
     }
-    handleBack = (x) => {
-        this.setState({ activeStep: x - 1 });
+    handleBack = async (x) => {
+        await this.setState({ activeStep: x - 1 });
     }
     wait = (ms) => {
         var start = new Date().getTime();
@@ -376,7 +396,15 @@ class RequestForm extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 value={this.state.phone}
-                                onChange={(value) => this.onGenericChange(value)}
+                                onChange={(event) => {
+                                    if (event.target.value.length <= 10) {
+                                        if (isNaN(Number(event.target.value))) {
+                                            return;
+                                        } else {
+                                            this.setState({ ...this.state, phone: event.target.value });
+                                        }
+                                    }
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} className={classes.grid_margin}>
@@ -450,10 +478,10 @@ class RequestForm extends Component {
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} className={classes.grid_margin}>
-                            <Typography style={{ "width": "90%" }} className={classes.date_instructions}><b>Order Date</b></Typography>
+                            <Typography style={{ "width": "90%" }} className={classes.date_instructions}><b>Order Date *</b></Typography>
                             <DatePicker
                                 id="order_date"
-                                label="Order Date *"
+                                label="Order Date"
                                 placeholderText="mm/dd/yyyy"
                                 selected={this.state.order_date}
                                 onChange={this.handleOrderDateChange}
@@ -470,7 +498,13 @@ class RequestForm extends Component {
                                 variant="outlined"
                                 required={this.state.grams_used_flag}
                                 value={this.state.grams_used}
-                                onChange={(value) => this.onGenericChange(value)}
+                                onChange={(event) => {
+                                    if (isNaN(Number(event.target.value))) {
+                                        return;
+                                    } else {
+                                        this.setState({ ...this.state, grams_used: event.target.value });
+                                    }
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} className={classes.grid_margin}>
@@ -487,14 +521,20 @@ class RequestForm extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 value={this.state.amount_due}
-                                onChange={(value) => this.onGenericChange(value)}
+                                onChange={(event) => {
+                                    if (isNaN(Number(event.target.value))) {
+                                        return;
+                                    } else {
+                                        this.setState({ ...this.state, amount_due: event.target.value });
+                                    }
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} className={classes.grid_margin}>
-                            <Typography style={{ "width": "90%" }} className={classes.date_instructions}><b>Expected Pick-Up Date</b></Typography>
+                            <Typography style={{ "width": "90%" }} className={classes.date_instructions}><b>Expected Pick-Up Date *</b></Typography>
                             <DatePicker
                                 id="expected_date"
-                                label="Expected Pick-Up Date *"
+                                label="Expected Pick-Up Date"
                                 placeholderText="mm/dd/yyyy"
                                 selected={this.state.pickup_date}
                                 onChange={this.handlePickUpDateChange}
@@ -632,10 +672,122 @@ class RequestForm extends Component {
                         <Grid item xs={12} sm={3} />
                     </Grid>
                 </div>}
+
+                {(this.state.activeStep === 3) && <div className={classes.form_css}>
+                    <Typography variant="h6" gutterBottom>
+                        Order Summary
+                </Typography>
+                    <Card className={classes.main_card}>
+                        <CardContent>
+                            {console.log("Order date is " + this.state.order_date)}
+                            {console.log("Pickup date is " + this.state.pickup_date)}
+
+                            <Grid container spacing={3}>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.dataHeading}>Name :</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.name && this.state.name !== "") ? this.state.name : ""}</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.dataHeading}>WSU ID :</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.wsuid && this.state.wsuid !== "") ? this.state.wsuid : ""}</Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.dataHeading}>Email :</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.email && this.state.email !== "") ? this.state.email : ""}</Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.dataHeading}>Phone :</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.phone && this.state.phone !== "") ? this.state.phone : ""}</Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.dataHeading}>Filament Color :</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.filament_color && this.state.filament_color !== "") ? this.state.filament_color : ""}</Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.dataHeading}>C-Space Representative :</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.cspace_rep_name && this.state.cspace_rep_name !== "") ? this.state.cspace_rep_name : ""}</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.dataHeading}>Order Date :</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.secondaryHeading}>
+                                        {(this.state.order_date && this.state.order_date !== null) ? this.state.order_date.toString().substring(0, 15) : null}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.dataHeading}>Grams Used :</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.grams_used && this.state.grams_used !== "") ? this.state.grams_used : ""}</Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.dataHeading}>Amount :</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.amount_due && this.state.amount_due !== "") ? "$ " + this.state.amount_due : ""}</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.dataHeading}>Expected Pick-Up date :</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.secondaryHeading}>
+                                        {(this.state.pickup_date && this.state.pickup_date !== null) ? this.state.pickup_date.toString().substring(0, 15) : null}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.dataHeading}>Receipt Number :</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.receipt_number && this.state.receipt_number !== "") ? this.state.receipt_number : ""}</Typography>
+                                </Grid>
+                            </Grid>
+                        </CardContent>
+                    </Card>
+                </div>}
                 <div className={classes.stepper_buttons}>
                     {this.state.activeStep === this.state.steps.length ? (
                         <div>
-                            <Button variant="contained" color="primary" style={{ "background": "#3b3b3b" }} onClick={() => this.handleSave({ vertical: 'bottom', horizontal: 'center' })}>Save</Button>
+                            <Button
+                                disabled={this.state.activeStep === 0}
+                                onClick={() => this.handleBack(this.state.activeStep)}
+                                className={classes.backButton}
+                            >
+                                Back
+              </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                style={{ "background": "#3b3b3b" }}
+                                onClick={() => this.handleSave({ vertical: 'bottom', horizontal: 'center' })}>
+                                Save
+                                    </Button>
                         </div>
                     ) : (
                             <div>

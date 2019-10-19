@@ -310,7 +310,15 @@ class FormEdit extends Component {
                                     margin="normal"
                                     variant="outlined"
                                     value={this.state.phone}
-                                    onChange={(value) => this.onGenericChange(value)}
+                                    onChange={(event) => {
+                                        if (event.target.value.length <= 10) {
+                                            if (isNaN(Number(event.target.value))) {
+                                                return;
+                                            } else {
+                                                this.setState({ ...this.state, phone: event.target.value });
+                                            }
+                                        }
+                                    }}
                                 />
                                 <TextField
                                     id="filament_color"
@@ -344,7 +352,7 @@ class FormEdit extends Component {
                                             format="MM/dd/yyyy"
                                             margin="normal"
                                             id="order_date"
-                                            label="Order Date"
+                                            label="Order Date *"
                                             placeholder='mm/dd/yyyy'
                                             value={this.state.order_date}
                                             onChange={this.handleOrderDateChange}
@@ -365,7 +373,13 @@ class FormEdit extends Component {
                                     margin="normal"
                                     variant="outlined"
                                     value={this.state.grams_used}
-                                    onChange={(value) => this.onGenericChange(value)}
+                                    onChange={(event) => {
+                                        if (isNaN(Number(event.target.value))) {
+                                            return;
+                                        } else {
+                                            this.setState({ ...this.state, grams_used: event.target.value });
+                                        }
+                                    }}
                                 />
                                 <TextField
                                     id="amount_due"
@@ -379,7 +393,13 @@ class FormEdit extends Component {
                                     margin="normal"
                                     variant="outlined"
                                     value={this.state.amount_due}
-                                    onChange={(value) => this.onGenericChange(value)}
+                                    onChange={(event) => {
+                                        if (isNaN(Number(event.target.value))) {
+                                            return;
+                                        } else {
+                                            this.setState({ ...this.state, amount_due: event.target.value });
+                                        }
+                                    }}
                                 />
                             </ListItem>
                             <ListItem className={classes.listItem}>
@@ -403,7 +423,7 @@ class FormEdit extends Component {
                                             placeholder='mm/dd/yyyy'
                                             margin="normal"
                                             id="expected_date"
-                                            label="Expected Pick-Up Date"
+                                            label="Expected Pick-Up Date *"
                                             value={this.state.pickup_date}
                                             onChange={this.handlePickUpDateChange}
                                             KeyboardButtonProps={{
