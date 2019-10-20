@@ -203,6 +203,7 @@ class RequestForm extends Component {
         }
     }
     async componentDidMount() {
+        document.title = 'Request Form';
         await this.setState({
             ...this.state,
             steps: ['3D Print Request Form', '3D Print Statement', 'Remarks'],

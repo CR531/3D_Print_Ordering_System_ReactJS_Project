@@ -5,6 +5,9 @@ export class Redirect extends Component {
         super();
         this.state = { ...props };
     }
+    componentDidMount() {
+        document.title = 'Estimate Cost';
+    }
     componentWillMount() {
         window.location = "http://156.26.97.138/3Destimate/index.html";
     }

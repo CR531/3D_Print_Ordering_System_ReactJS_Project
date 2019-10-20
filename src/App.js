@@ -1,41 +1,59 @@
-import './App.css';
 import React, { Component } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import Create from "./Create";
-import Display from './Display';
-import Edit from "./Edit";
+import Typography from '@material-ui/core/Typography';
+import wsu_logo from "./Images/wsu_logo.PNG";
+import './index.css';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Dash from './Dash';
+import Divider from '@material-ui/core/Divider';
+import AppBar from '@material-ui/core/AppBar';
+const styles = theme => ({
+  title1: {
+    flexGrow: 1,
+    color: "white",
+    marginLeft: "22%",
+    fontSize: "200%",
+    fontWeight: "500",
+    fontVariant: "all-petite-caps",
+  },
+  root: {
+    flexGrow: 1,
+  },
+  appbar_css: {
+    // height: "11%",
+  },
+  grid_css: {
+    marginTop: "1%",
+  },
+});
+
 class App extends Component {
+
   render() {
+    const { classes } = this.props;
     return (
-      <Router>
-        <div className="container">
-          <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <Link to={'/'} className="navbar-brand">React CRUD Example</Link>
-            <div className="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul className="navbar-nav mr-auto">
-                <li className="nav-item">
-                  <Link to={'/'} className="nav-link">Home</Link>
-                </li>
-                <li className="nav-item">
-                  <Link to={'/create'} className="nav-link">Create</Link>
-                </li>
-                <li className="nav-item">
-                  <Link to={'/display'} className="nav-link">Display</Link>
-                </li>
-              </ul>
-            </div>
-          </nav> <br />
-          <h2>Welcome to React CRUD Tutorial</h2> <br />
-          <Switch>
-            <Route exact path='/create' component={Create} />
-            <Route path='/edit/:id' component={Edit} />
-            <Route exact path='/display' component={Display} />
-          </Switch>
+      <React.Fragment>
+        <AppBar position="fixed" className={classes.appbar_css} style={{ "background": "#3b3b3b" }}>
+          <Grid container className={classes.grid_css} style={{ "background": "#3b3b3b" }}>
+            <Grid item xs><img
+              className="wsu_logo_css"
+              src={wsu_logo}
+              alt="WSU Logo"
+            >
+            </img>
+            </Grid>
+            <Grid item xs><Typography variant="h6" className={classes.title1}>
+              3D Print Ordering System
+                      </Typography></Grid>
+            <Grid item xs></Grid>
+          </Grid>
+        </AppBar>
+        <Divider />
+        <div>
+          <Dash />
         </div>
-      </Router>
+      </React.Fragment>
     );
   }
 }
-
-export default App;
+export default withStyles(styles)(App);

@@ -34,6 +34,17 @@ const styles = theme => ({
     }
 });
 class Home extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            images: []
+        }
+    }
+
+    async componentDidMount() {
+        document.title = 'Home';
+        await this.setState({ ...this.state, images: Image_1 });
+    }
     render() {
         const { classes } = this.props;
         return (

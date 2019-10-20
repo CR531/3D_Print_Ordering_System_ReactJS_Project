@@ -10,7 +10,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import FormIcon from '@material-ui/icons/Note';
 import OrdersIcon from '@material-ui/icons/List';
 import ExportIcon from '@material-ui/icons/Launch';
-import EstimateIcon from '@material-ui/icons/Assessment';
+// import EstimateIcon from '@material-ui/icons/Assessment';
 import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
 import RequestForm from "./RequestForm";
@@ -143,7 +143,7 @@ class Dash extends Component {
                                 </ListItem>
                             </Link>
                             <Divider />
-                            <Link to="/estimate_cost" className="link_css">
+                            {/* <Link to="/3D_print_order/estimate_cost" className="link_css">
                                 <ListItem
                                     button
                                     onClick={() => this.handleEstimate()}
@@ -154,9 +154,9 @@ class Dash extends Component {
                                     </ListItemIcon>
                                     <ListItemText primary="Estimate Cost" />
                                 </ListItem>
-                            </Link>
+                            </Link> */}
                             <Divider />
-                            <Link to="/request_form" className="link_css">
+                            <Link to="/3D_print_order/request_form" className="link_css">
                                 <ListItem
                                     button
                                     onClick={() => this.handleRequestForm()}
@@ -169,7 +169,7 @@ class Dash extends Component {
                                 </ListItem>
                             </Link>
                             <Divider />
-                            <Link to="/orders" className="link_css">
+                            <Link to="/3D_print_order/orders" className="link_css">
                                 <ListItem button
                                     onClick={() => this.handleOrders()}
                                     selected={this.state.orders_selected}>
@@ -180,7 +180,7 @@ class Dash extends Component {
                                 </ListItem>
                             </Link>
                             <Divider />
-                            <Link to="/export_data" className="link_css">
+                            <Link to="/3D_print_order/export_data" className="link_css">
                                 <ListItem
                                     button
                                     onClick={() => this.handleExport()}
@@ -197,10 +197,10 @@ class Dash extends Component {
                     </Drawer>
                     <Card className={classes.card_css}>
                         <Route exact path='/' component={Home} />
-                        <Route path='/request_form' component={RequestForm} />
-                        <Route path='/orders' component={Orders} />
-                        <Route path='/export_data' component={Export} />
-                        <Route path='/estimate_cost' component={Redirect} />
+                        <Route path='/3D_print_order/request_form' component={RequestForm} />
+                        <Route path='/3D_print_order/orders' component={Orders} />
+                        <Route path='/3D_print_order/export_data' component={Export} />
+                        <Route path='/3D_print_order/estimate_cost' component={Redirect} />
                     </Card>
                 </div >
             </Router>
