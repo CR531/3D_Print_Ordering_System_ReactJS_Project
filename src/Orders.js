@@ -128,7 +128,7 @@ class Orders extends Component {
         console.log("Expanded panel is :" + this.state.active_index)
     }
     handleOrderOpen1 = async (list, val) => {
-        const type = list.find(el => el.receipt_number === val);
+        const type = list.find(el => el.id === val);
         await this.setState({ ...this.state, selected_Order: type });
         this.handleOrderOpen();
     }
@@ -214,7 +214,7 @@ class Orders extends Component {
                                                         <Typography className={classes.secondaryHeading}>Name : </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={9}>
-                                                        <Typography className={classes.dataHeading}>{listValue.name} </Typography>
+                                                        <Typography className={classes.dataHeading}>{(listValue.name && listValue.name !== "") ? listValue.name : "N/A"} </Typography>
                                                     </Grid>
                                                 </Grid>
                                             </div>
@@ -224,7 +224,7 @@ class Orders extends Component {
                                                         <Typography className={classes.secondaryHeading}>Receipt # </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={8}>
-                                                        <Typography className={classes.dataHeading}>{listValue.receipt_number} </Typography>
+                                                        <Typography className={classes.dataHeading}>{(listValue.receipt_number && listValue.receipt_number !== "") ? listValue.receipt_number : "N/A"} </Typography>
                                                     </Grid>
                                                 </Grid>
                                             </div>
@@ -250,7 +250,7 @@ class Orders extends Component {
                                                         <Typography className={classes.secondaryHeading}>Job Completed by : </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={6}>
-                                                        <Typography className={classes.dataHeading}>{listValue.job_completed_GA}</Typography>
+                                                        <Typography className={classes.dataHeading}>{(listValue.job_completed_GA && listValue.job_completed_GA !== "") ? listValue.job_completed_GA : "N/A"}</Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={6}>
                                                     </Grid>
@@ -262,7 +262,7 @@ class Orders extends Component {
                                                         <Typography className={classes.secondaryHeading}>Job Completion Date : </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={6}>
-                                                        <Typography className={classes.dataHeading}>{listValue.job_completion_date}</Typography>
+                                                        <Typography className={classes.dataHeading}>{(listValue.job_completion_date && listValue.job_completion_date !== null) ? listValue.job_completion_date.toString().split("T")[0] : "N/A"}</Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={6}>
                                                     </Grid>
@@ -276,7 +276,7 @@ class Orders extends Component {
                                                         <Typography className={classes.secondaryHeading}>Job Delivered by : </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={6}>
-                                                        <Typography className={classes.dataHeading}>{listValue.job_delivered_GA} </Typography>
+                                                        <Typography className={classes.dataHeading}>{(listValue.job_delivered_GA && listValue.job_delivered_GA !== "") ? listValue.job_delivered_GA : "N/A"} </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={6}>
                                                     </Grid>
@@ -288,7 +288,7 @@ class Orders extends Component {
                                                         <Typography className={classes.secondaryHeading}>Job Delivery Date : </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={6}>
-                                                        <Typography className={classes.dataHeading}>{listValue.job_delivery_date}</Typography>
+                                                        <Typography className={classes.dataHeading}>{(listValue.job_delivery_date && listValue.job_delivery_date !== null) ? listValue.job_delivery_date.toString().split("T")[0] : "N/A"}</Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={6}>
                                                     </Grid>
@@ -298,7 +298,7 @@ class Orders extends Component {
                                         <Divider />
                                         <ExpansionPanelActions>
                                             <Button size="small" onClick={() => this.handleExpChange()}>Cancel</Button>
-                                            <Button size="small" variant="contained" color="#3b3b3b" className={classes.openOrderLabel} onClick={() => this.handleOrderOpen1(this.state.orders, listValue.receipt_number)}>
+                                            <Button size="small" variant="contained" color="#3b3b3b" className={classes.openOrderLabel} onClick={() => this.handleOrderOpen1(this.state.orders, listValue.id)}>
                                                 Open Order
                                     </Button>
                                         </ExpansionPanelActions>

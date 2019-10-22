@@ -211,10 +211,8 @@ class FormEdit extends Component {
         };
         axios.post('http://localhost:4000/printOrder/update/' + this.props.selected_Order._id, obj)
             .then((res) => {
-                console.log("outcome response is :" + res.data);
                 this.setState({ update_response: res.data });
                 console.log("response is :" + this.state.update_response.printOrder);
-                console.log("response is :" + this.state.update_response);
             });
         await this.checkResponse(this.state.update_response.printOrder);
     }

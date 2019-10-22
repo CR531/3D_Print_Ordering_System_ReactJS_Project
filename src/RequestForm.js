@@ -688,13 +688,13 @@ class RequestForm extends Component {
                                     <Typography className={classes.dataHeading}>Name :</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={3}>
-                                    <Typography className={classes.secondaryHeading}>{(this.state.name && this.state.name !== "") ? this.state.name : ""}</Typography>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.name && this.state.name !== "") ? this.state.name : "N/A"}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={3}>
                                     <Typography className={classes.dataHeading}>WSU ID :</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={3}>
-                                    <Typography className={classes.secondaryHeading}>{(this.state.wsuid && this.state.wsuid !== "") ? this.state.wsuid : ""}</Typography>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.wsuid && this.state.wsuid !== "") ? this.state.wsuid : "N/A"}</Typography>
                                 </Grid>
                             </Grid>
                             <Grid container spacing={3}>
@@ -702,7 +702,7 @@ class RequestForm extends Component {
                                     <Typography className={classes.dataHeading}>Email :</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={3}>
-                                    <Typography className={classes.secondaryHeading}>{(this.state.email && this.state.email !== "") ? this.state.email : ""}</Typography>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.email && this.state.email !== "") ? this.state.email : "N/A"}</Typography>
                                 </Grid>
                             </Grid>
                             <Grid container spacing={3}>
@@ -710,7 +710,7 @@ class RequestForm extends Component {
                                     <Typography className={classes.dataHeading}>Phone :</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={3}>
-                                    <Typography className={classes.secondaryHeading}>{(this.state.phone && this.state.phone !== "") ? this.state.phone : ""}</Typography>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.phone && this.state.phone !== "") ? this.state.phone : "N/A"}</Typography>
                                 </Grid>
                             </Grid>
                             <Grid container spacing={3}>
@@ -718,7 +718,7 @@ class RequestForm extends Component {
                                     <Typography className={classes.dataHeading}>Filament Color :</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={3}>
-                                    <Typography className={classes.secondaryHeading}>{(this.state.filament_color && this.state.filament_color !== "") ? this.state.filament_color : ""}</Typography>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.filament_color && this.state.filament_color !== "") ? this.state.filament_color : "N/A"}</Typography>
                                 </Grid>
                             </Grid>
                             <Grid container spacing={3}>
@@ -726,14 +726,14 @@ class RequestForm extends Component {
                                     <Typography className={classes.dataHeading}>C-Space Representative :</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={3}>
-                                    <Typography className={classes.secondaryHeading}>{(this.state.cspace_rep_name && this.state.cspace_rep_name !== "") ? this.state.cspace_rep_name : ""}</Typography>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.cspace_rep_name && this.state.cspace_rep_name !== "") ? this.state.cspace_rep_name : "N/A"}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={3}>
                                     <Typography className={classes.dataHeading}>Order Date :</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={3}>
                                     <Typography className={classes.secondaryHeading}>
-                                        {(this.state.order_date && this.state.order_date !== null) ? this.state.order_date.toString().substring(0, 15) : null}
+                                        {(this.state.order_date && this.state.order_date !== null) ? this.state.order_date.toString().substring(0, 15) : "N/A"}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -742,7 +742,7 @@ class RequestForm extends Component {
                                     <Typography className={classes.dataHeading}>Grams Used :</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={3}>
-                                    <Typography className={classes.secondaryHeading}>{(this.state.grams_used && this.state.grams_used !== "") ? this.state.grams_used : ""}</Typography>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.grams_used && this.state.grams_used !== "") ? this.state.grams_used : "N/A"}</Typography>
                                 </Grid>
                             </Grid>
                             <Grid container spacing={3}>
@@ -750,14 +750,14 @@ class RequestForm extends Component {
                                     <Typography className={classes.dataHeading}>Amount :</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={3}>
-                                    <Typography className={classes.secondaryHeading}>{(this.state.amount_due && this.state.amount_due !== "") ? "$ " + this.state.amount_due : ""}</Typography>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.amount_due && this.state.amount_due !== "") ? "$ " + this.state.amount_due : "N/A"}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={3}>
                                     <Typography className={classes.dataHeading}>Expected Pick-Up date :</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={3}>
                                     <Typography className={classes.secondaryHeading}>
-                                        {(this.state.pickup_date && this.state.pickup_date !== null) ? this.state.pickup_date.toString().substring(0, 15) : null}
+                                        {(this.state.pickup_date && this.state.pickup_date !== null) ? this.state.pickup_date.toString().substring(0, 15) : "N/A"}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -766,7 +766,7 @@ class RequestForm extends Component {
                                     <Typography className={classes.dataHeading}>Receipt Number :</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={3}>
-                                    <Typography className={classes.secondaryHeading}>{(this.state.receipt_number && this.state.receipt_number !== "") ? this.state.receipt_number : ""}</Typography>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.receipt_number && this.state.receipt_number !== "") ? this.state.receipt_number : "N/A"}</Typography>
                                 </Grid>
                             </Grid>
                         </CardContent>

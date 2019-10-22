@@ -173,13 +173,18 @@ class Export extends Component {
             if (this.state.sorted_Orders.length > 0) {
                 this.state.sorted_Orders.map(listValue => {
                     let arr = [];
-                    arr.push(listValue.name);
-                    arr.push(listValue.receipt_number);
-                    arr.push(listValue.filament_color);
-                    arr.push(listValue.grams_used);
-                    arr.push(listValue.amount_due);
-                    arr.push("Material Cost");
-                    arr.push("Paid status");
+                    arr.push((listValue.name !== "") ? listValue.name : "N/A");
+                    arr.push((listValue.receipt_number !== "") ? listValue.receipt_number : "N/A");
+                    arr.push((listValue.filament_color !== "") ? listValue.filament_color : "N/A");
+                    arr.push((listValue.grams_used !== "") ? listValue.grams_used : "N/A");
+                    arr.push((listValue.amount_due !== "") ? listValue.amount_due : "N/A");
+                    if (listValue.grams_used !== "") {
+                        let tempString = listValue.grams_used.toString();
+                        let tempVal = parseFloat(tempString);
+                        arr.push(tempVal * (0.055));
+                    } else {
+                        arr.push("N/A");
+                    }
                     if (listValue.job_delivered_check === true) {
                         arr.push("Delivered");
                     }
@@ -200,8 +205,7 @@ class Export extends Component {
                 { title: "Material Color", width: { wch: 20 } },
                 { title: "Weight (g)", width: { wch: 10 } },
                 { title: "Cost ($)", width: { wch: 10 } },
-                { title: "Material Cost ($)", width: { wch: 10 } },
-                { title: "Paid Status", width: { wch: 20 } },
+                { title: "Material Cost ($)", width: { wch: 15 } },
                 { title: "Delivered Status", width: { wch: 20 } },
             ],
             data: this.state.converted_array
@@ -297,14 +301,14 @@ class Export extends Component {
                                 {this.state.sorted_Orders.map((listValue, index) => (
                                     <TableRow key={index}>
                                         <TableCell component="th" scope="row">
-                                            <Typography className={classes.dataHeading}>{listValue.name} </Typography>
+                                            <Typography className={classes.dataHeading}>{(listValue.name && listValue.name !== "") ? listValue.name : "N/A"} </Typography>
                                         </TableCell>
                                         <TableCell align="right">
-                                            <Typography className={classes.dataHeading}>{listValue.wsuid} </Typography>
+                                            <Typography className={classes.dataHeading}>{(listValue.wsuid && listValue.wsuid !== "") ? listValue.wsuid : "N/A"} </Typography>
                                         </TableCell>
                                         <TableCell align="right">
                                             <Typography className={classes.dataHeading}>
-                                                {listValue.order_date !== null ? listValue.order_date.toString().split("T")[0] : null}
+                                                {(listValue.order_date && listValue.order_date !== null) ? listValue.order_date.toString().split("T")[0] : "N/A"}
                                             </Typography>
                                         </TableCell>
                                     </TableRow>
