@@ -290,7 +290,7 @@ class Export extends Component {
                     this.state.sorted_Orders.length > 0 &&
                     <Paper className={classes.root} style={{ "marginBottom": "1%" }}>
                         <Table className={classes.table} aria-label="simple table">
-                            <TableHead>
+                            <TableHead style={{ "background": "lightgrey" }}>
                                 <TableRow>
                                     <TableCell ><Typography className={classes.tableHeading}>Name </Typography></TableCell>
                                     <TableCell align="right"><Typography className={classes.tableHeading}>Wsu ID </Typography></TableCell>

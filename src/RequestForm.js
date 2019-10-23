@@ -130,6 +130,7 @@ class RequestForm extends Component {
             job_delivered_check: false,
             job_delivered_GA: '',
             job_delivery_date: null,
+            status: "Pending",
             name_flag: false,
             wsuid_flag: false,
             email_flag: false,
@@ -230,6 +231,7 @@ class RequestForm extends Component {
             job_delivered_check: false,
             job_delivered_GA: '',
             job_delivery_date: null,
+            status: "Pending",
             name_flag: false,
             wsuid_flag: false,
             email_flag: false,
@@ -283,6 +285,7 @@ class RequestForm extends Component {
             job_delivered_check: this.state.job_delivered_check,
             job_delivered_GA: this.state.job_delivered_GA,
             job_delivery_date: this.state.job_delivery_date,
+            status: ((this.state.job_completed_check === true && this.state.job_delivered_check === true) ? "Done" : "Pending")
         }
         await axios.post('http://localhost:4000/printOrder/add', obj)
             .then((res) => {
@@ -320,6 +323,7 @@ class RequestForm extends Component {
             job_delivered_check: false,
             job_delivered_GA: '',
             job_delivery_date: null,
+            status: "Pending",
             name_flag: false,
             wsuid_flag: false,
             email_flag: false,

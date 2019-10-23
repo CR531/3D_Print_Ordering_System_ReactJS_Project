@@ -57,9 +57,13 @@ printOrderRoutes.route('/update/:id').post(function (req, res) {
             printOrder.job_completion_date = req.body.job_completion_date;
             printOrder.job_delivered_check = req.body.job_delivered_check
             printOrder.job_delivered_GA = req.body.job_delivered_GA;
-            printOrder.job_delivery_date = req.body.job_delivery_date
+            printOrder.job_delivery_date = req.body.job_delivery_date;
+            if ((req.body.job_completed_check === true) && (req.body.job_delivered_check === true)) {
+                printOrder.status = "Done";
+            } else {
+                printOrder.status = "Pending";
+            }
             printOrder.id = req.body.id;
-
             printOrder.save().then(printOrder => {
                 if (res.status(200)) {
                     res.status(200).json({ 'printOrder': 'Data Updated Successfully.' });

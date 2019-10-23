@@ -60,6 +60,9 @@ let PrintOrder = new Schema({
     },
     job_delivery_date: {
         type: Date
+    },
+    status: {
+        type: String
     }
 }, {
     collection: 'printOrder'

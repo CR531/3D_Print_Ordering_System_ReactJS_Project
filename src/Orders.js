@@ -143,6 +143,7 @@ class Orders extends Component {
         const updatedList = this.state.orders.filter(item => {
             if (((item.name.toString().toLowerCase().search(e.target.value.toString().toLowerCase())) === 0)
                 || ((item.receipt_number.search(e.target.value) === 0))
+                || ((item.status.toString().toLowerCase().search(e.target.value.toString().toLowerCase())) === 0)
                 || ((item.wsuid.toString().toLowerCase().search(e.target.value.toString().toLowerCase()) === 0))) {
                 console.log("Either Name or Receipt number or WSU ID Matched");
                 x = 0;
@@ -188,7 +189,7 @@ class Orders extends Component {
                             <TextField
                                 id="search"
                                 label="Search...."
-                                placeholder="Name, Wsu ID, Receipt Number"
+                                placeholder="Name, Status, Wsu ID, Receipt Number"
                                 style={{ "width": "98%" }}
                                 className={classes.textField}
                                 margin="normal"
@@ -234,7 +235,7 @@ class Orders extends Component {
                                                         <Typography className={classes.secondaryHeading}>Status : </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={3} className={classes.chip_css}>
-                                                        {(listValue.job_completed_check && listValue.job_delivered_check) ? <Chip label="Done" className={classes.chip1} />
+                                                        {(listValue.status === "Done") ? <Chip label="Done" className={classes.chip1} />
                                                             : <Chip label="Pending" className={classes.chip2} />}
                                                     </Grid>
                                                     <Grid item xs={12} sm={6}>
