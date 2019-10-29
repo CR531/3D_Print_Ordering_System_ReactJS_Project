@@ -71,7 +71,7 @@ const styles = theme => ({
         marginRight: "4%",
     },
     listItem: {
-        marginBottom: "-2%"
+        marginBottom: "-1%"
     }
 });
 
@@ -82,7 +82,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 class FormEdit extends Component {
     async componentDidMount() {
-        axios.get('http://localhost:4000/printOrder/edit/' + this.props.selected_Order._id)
+        axios.get('http://156.26.97.138:4000/printOrder/edit/' + this.props.selected_Order._id)
             .then(response => {
                 console.log("Response is given as :" + response)
             })
@@ -209,7 +209,7 @@ class FormEdit extends Component {
             job_delivery_date: (((this.state.job_completed_check === false) || (this.state.job_delivered_check === false)) ? null : this.state.job_delivery_date),
             id: this.state.id
         };
-        axios.post('http://localhost:4000/printOrder/update/' + this.props.selected_Order._id, obj)
+        axios.post('http://156.26.97.138:4000/printOrder/update/' + this.props.selected_Order._id, obj)
             .then((res) => {
                 this.setState({ update_response: res.data });
                 console.log("response is :" + this.state.update_response.printOrder);

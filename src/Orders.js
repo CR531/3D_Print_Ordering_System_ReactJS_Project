@@ -114,7 +114,7 @@ class Orders extends Component {
 
     async componentDidMount() {
         document.title = 'Orders';
-        await axios.get('http://localhost:4000/printOrder')
+        await axios.get('http://156.26.97.138:4000/printOrder')
             .then(response => {
                 this.setState({ ...this.state, orders: response.data, sorted_data: response.data });
                 console.log(this.state.orders);
