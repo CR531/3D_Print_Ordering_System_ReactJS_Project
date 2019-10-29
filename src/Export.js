@@ -227,10 +227,10 @@ class Export extends Component {
                                     <Grid item xs={12} sm={12} className={classes.grid_margin}>
                                         <Typography className={classes.tableHeading}><b>Display Orders by dates :</b></Typography>
                                     </Grid>
-                                    <Grid item xs={12} sm={2} className={classes.grid_margin}>
+                                    <Grid item xs={12} sm={3} className={classes.grid_margin} style={{ "marginLeft": "2%" }}>
                                         <Typography style={{ "marginTop": "-2%" }} className={classes.tableHeading}><b>Start Date :</b></Typography>
                                     </Grid>
-                                    <Grid item xs={12} sm={2} className={classes.date_grid_margin}>
+                                    <Grid item xs={12} sm={3} className={classes.date_grid_margin}>
                                         <DatePicker
                                             id="start_date"
                                             placeholderText="mm/dd/yyyy"
@@ -238,10 +238,12 @@ class Export extends Component {
                                             onChange={this.handleStartDateChange}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} sm={2} className={classes.grid_margin} style={{ "marginLeft": "2%" }}>
+                                    <Grid item xs={12} sm={6} className={classes.date_grid_margin}>
+                                    </Grid>
+                                    <Grid item xs={12} sm={3} className={classes.grid_margin} style={{ "marginLeft": "2%" }}>
                                         <Typography style={{ "marginTop": "-2%" }} className={classes.tableHeading}><b>End Date :</b></Typography>
                                     </Grid>
-                                    <Grid item xs={12} sm={2} className={classes.date_grid_margin}>
+                                    <Grid item xs={12} sm={3} className={classes.date_grid_margin}>
                                         <DatePicker
                                             id="end_date"
                                             placeholderText="mm/dd/yyyy"
@@ -249,7 +251,7 @@ class Export extends Component {
                                             onChange={this.handleEndDateChange}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} sm={2} className={classes.get_orders_button_grid_margin}>
+                                    <Grid item xs={12} sm={3} className={classes.get_orders_button_grid_margin}>
                                         <Button size="small" variant="contained" color="#3b3b3b" className={classes.get_orders_label}
                                             onClick={() => this.getOrders()}
                                         >
@@ -257,7 +259,7 @@ class Export extends Component {
                                     </Button>
                                     </Grid>
                                     {(this.state.no_of_records && this.state.no_of_records > 0) ?
-                                        <Grid item xs={12} sm={2} className={classes.export_button_grid_margin}>
+                                        <Grid item xs={12} sm={3} className={classes.export_button_grid_margin}>
                                             <ExcelFile
                                                 filename="3D_Print_Orders"
                                                 element={<Button size="small" variant="contained" color="#3b3b3b" className={classes.get_orders_label}
@@ -269,7 +271,7 @@ class Export extends Component {
                                                     dataSet={(this.state.dataset && this.state.dataset.length > 0) ? this.state.dataset : []}
                                                 />
                                             </ExcelFile>
-                                        </Grid> : <Grid item xs={12} sm={2} className={classes.export_button_grid_margin}></Grid>}
+                                        </Grid> : <Grid item xs={12} sm={3} className={classes.export_button_grid_margin}></Grid>}
                                 </Grid>
                             </CardContent>
                         </Card>
