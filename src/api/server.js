@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const config = require('./DB.js');
 // const businessRoute = require('./business.route');
 const printOrderRoute = require('./printOrder.route');
-
+mongoose.set('useFindAndModify', false);
 mongoose.Promise = global.Promise;
 mongoose.set('useCreateIndex', true);
 mongoose.connect(config.DB, { useNewUrlParser: true, useUnifiedTopology: true }).then(

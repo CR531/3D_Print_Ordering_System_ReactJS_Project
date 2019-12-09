@@ -15,6 +15,12 @@ import { Card } from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import FormEdit from "./FormEdit";
 import TextField from '@material-ui/core/TextField';
+import DeleteIcon from '@material-ui/icons/Delete';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
 
 const styles = theme => ({
     root: {
@@ -96,7 +102,15 @@ const styles = theme => ({
     openOrderLabel: {
         color: "white",
         background: "#3b3b3b"
-    }
+    },
+    deleteOrderLabel: {
+        left: 0,
+        marginLeft: "3%",
+        position: "absolute"
+    },
+    delete_dialog_header_css: {
+        background: "rgba(255, 194, 23, 0.95)",
+    },
 });
 
 class Orders extends Component {
@@ -106,15 +120,19 @@ class Orders extends Component {
             chipStatus: false,
             active_index: -1,
             open_Dialog: false,
+            open_Delete_Dialog: false,
+            open_Delete_status_Dialog: false,
+            delete_Order: null,
             selected_Order: {},
             orders: [],
-            sorted_data: []
+            sorted_data: [],
+            delete_response: {}
         }
     }
 
     async componentDidMount() {
         document.title = 'Orders';
-        await axios.get('http://156.26.97.138:4000/printOrder')
+        await axios.get('http://localhost:4000/printOrder')
             .then(response => {
                 this.setState({ ...this.state, orders: response.data, sorted_data: response.data });
                 console.log(this.state.orders);
@@ -135,8 +153,27 @@ class Orders extends Component {
     handleOrderOpen = async (val) => {
         await this.setState({ ...this.state, open_Dialog: true });
     }
+    handleOrderDelete = async () => {
+        await this.setState({ ...this.state, open_Delete_Dialog: false })
+        console.log("We are deleting order " + this.state.delete_Order);
+        await axios.get('http://localhost:4000/printOrder/delete/' + this.state.delete_Order)
+
+            .then((res) => {
+                this.setState({ delete_response: res.data });
+                console.log("response is :" + this.state.delete_response);
+            })
+            .catch(err => console.log(err))
+        await this.setState({ ...this.state, open_Delete_Dialog: false, open_Delete_status_Dialog: true });
+    }
     dialog_close = (value) => {
         this.setState({ ...this.state, open_Dialog: value })
+    }
+    handleDeleteDialogClose = () => {
+        this.setState({ ...this.state, open_Delete_Dialog: false })
+    }
+    handleDeleteStatusDialogClose = () => {
+        this.setState({ ...this.state, open_Delete_Dialog: false, open_Delete_status_Dialog: false });
+        window.location.reload(false);
     }
     filterData = (e) => {
         var x = -1;
@@ -160,7 +197,55 @@ class Orders extends Component {
     render() {
         const { classes } = this.props;
         return (
+
             <div style={{ "marginBottom": "2%" }}>
+                {this.state.open_Delete_status_Dialog &&
+                    <Dialog
+                        className={classes.main_heading}
+                        open={true}
+                        onClose={() => this.handleDeleteStatusDialogClose()}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle className={classes.delete_dialog_header_css} id="alert-dialog-title">{"Delete Status"}</DialogTitle>
+                        <Divider />
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description" style={{ "color": "black" }}>
+                                <br />
+                                {(this.state.delete_response === "delete_success")
+                                    ? "You have successfully deleted the 3d print order data."
+                                    : "Unable to delete the 3d print order data. Please try again."}
+                            </DialogContentText>
+                        </DialogContent>
+                        <Divider />
+                        <DialogActions>
+                            <Button onClick={() => this.handleDeleteStatusDialogClose()} color="primary" autoFocus>Close</Button>
+                        </DialogActions>
+                    </Dialog>
+                }
+                {this.state.open_Delete_Dialog &&
+                    <Dialog
+                        className={classes.main_heading}
+                        open={true}
+                        onClose={() => this.handleDeleteDialogClose()}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle className={classes.delete_dialog_header_css} id="alert-dialog-title">{"Delete Order"}</DialogTitle>
+                        <Divider />
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description" style={{ "color": "black" }}>
+                                <br />
+                                {"Are you sure to delete the specific 3d print order?"}
+                            </DialogContentText>
+                        </DialogContent>
+                        <Divider />
+                        <DialogActions>
+                            <Button onClick={() => this.handleDeleteDialogClose()} color="primary" autoFocus>Close</Button>
+                            <Button onClick={() => this.handleOrderDelete()} color="primary" autoFocus>Delete</Button>
+                        </DialogActions>
+                    </Dialog>
+                }
                 {this.state.open_Dialog && <div>
                     <FormEdit
                         open_Dialog={this.state.open_Dialog}
@@ -298,6 +383,7 @@ class Orders extends Component {
                                         </ExpansionPanelDetails>
                                         <Divider />
                                         <ExpansionPanelActions>
+                                            <Button size="small" className={classes.deleteOrderLabel} onClick={() => this.setState({ ...this.state, open_Delete_Dialog: true, delete_Order: listValue._id })}><DeleteIcon />Delete</Button>
                                             <Button size="small" onClick={() => this.handleExpChange()}>Cancel</Button>
                                             <Button size="small" variant="contained" color="#3b3b3b" className={classes.openOrderLabel} onClick={() => this.handleOrderOpen1(this.state.orders, listValue.id)}>
                                                 Open Order

@@ -66,16 +66,24 @@ printOrderRoutes.route('/update/:id').post(function (req, res) {
             printOrder.id = req.body.id;
             printOrder.save().then(printOrder => {
                 if (res.status(200)) {
-                    res.status(200).json({ 'printOrder': 'Data Updated Successfully.' });
+                    res.status(200).json({ 'printOrder': 'update_success' });
                 }
                 if (res.status(400)) {
-                    res.status(400).json({ 'printOrder': 'Unable to Update the Data. Please try again.' });
+                    res.status(400).json({ 'printOrder': 'update_failure' });
                 }
             })
                 .catch(err => {
                     res.status(400).send("unable to update the database");
                 });
         }
+    });
+});
+
+// Defined delete | remove | destroy route
+printOrderRoutes.route('/delete/:id').get(function (req, res) {
+    PrintOrder.findByIdAndRemove({ _id: req.params.id }, function (err, printOrder) {
+        if (err) res.json(err);
+        else res.json('delete_success');
     });
 });
 

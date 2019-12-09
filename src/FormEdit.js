@@ -72,7 +72,12 @@ const styles = theme => ({
     },
     listItem: {
         marginBottom: "-1%"
-    }
+    },
+    main_heading: {
+        fontSize: "x-large",
+        fontWeight: "500",
+        fontVariant: "all-petite-caps",
+    },
 });
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -82,7 +87,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 class FormEdit extends Component {
     async componentDidMount() {
-        axios.get('http://156.26.97.138:4000/printOrder/edit/' + this.props.selected_Order._id)
+        axios.get('http://localhost:4000/printOrder/edit/' + this.props.selected_Order._id)
             .then(response => {
                 console.log("Response is given as :" + response)
             })
@@ -209,7 +214,7 @@ class FormEdit extends Component {
             job_delivery_date: (((this.state.job_completed_check === false) || (this.state.job_delivered_check === false)) ? null : this.state.job_delivery_date),
             id: this.state.id
         };
-        axios.post('http://156.26.97.138:4000/printOrder/update/' + this.props.selected_Order._id, obj)
+        axios.post('http://localhost:4000/printOrder/update/' + this.props.selected_Order._id, obj)
             .then((res) => {
                 this.setState({ update_response: res.data });
                 console.log("response is :" + this.state.update_response.printOrder);
@@ -225,6 +230,7 @@ class FormEdit extends Component {
         return (
             <div>{this.state.open_new_dialog &&
                 <Dialog
+                    className={classes.main_heading}
                     open={true}
                     onClose={() => this.handleResponseClose()}
                     aria-labelledby="alert-dialog-title"
@@ -233,9 +239,10 @@ class FormEdit extends Component {
                     <DialogTitle className={classes.response_dialog_header_css} id="alert-dialog-title">{"Update Status"}</DialogTitle>
                     <Divider />
                     <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
+                        <DialogContentText id="alert-dialog-description" style={{ "color": "black" }}>
                             <br />
-                            {this.state.update_response.printOrder}
+                            {(this.state.update_response.printOrder === "update_success") && "You have successfully updated the 3d print order data."}
+                            {(this.state.update_response.printOrder === "update_failure") && "Unable to update the 3d print order data. Please try again."}
                             <br />
                         </DialogContentText>
                     </DialogContent>

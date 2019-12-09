@@ -287,7 +287,7 @@ class RequestForm extends Component {
             job_delivery_date: this.state.job_delivery_date,
             status: ((this.state.job_completed_check === true && this.state.job_delivered_check === true) ? "Done" : "Pending")
         }
-        await axios.post('http://156.26.97.138:4000/printOrder/add', obj)
+        await axios.post('http://localhost:4000/printOrder/add', obj)
             .then((res) => {
                 this.setState({ response: res.data });
                 console.log("response is :" + this.state.response.printOrder);
