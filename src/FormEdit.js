@@ -27,6 +27,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
+import emailjs from 'emailjs-com';
 
 const styles = theme => ({
     close: {
@@ -207,14 +208,46 @@ class FormEdit extends Component {
             email_notify_check: !(this.state.email_notify_check)
         });
     }
-    handleCompletedEmail = () => { }
+    handleCompletedEmail = () => {
+        console.log('We are in email block');
+        const templateParams = {
+            from_name: "Ablah Library C-Space",
+            rec_email: this.state.email !== '' ? this.state.email : null,
+            to_name: this.state.name !== '' ? this.state.name : null,
+        };
+
+        emailjs.send('gmail', 'job_completed_email', templateParams, 'user_bLarFHLTfyHL5M51XRyq9')
+            .then((response) => {
+                console.log('SUCCESS!');
+                alert("Job Completed Email Sent Successfully")
+            }, (err) => {
+                console.log('FAILED...', err);
+            });
+        console.log('We are out of email block');
+    }
     handleJobCompletedEmailSent = () => {
         this.setState({
             ...this.state,
             job_completed_email_sent: !(this.state.job_completed_email_sent)
         });
     }
-    handleFeedbackEmail = () => { }
+    handleFeedbackEmail = () => {
+        console.log('We are in email block');
+        const templateParams = {
+            from_name: "Ablah Library C-Space",
+            rec_email: this.state.email !== '' ? this.state.email : null,
+            to_name: this.state.name !== '' ? this.state.name : null,
+        };
+
+        emailjs.send('gmail', 'feedback_email', templateParams, 'user_bLarFHLTfyHL5M51XRyq9')
+            .then((response) => {
+                console.log('SUCCESS!');
+                alert("Feedback Email Sent Successfully")
+            }, (err) => {
+                console.log('FAILED...', err);
+            });
+        console.log('We are out of email block');
+    }
     handleFeedbackEmailSent = () => {
         this.setState({
             ...this.state,
@@ -549,14 +582,14 @@ class FormEdit extends Component {
                                     </Grid>
                                 </MuiPickersUtilsProvider>
                             </ListItem>
-                            {this.state.email_notify_check ?
+                            {(this.state.email_notify_check === true && this.state.job_completed_check === true) ?
                                 <ListItem className={classes.listItem}>
                                     <Grid container spacing={3}>
                                         <Grid item xs={12} sm={6} className={classes.margin_top_1}>
                                             <Button
                                                 variant="contained"
                                                 color="primary"
-                                                disabled={(this.state.email_notify_check && this.state.job_completed_check) === true ? false : true}
+                                                disabled={this.state.job_completed_email_sent === true ? true : false}
                                                 style={{ "background": "#3b3b3b", "marginLeft": "2%" }}
                                                 onClick={() => this.handleCompletedEmail()}>
                                                 Send Job Completed Email
@@ -634,14 +667,14 @@ class FormEdit extends Component {
                                     </Grid>
                                 </MuiPickersUtilsProvider>
                             </ListItem>
-                            {this.state.email_notify_check ?
+                            {(this.state.email_notify_check === true && this.state.job_delivered_check === true && this.state.job_completed_check === true) ?
                                 <ListItem className={classes.listItem}>
                                     <Grid container spacing={3}>
                                         <Grid item xs={12} sm={6} className={classes.margin_top_1}>
                                             <Button
                                                 variant="contained"
                                                 color="primary"
-                                                disabled={(this.state.email_notify_check && this.state.job_completed_check && this.state.job_delivered_check) === true ? false : true}
+                                                disabled={this.state.job_feedback_email_sent === true ? true : false}
                                                 style={{ "background": "#3b3b3b", "marginLeft": "2%" }}
                                                 onClick={() => this.handleFeedbackEmail()}>
                                                 Send Feedback Email
