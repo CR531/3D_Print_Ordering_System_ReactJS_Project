@@ -16,6 +16,9 @@ let PrintOrder = new Schema({
     email: {
         type: String
     },
+    email_notify_check: {
+        type: Boolean
+    },
     filament_color: {
         type: String
     },
@@ -52,6 +55,9 @@ let PrintOrder = new Schema({
     job_completion_date: {
         type: Date
     },
+    job_completed_email_sent: {
+        type: Boolean
+    },
     job_delivered_check: {
         type: Boolean
     },
@@ -60,6 +66,9 @@ let PrintOrder = new Schema({
     },
     job_delivery_date: {
         type: Date
+    },
+    job_feedback_email_sent: {
+        type: Boolean
     },
     status: {
         type: String

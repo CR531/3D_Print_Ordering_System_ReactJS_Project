@@ -115,6 +115,7 @@ class RequestForm extends Component {
             wsuid: '',
             phone: '',
             email: '',
+            email_notify_check: false,
             filament_color: '',
             notes: '',
             cspace_rep_name: '',
@@ -127,9 +128,11 @@ class RequestForm extends Component {
             job_completed_check: false,
             job_completed_GA: '',
             job_completion_date: null,
+            job_completed_email_sent: false,
             job_delivered_check: false,
             job_delivered_GA: '',
             job_delivery_date: null,
+            job_feedback_email_sent: false,
             status: "Pending",
             name_flag: false,
             wsuid_flag: false,
@@ -216,6 +219,7 @@ class RequestForm extends Component {
             wsuid: '',
             phone: '',
             email: '',
+            email_notify_check: false,
             filament_color: '',
             notes: '',
             cspace_rep_name: '',
@@ -228,9 +232,11 @@ class RequestForm extends Component {
             job_completed_check: false,
             job_completed_GA: '',
             job_completion_date: null,
+            job_completed_email_sent: false,
             job_delivered_check: false,
             job_delivered_GA: '',
             job_delivery_date: null,
+            job_feedback_email_sent: false,
             status: "Pending",
             name_flag: false,
             wsuid_flag: false,
@@ -270,6 +276,7 @@ class RequestForm extends Component {
             wsuid: this.state.wsuid,
             phone: this.state.phone,
             email: this.state.email,
+            email_notify_check: this.state.email_notify_check,
             filament_color: this.state.filament_color,
             notes: this.state.notes,
             cspace_rep_name: this.state.cspace_rep_name,
@@ -282,9 +289,11 @@ class RequestForm extends Component {
             job_completed_check: this.state.job_completed_check,
             job_completed_GA: this.state.job_completed_GA,
             job_completion_date: this.state.job_completion_date,
+            job_completed_email_sent: this.state.job_completed_email_sent,
             job_delivered_check: this.state.job_delivered_check,
             job_delivered_GA: this.state.job_delivered_GA,
             job_delivery_date: this.state.job_delivery_date,
+            job_feedback_email_sent: this.state.job_feedback_email_sent,
             status: ((this.state.job_completed_check === true && this.state.job_delivered_check === true) ? "Done" : "Pending")
         }
         await axios.post('http://localhost:4000/printOrder/add', obj)
@@ -308,6 +317,7 @@ class RequestForm extends Component {
             wsuid: '',
             phone: '',
             email: '',
+            email_notify_check: false,
             filament_color: '',
             notes: '',
             cspace_rep_name: '',
@@ -320,9 +330,11 @@ class RequestForm extends Component {
             job_completed_check: false,
             job_completed_GA: '',
             job_completion_date: null,
+            job_completed_email_sent: false,
             job_delivered_check: false,
             job_delivered_GA: '',
             job_delivery_date: null,
+            job_feedback_email_sent: false,
             status: "Pending",
             name_flag: false,
             wsuid_flag: false,
@@ -345,6 +357,26 @@ class RequestForm extends Component {
         this.setState({
             ...this.state,
             job_delivered_check: !(this.state.job_delivered_check)
+        });
+    }
+    handleEmailNotifyChange = () => {
+        this.setState({
+            ...this.state,
+            email_notify_check: !(this.state.email_notify_check)
+        });
+    }
+    handleCompletedEmail = () => { }
+    handleJobCompletedEmailSent = () => {
+        this.setState({
+            ...this.state,
+            job_completed_email_sent: !(this.state.job_completed_email_sent)
+        });
+    }
+    handleFeedbackEmail = () => { }
+    handleFeedbackEmailSent = () => {
+        this.setState({
+            ...this.state,
+            job_feedback_email_sent: !(this.state.job_feedback_email_sent)
         });
     }
     render() {
@@ -425,6 +457,22 @@ class RequestForm extends Component {
                                 value={this.state.email}
                                 onChange={(value) => this.onGenericChange(value)}
                             />
+                        </Grid>
+                        <Grid item xs={12} sm={6} className={classes.grid_margin} style={{ "marginLeft": "1%" }}>
+                            <FormGroup row>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            id="email_notify_check"
+                                            checked={this.state.email_notify_check}
+                                            onChange={() => this.handleEmailNotifyChange()}
+                                            color="primary"
+                                            value={this.state.email_notify_check}
+                                        />
+                                    }
+                                    label="Send Email Notifications"
+                                />
+                            </FormGroup>
                         </Grid>
                         <Grid item xs={12} sm={12} className={classes.grid_margin}>
                             <TextField
@@ -630,6 +678,34 @@ class RequestForm extends Component {
                                 />
                             </Grid>
                             : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
+                        {(this.state.email_notify_check && this.state.job_completed_check) ?
+                            <Grid item xs={12} sm={6} className={classes.grid_margin}>
+                                <Button
+
+                                    variant="contained"
+                                    color="primary"
+                                    style={{ "background": "#3b3b3b", "marginLeft": "2%" }}
+                                    onClick={() => this.handleCompletedEmail()}>
+                                    Send Job Completed Email
+                                    </Button>
+                            </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
+                        {(this.state.email_notify_check && this.state.job_completed_check) ?
+                            <Grid item xs={12} sm={6} className={classes.grid_margin}>
+                                <FormGroup row>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                id="job_completed_email_sent"
+                                                checked={this.state.job_completed_email_sent}
+                                                onChange={() => this.handleJobCompletedEmailSent()}
+                                                color="primary"
+                                                value={this.state.job_completed_email_sent}
+                                            />
+                                        }
+                                        label="Job Completed Email Sent"
+                                    />
+                                </FormGroup>
+                            </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
                         <Grid item xs={12} sm={3} className={classes.grid_margin}>
                             <FormGroup row>
                                 <FormControlLabel
@@ -674,6 +750,33 @@ class RequestForm extends Component {
                                 />
                             </Grid>
                             : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
+                        {(this.state.email_notify_check && this.state.job_delivered_check) ?
+                            <Grid item xs={12} sm={6} className={classes.grid_margin}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    style={{ "background": "#3b3b3b", "marginLeft": "2%" }}
+                                    onClick={() => this.handleFeedbackEmail()}>
+                                    Send Feedback Email
+                                    </Button>
+                            </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
+                        {(this.state.email_notify_check && this.state.job_delivered_check) ?
+                            <Grid item xs={12} sm={6} className={classes.grid_margin}>
+                                <FormGroup row>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                id="job_feedback_email_sent"
+                                                checked={this.state.job_feedback_email_sent}
+                                                onChange={() => this.handleFeedbackEmailSent()}
+                                                color="primary"
+                                                value={this.state.job_feedback_email_sent}
+                                            />
+                                        }
+                                        label="Job Delivered Email Sent"
+                                    />
+                                </FormGroup>
+                            </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
                         <Grid item xs={12} sm={3} />
                     </Grid>
                 </div>}

@@ -78,6 +78,13 @@ const styles = theme => ({
         fontWeight: "500",
         fontVariant: "all-petite-caps",
     },
+    checkbox_margins: {
+        marginTop: "1%",
+        marginLeft: "-6%"
+    },
+    margin_top_1: {
+        marginTop: "1%"
+    }
 });
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -100,6 +107,7 @@ class FormEdit extends Component {
             wsuid: this.props.selected_Order.wsuid,
             phone: this.props.selected_Order.phone,
             email: this.props.selected_Order.email,
+            email_notify_check: (this.props.selected_Order.email_notify_check ? this.props.selected_Order.email_notify_check : false),
             filament_color: this.props.selected_Order.filament_color,
             notes: this.props.selected_Order.notes,
             cspace_rep_name: this.props.selected_Order.cspace_rep_name,
@@ -112,9 +120,15 @@ class FormEdit extends Component {
             job_completed_check: this.props.selected_Order.job_completed_check,
             job_completed_GA: (this.props.selected_Order.job_completed_check === true ? this.props.selected_Order.job_completed_GA : ""),
             job_completion_date: (this.props.selected_Order.job_completed_check === true ? this.props.selected_Order.job_completion_date : null),
+            job_completed_email_sent: (this.props.selected_Order.job_completed_email_sent) ?
+                ((this.props.selected_Order.email_notify_check && this.props.selected_Order.job_completed_check) === true ? this.props.selected_Order.job_completed_email_sent : false)
+                : false,
             job_delivered_check: (this.props.selected_Order.job_completed_check === true ? this.props.selected_Order.job_delivered_check : false),
             job_delivered_GA: (this.props.selected_Order.job_delivered_check === true ? this.props.selected_Order.job_delivered_GA : ""),
             job_delivery_date: (this.props.selected_Order.job_delivered_check === true ? this.props.selected_Order.job_delivery_date : null),
+            job_feedback_email_sent: (this.props.selected_Order.job_feedback_email_sent) ?
+                ((this.props.selected_Order.email_notify_check && this.props.selected_Order.job_delivered_check) === true ? this.props.selected_Order.job_feedback_email_sent : false)
+                : false,
             id: this.props.selected_Order.id
         });
     }
@@ -151,6 +165,7 @@ class FormEdit extends Component {
             wsuid: '',
             phone: '',
             email: '',
+            email_notify_check: false,
             filament_color: '',
             notes: '',
             cspace_rep_name: '',
@@ -163,9 +178,11 @@ class FormEdit extends Component {
             job_completed_check: false,
             job_completed_GA: '',
             job_completion_date: null,
+            job_completed_email_sent: false,
             job_delivered_check: false,
             job_delivered_GA: '',
             job_delivery_date: null,
+            job_feedback_email_sent: false,
             id: null
         }
     }
@@ -184,6 +201,26 @@ class FormEdit extends Component {
     handleDeliveredDateChange = date => {
         this.setState({ ...this.state, job_delivery_date: date });
     }
+    handleEmailNotifyChange = () => {
+        this.setState({
+            ...this.state,
+            email_notify_check: !(this.state.email_notify_check)
+        });
+    }
+    handleCompletedEmail = () => { }
+    handleJobCompletedEmailSent = () => {
+        this.setState({
+            ...this.state,
+            job_completed_email_sent: !(this.state.job_completed_email_sent)
+        });
+    }
+    handleFeedbackEmail = () => { }
+    handleFeedbackEmailSent = () => {
+        this.setState({
+            ...this.state,
+            job_feedback_email_sent: !(this.state.job_feedback_email_sent)
+        });
+    }
     wait = (ms) => {
         var start = new Date().getTime();
         var end = start;
@@ -197,6 +234,7 @@ class FormEdit extends Component {
             wsuid: this.state.wsuid,
             phone: this.state.phone,
             email: this.state.email,
+            email_notify_check: this.state.email_notify_check,
             filament_color: this.state.filament_color,
             notes: this.state.notes,
             cspace_rep_name: this.state.cspace_rep_name,
@@ -209,17 +247,19 @@ class FormEdit extends Component {
             job_completed_check: this.state.job_completed_check,
             job_completed_GA: (this.state.job_completed_check === false ? "" : this.state.job_completed_GA),
             job_completion_date: (this.state.job_completed_check === false ? null : this.state.job_completion_date),
+            job_completed_email_sent: ((this.state.email_notify_check && this.state.job_completed_check) === true ? this.state.job_completed_email_sent : false),
             job_delivered_check: (this.state.job_completed_check === false ? false : this.state.job_delivered_check),
             job_delivered_GA: (((this.state.job_completed_check === false) || (this.state.job_delivered_check === false)) ? "" : this.state.job_delivered_GA),
             job_delivery_date: (((this.state.job_completed_check === false) || (this.state.job_delivered_check === false)) ? null : this.state.job_delivery_date),
+            job_feedback_email_sent: (((this.state.job_completed_check === false) || (this.state.job_delivered_check === false) || (this.state.email_notify_check === false)) ? false : this.state.job_feedback_email_sent),
             id: this.state.id
         };
         axios.post('http://localhost:4000/printOrder/update/' + this.props.selected_Order._id, obj)
             .then((res) => {
                 this.setState({ update_response: res.data });
-                console.log("response is :" + this.state.update_response.printOrder);
+                console.log("response is :" + this.state.update_response);
             });
-        await this.checkResponse(this.state.update_response.printOrder);
+        await this.checkResponse(this.state.update_response);
     }
     checkResponse = async (val) => {
         this.setState({ ...this.state, open_new_dialog: true })
@@ -241,8 +281,9 @@ class FormEdit extends Component {
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description" style={{ "color": "black" }}>
                             <br />
-                            {(this.state.update_response.printOrder === "update_success") && "You have successfully updated the 3d print order data."}
-                            {(this.state.update_response.printOrder === "update_failure") && "Unable to update the 3d print order data. Please try again."}
+                            {(this.state.update_response === "update_success")
+                                ? "You have successfully updated the 3d print order data."
+                                : "Unable to update the 3d print order data. Please try again."}
                             <br />
                         </DialogContentText>
                     </DialogContent>
@@ -304,6 +345,24 @@ class FormEdit extends Component {
                                     value={this.state.email}
                                     onChange={(value) => this.onGenericChange(value)}
                                 />
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
+                                <Grid item xs={12} sm={3} style={{ "marginLeft": "1%" }}>
+                                    <FormGroup row>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    id="email_notify_check"
+                                                    checked={this.state.email_notify_check}
+                                                    onChange={() => this.handleEmailNotifyChange()}
+                                                    color="primary"
+                                                    value={this.state.email_notify_check}
+                                                />
+                                            }
+                                            label="Send Email Notifications"
+                                        />
+                                    </FormGroup>
+                                </Grid>
                             </ListItem>
                             <ListItem className={classes.listItem}>
                                 <TextField
@@ -490,6 +549,38 @@ class FormEdit extends Component {
                                     </Grid>
                                 </MuiPickersUtilsProvider>
                             </ListItem>
+                            {this.state.email_notify_check ?
+                                <ListItem className={classes.listItem}>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={12} sm={6} className={classes.margin_top_1}>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                disabled={(this.state.email_notify_check && this.state.job_completed_check) === true ? false : true}
+                                                style={{ "background": "#3b3b3b", "marginLeft": "2%" }}
+                                                onClick={() => this.handleCompletedEmail()}>
+                                                Send Job Completed Email
+                                    </Button>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6} className={classes.checkbox_margins}>
+                                            <FormGroup row>
+                                                <FormControlLabel
+                                                    control={
+                                                        <Checkbox
+                                                            id="job_completed_email_sent"
+                                                            checked={this.state.job_completed_email_sent}
+                                                            disabled={(this.state.email_notify_check && this.state.job_completed_check) === true ? false : true}
+                                                            onChange={() => this.handleJobCompletedEmailSent()}
+                                                            color="primary"
+                                                            value={this.state.job_completed_email_sent}
+                                                        />
+                                                    }
+                                                    label="Job Completed Email Sent"
+                                                />
+                                            </FormGroup>
+                                        </Grid>
+                                    </Grid>
+                                </ListItem> : <ListItem className={classes.listItem} />}
                             <ListItem className={classes.listItem}>
                                 <Grid item xs={12} sm={3} style={{ "marginLeft": "1%", "marginTop": "1.5%" }}>
                                     <FormGroup row>
@@ -543,6 +634,38 @@ class FormEdit extends Component {
                                     </Grid>
                                 </MuiPickersUtilsProvider>
                             </ListItem>
+                            {this.state.email_notify_check ?
+                                <ListItem className={classes.listItem}>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={12} sm={6} className={classes.margin_top_1}>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                disabled={(this.state.email_notify_check && this.state.job_completed_check && this.state.job_delivered_check) === true ? false : true}
+                                                style={{ "background": "#3b3b3b", "marginLeft": "2%" }}
+                                                onClick={() => this.handleFeedbackEmail()}>
+                                                Send Feedback Email
+                                    </Button>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6} className={classes.checkbox_margins}>
+                                            <FormGroup row>
+                                                <FormControlLabel
+                                                    control={
+                                                        <Checkbox
+                                                            id="job_feedback_email_sent"
+                                                            checked={this.state.job_feedback_email_sent}
+                                                            disabled={(this.state.email_notify_check && this.state.job_delivered_check && this.state.job_completed_check) === true ? false : true}
+                                                            onChange={() => this.handleFeedbackEmailSent()}
+                                                            color="primary"
+                                                            value={this.state.job_feedback_email_sent}
+                                                        />
+                                                    }
+                                                    label="Job Delivered Email Sent"
+                                                />
+                                            </FormGroup>
+                                        </Grid>
+                                    </Grid>
+                                </ListItem> : <ListItem className={classes.listItem} />}
                         </List>
                     </Dialog>
                 </div>
