@@ -431,6 +431,21 @@ class FormEdit extends Component {
                             </ListItem>
                             <ListItem className={classes.listItem}>
                                 <TextField
+                                    id="notes"
+                                    multiline
+                                    label="Notes"
+                                    placeholder="Notes"
+                                    rows="3"
+                                    style={{ "width": "61%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    value={this.state.notes}
+                                    onChange={(value) => this.onGenericChange(value)}
+                                />
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
+                                <TextField
                                     id="cspace_rep_name"
                                     label="C-Space Representative"
                                     placeholder="C-Space Representative"
@@ -529,6 +544,21 @@ class FormEdit extends Component {
                                         />
                                     </Grid>
                                 </MuiPickersUtilsProvider>
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
+                                <TextField
+                                    id="remark_notes"
+                                    multiline
+                                    label="Remark Notes"
+                                    placeholder="Remark Notes"
+                                    rows="3"
+                                    style={{ "width": "61%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    value={this.state.remark_notes}
+                                    onChange={(value) => this.onGenericChange(value)}
+                                />
                             </ListItem>
                             <ListItem className={classes.listItem}>
                                 <Grid item xs={12} sm={3} style={{ "marginLeft": "1%", "marginTop": "1.5%" }}>
