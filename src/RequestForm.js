@@ -887,6 +887,12 @@ class RequestForm extends Component {
                                 <Grid item xs={12} sm={3}>
                                     <Typography className={classes.secondaryHeading}>{(this.state.phone && this.state.phone !== "") ? this.state.phone : "N/A"}</Typography>
                                 </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.dataHeading}>Email Notifications :</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <Typography className={classes.secondaryHeading}>{(this.state.email_notify_check && this.state.email_notify_check === true) ? "YES" : "NO"}</Typography>
+                                </Grid>
                             </Grid>
                             <Grid container spacing={3}>
                                 <Grid item xs={12} sm={3}>

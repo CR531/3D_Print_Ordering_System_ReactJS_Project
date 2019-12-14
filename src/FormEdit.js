@@ -403,39 +403,6 @@ class FormEdit extends Component {
                                     value={this.state.wsuid}
                                     onChange={(value) => this.onGenericChange(value)}
                                 />
-                            </ListItem>
-                            <ListItem className={classes.listItem}>
-                                <TextField
-                                    id="email"
-                                    label="Email"
-                                    placeholder="Email"
-                                    style={{ "width": "61%" }}
-                                    className={classes.textField}
-                                    margin="normal"
-                                    variant="outlined"
-                                    value={this.state.email}
-                                    onChange={(value) => this.onGenericChange(value)}
-                                />
-                            </ListItem>
-                            <ListItem className={classes.listItem}>
-                                <Grid item xs={12} sm={3} style={{ "marginLeft": "1%" }}>
-                                    <FormGroup row>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    id="email_notify_check"
-                                                    checked={this.state.email_notify_check}
-                                                    onChange={() => this.handleEmailNotifyChange()}
-                                                    color="primary"
-                                                    value={this.state.email_notify_check}
-                                                />
-                                            }
-                                            label="Send Email Notifications"
-                                        />
-                                    </FormGroup>
-                                </Grid>
-                            </ListItem>
-                            <ListItem className={classes.listItem}>
                                 <TextField
                                     id="phone"
                                     label="Phone"
@@ -455,6 +422,38 @@ class FormEdit extends Component {
                                         }
                                     }}
                                 />
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
+                                <Grid item xs={12} sm={3} style={{ "marginLeft": "1%", "marginRight": "5%" }}>
+                                    <FormGroup row>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    id="email_notify_check"
+                                                    checked={this.state.email_notify_check}
+                                                    onChange={() => this.handleEmailNotifyChange()}
+                                                    color="primary"
+                                                    value={this.state.email_notify_check}
+                                                />
+                                            }
+                                            label="Send Email Notifications"
+                                        />
+                                    </FormGroup>
+                                </Grid>
+                                <TextField
+                                    id="email"
+                                    label="Email"
+                                    placeholder="Email"
+                                    style={{ "width": "61%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    value={this.state.email}
+                                    onChange={(value) => this.onGenericChange(value)}
+                                />
+
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
                                 <TextField
                                     id="filament_color"
                                     label="Filament Color"
@@ -466,8 +465,6 @@ class FormEdit extends Component {
                                     value={this.state.filament_color}
                                     onChange={(value) => this.onGenericChange(value)}
                                 />
-                            </ListItem>
-                            <ListItem className={classes.listItem}>
                                 <TextField
                                     id="notes"
                                     multiline
@@ -494,8 +491,25 @@ class FormEdit extends Component {
                                     value={this.state.cspace_rep_name}
                                     onChange={(value) => this.onGenericChange(value)}
                                 />
+                                <TextField
+                                    id="grams_used"
+                                    label="Total Grams Used"
+                                    placeholder="Total Grams Used"
+                                    style={{ "width": "30%" }}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    value={this.state.grams_used}
+                                    onChange={(event) => {
+                                        if (isNaN(Number(event.target.value))) {
+                                            return;
+                                        } else {
+                                            this.setState({ ...this.state, grams_used: event.target.value });
+                                        }
+                                    }}
+                                />
                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
+                                    <Grid item xs={12} sm={4} className={classes.grid_margin} container justify="space-around">
                                         <KeyboardDatePicker
                                             disableToolbar
                                             variant="inline"
@@ -515,21 +529,15 @@ class FormEdit extends Component {
                             </ListItem>
                             <ListItem className={classes.listItem}>
                                 <TextField
-                                    id="grams_used"
-                                    label="Total Grams Used"
-                                    placeholder="Total Grams Used"
+                                    id="receipt_number"
+                                    label="Receipt #"
+                                    placeholder="Receipt #"
                                     style={{ "width": "30%" }}
                                     className={classes.textField}
                                     margin="normal"
                                     variant="outlined"
-                                    value={this.state.grams_used}
-                                    onChange={(event) => {
-                                        if (isNaN(Number(event.target.value))) {
-                                            return;
-                                        } else {
-                                            this.setState({ ...this.state, grams_used: event.target.value });
-                                        }
-                                    }}
+                                    value={this.state.receipt_number}
+                                    onChange={(value) => this.onGenericChange(value)}
                                 />
                                 <TextField
                                     id="amount_due"
@@ -551,21 +559,8 @@ class FormEdit extends Component {
                                         }
                                     }}
                                 />
-                            </ListItem>
-                            <ListItem className={classes.listItem}>
-                                <TextField
-                                    id="receipt_number"
-                                    label="Receipt #"
-                                    placeholder="Receipt #"
-                                    style={{ "width": "30%" }}
-                                    className={classes.textField}
-                                    margin="normal"
-                                    variant="outlined"
-                                    value={this.state.receipt_number}
-                                    onChange={(value) => this.onGenericChange(value)}
-                                />
                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
+                                    <Grid item xs={12} sm={4} className={classes.grid_margin} container justify="space-around">
                                         <KeyboardDatePicker
                                             disableToolbar
                                             variant="inline"
@@ -590,7 +585,7 @@ class FormEdit extends Component {
                                     label="Remark Notes"
                                     placeholder="Remark Notes"
                                     rows="3"
-                                    style={{ "width": "61%" }}
+                                    style={{ "width": "92%" }}
                                     className={classes.textField}
                                     margin="normal"
                                     variant="outlined"
@@ -599,7 +594,7 @@ class FormEdit extends Component {
                                 />
                             </ListItem>
                             <ListItem className={classes.listItem}>
-                                <Grid item xs={12} sm={3} style={{ "marginLeft": "1%", "marginTop": "1.5%" }}>
+                                <Grid item xs={12} sm={3} style={{ "marginLeft": "1%", "marginTop": "1.5%", "marginRight": "5%" }}>
                                     <FormGroup row>
                                         <FormControlLabel
                                             control={
@@ -615,9 +610,6 @@ class FormEdit extends Component {
                                         />
                                     </FormGroup>
                                 </Grid>
-                            </ListItem>
-
-                            <ListItem className={classes.listItem}>
                                 <TextField
                                     id="job_completed_GA"
                                     label="Completed GA"
@@ -632,7 +624,7 @@ class FormEdit extends Component {
                                     onChange={(value) => this.onGenericChange(value)}
                                 />
                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
+                                    <Grid item xs={12} sm={4} className={classes.grid_margin} container justify="space-around">
                                         <KeyboardDatePicker
                                             disableToolbar
                                             variant="inline"
@@ -655,7 +647,8 @@ class FormEdit extends Component {
                             {(this.state.email_notify_check === true && this.state.job_completed_check === true) ?
                                 <ListItem className={classes.listItem}>
                                     <Grid container spacing={3}>
-                                        <Grid item xs={12} sm={6} className={classes.margin_top_1}>
+                                        <Grid item xs={12} sm={4} style={{ "marginTop": "1.5%", "marginRight": "-3%" }}></Grid>
+                                        <Grid item xs={12} sm={5} className={classes.margin_top_1}>
                                             <Button
                                                 variant="contained"
                                                 color="primary"
@@ -665,7 +658,7 @@ class FormEdit extends Component {
                                                 Send Job Completed Email
                                     </Button>
                                         </Grid>
-                                        <Grid item xs={12} sm={6} className={classes.checkbox_margins}>
+                                        <Grid item xs={12} sm={3} className={classes.checkbox_margins}>
                                             <FormGroup row>
                                                 <FormControlLabel
                                                     control={
@@ -685,7 +678,7 @@ class FormEdit extends Component {
                                     </Grid>
                                 </ListItem> : <ListItem className={classes.listItem} />}
                             <ListItem className={classes.listItem}>
-                                <Grid item xs={12} sm={3} style={{ "marginLeft": "1%", "marginTop": "1.5%" }}>
+                                <Grid item xs={12} sm={3} style={{ "marginLeft": "1%", "marginTop": "1.5%", "marginRight": "5%" }}>
                                     <FormGroup row>
                                         <FormControlLabel
                                             control={
@@ -702,9 +695,6 @@ class FormEdit extends Component {
                                         />
                                     </FormGroup>
                                 </Grid>
-                            </ListItem>
-
-                            <ListItem className={classes.listItem}>
                                 <TextField
                                     id="job_delivered_GA"
                                     label="Delivered GA"
@@ -719,7 +709,7 @@ class FormEdit extends Component {
                                     onChange={(value) => this.onGenericChange(value)}
                                 />
                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    <Grid item xs={12} sm={6} className={classes.grid_margin} container justify="space-around">
+                                    <Grid item xs={12} sm={4} className={classes.grid_margin} container justify="space-around">
                                         <KeyboardDatePicker
                                             disableToolbar
                                             variant="inline"
@@ -742,7 +732,8 @@ class FormEdit extends Component {
                             {(this.state.email_notify_check === true && this.state.job_delivered_check === true && this.state.job_completed_check === true) ?
                                 <ListItem className={classes.listItem}>
                                     <Grid container spacing={3}>
-                                        <Grid item xs={12} sm={6} className={classes.margin_top_1}>
+                                        <Grid item xs={12} sm={4} style={{ "marginTop": "1.5%", "marginRight": "-3%" }}></Grid>
+                                        <Grid item xs={12} sm={5} className={classes.margin_top_1}>
                                             <Button
                                                 variant="contained"
                                                 color="primary"
@@ -752,7 +743,7 @@ class FormEdit extends Component {
                                                 Send Feedback Email
                                     </Button>
                                         </Grid>
-                                        <Grid item xs={12} sm={6} className={classes.checkbox_margins}>
+                                        <Grid item xs={12} sm={3} className={classes.checkbox_margins}>
                                             <FormGroup row>
                                                 <FormControlLabel
                                                     control={
