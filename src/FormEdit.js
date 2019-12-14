@@ -28,6 +28,10 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
 import emailjs from 'emailjs-com';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import clsx from 'clsx';
+import ErrorIcon from '@material-ui/icons/Error';
 
 const styles = theme => ({
     close: {
@@ -184,7 +188,8 @@ class FormEdit extends Component {
             job_delivered_GA: '',
             job_delivery_date: null,
             job_feedback_email_sent: false,
-            id: null
+            id: null,
+            required_snackbar: false
         }
     }
     onGenericChange = (e) => {
@@ -261,6 +266,37 @@ class FormEdit extends Component {
             end = new Date().getTime();
         }
     }
+    checkRequiredFields = async () => {
+        if (this.state.job_completed_check === false && this.state.job_delivered_check === false) {
+            await this.setState({ ...this.state, required_snackbar: false });
+            this.handleUpdate();
+        }
+        if (this.state.job_completed_check === true && this.state.job_delivered_check === false) {
+            if (this.state.job_completed_GA === "" || this.state.job_completion_date === null) {
+                await this.setState({ ...this.state, required_snackbar: true });
+            } else {
+                await this.setState({ ...this.state, required_snackbar: false });
+                this.handleUpdate();
+            }
+        }
+        if (this.state.job_delivered_check === true && this.state.job_completed_check === false) {
+            if (this.state.job_delivered_GA === "" || this.state.job_delivery_date === null) {
+                await this.setState({ ...this.state, required_snackbar: true });
+            } else {
+                await this.setState({ ...this.state, required_snackbar: false });
+                this.handleUpdate();
+            }
+        }
+        if (this.state.job_completed_check === true && this.state.job_delivered_check === true) {
+            if (this.state.job_completed_GA === "" || this.state.job_completion_date === null
+                || this.state.job_delivered_GA === "" || this.state.job_delivery_date === null) {
+                await this.setState({ ...this.state, required_snackbar: true });
+            } else {
+                await this.setState({ ...this.state, required_snackbar: false });
+                this.handleUpdate();
+            }
+        }
+    }
     handleUpdate = async () => {
         const obj = {
             name: this.state.name,
@@ -297,7 +333,9 @@ class FormEdit extends Component {
     checkResponse = async (val) => {
         this.setState({ ...this.state, open_new_dialog: true })
     }
-
+    handleReqSnackbarClose = async () => {
+        await this.setState({ ...this.state, required_snackbar: false })
+    }
     render() {
         const { classes } = this.props;
         return (
@@ -336,7 +374,7 @@ class FormEdit extends Component {
                                 <Typography variant="h6" className={classes.title}>
                                     Order Details
                         </Typography>
-                                <Button color="inherit" onClick={() => this.handleUpdate()} style={{ "background": "rgba(255, 194, 23, 0.95)", "color": "black" }}>
+                                <Button color="inherit" onClick={() => this.checkRequiredFields()} style={{ "background": "rgba(255, 194, 23, 0.95)", "color": "black" }}>
                                     Update
                         </Button>
                             </Toolbar>
@@ -585,6 +623,7 @@ class FormEdit extends Component {
                                     label="Completed GA"
                                     placeholder="Completed GA"
                                     style={{ "width": "30%" }}
+                                    required={this.state.job_completed_check === true ? true : false}
                                     className={classes.textField}
                                     margin="normal"
                                     disabled={this.state.job_completed_check === false ? true : false}
@@ -599,6 +638,7 @@ class FormEdit extends Component {
                                             variant="inline"
                                             format="MM/dd/yyyy"
                                             placeholder='mm/dd/yyyy'
+                                            required={this.state.job_completed_check === true ? true : false}
                                             margin="normal"
                                             id="job_completion_date"
                                             disabled={this.state.job_completed_check === false ? true : false}
@@ -668,6 +708,7 @@ class FormEdit extends Component {
                                 <TextField
                                     id="job_delivered_GA"
                                     label="Delivered GA"
+                                    required={this.state.job_delivered_check === true ? true : false}
                                     placeholder="Delivered GA"
                                     style={{ "width": "30%" }}
                                     className={classes.textField}
@@ -685,6 +726,7 @@ class FormEdit extends Component {
                                             format="MM/dd/yyyy"
                                             placeholder='mm/dd/yyyy'
                                             margin="normal"
+                                            required={this.state.job_delivered_check === true ? true : false}
                                             id="job_delivery_date"
                                             label="Job Delivery Date"
                                             disabled={((this.state.job_completed_check === false) || (this.state.job_delivered_check === false)) ? true : false}
@@ -732,7 +774,35 @@ class FormEdit extends Component {
                         </List>
                     </Dialog>
                 </div>
+                <Snackbar
+                    open={this.state.required_snackbar}
+                    onClose={() => this.handleReqSnackbarClose()}
+                    autoHideDuration={3000}
+                >
+                    <SnackbarContent
+                        style={{ "background": "black" }}
+                        aria-describedby="client-snackbar"
+                        message={
+                            <span id="client-snackbar" className={classes.message}>
+                                <ErrorIcon className={clsx(classes.icon, classes.iconVariant)} />
+                                Please Enter Required Fields
+                            </span>
+                        }
+                        action={[
+                            <IconButton
+                                key="close"
+                                aria-label="close"
+                                color="inherit"
+                                className={classes.close}
+                                onClick={() => this.handleReqSnackbarClose()}
+                            >
+                                <CloseIcon />
+                            </IconButton>,
+                        ]}
+                    />
+                </Snackbar>
             </div >
+
         );
     }
 }

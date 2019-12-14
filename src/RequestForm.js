@@ -174,6 +174,7 @@ class RequestForm extends Component {
         await this.setState({ ...this.state, required_snackbar: false })
     }
     handleNext = async (x) => {
+        if (this.state.job_completed_check === false) { this.setState({ ...this.state, job_delivered_check: false }); }
         if (this.state.activeStep === 0) {
             if (this.state.name === "" || this.state.wsuid === "" || this.state.email === "") {
                 await this.setState({ ...this.state, required_snackbar: true });
@@ -194,7 +195,38 @@ class RequestForm extends Component {
                 await this.setState({ activeStep: x + 1 });
             }
         }
-        if (this.state.activeStep > 1) {
+        if (this.state.activeStep === 2) {
+            if (this.state.job_completed_check === false && this.state.job_delivered_check === false) {
+                await this.setState({ ...this.state, required_snackbar: false });
+                await this.setState({ activeStep: x + 1 });
+            }
+            if (this.state.job_completed_check === true && this.state.job_delivered_check === false) {
+                if (this.state.job_completed_GA === "" || this.state.job_completion_date === null) {
+                    await this.setState({ ...this.state, required_snackbar: true });
+                } else {
+                    await this.setState({ ...this.state, required_snackbar: false });
+                    await this.setState({ activeStep: x + 1 });
+                }
+            }
+            if (this.state.job_delivered_check === true && this.state.job_completed_check === false) {
+                if (this.state.job_delivered_GA === "" || this.state.job_delivery_date === null) {
+                    await this.setState({ ...this.state, required_snackbar: true });
+                } else {
+                    await this.setState({ ...this.state, required_snackbar: false });
+                    await this.setState({ activeStep: x + 1 });
+                }
+            }
+            if (this.state.job_completed_check === true && this.state.job_delivered_check === true) {
+                if (this.state.job_completed_GA === "" || this.state.job_completion_date === null
+                    || this.state.job_delivered_GA === "" || this.state.job_delivery_date === null) {
+                    await this.setState({ ...this.state, required_snackbar: true });
+                } else {
+                    await this.setState({ ...this.state, required_snackbar: false });
+                    await this.setState({ activeStep: x + 1 });
+                }
+            }
+        }
+        if (this.state.activeStep > 2) {
             await this.setState({ activeStep: x + 1 });
         }
     }
@@ -352,7 +384,7 @@ class RequestForm extends Component {
         this.setState({
             ...this.state,
             job_completed_check: !(this.state.job_completed_check),
-            job_delivered_check: (this.state.job_completed_check === false ? false : ""),
+            job_delivered_check: (this.state.job_completed_check === false ? false : this.state.job_delivered_check),
         });
     }
     handleDeliveredChange = () => {
@@ -368,7 +400,6 @@ class RequestForm extends Component {
         });
     }
     handleCompletedEmail = () => {
-        console.log('We are in email block');
         const templateParams = {
             from_name: "Ablah Library C-Space",
             rec_email: this.state.email !== '' ? this.state.email : null,
@@ -382,7 +413,6 @@ class RequestForm extends Component {
             }, (err) => {
                 console.log('FAILED...', err);
             });
-        console.log('We are out of email block');
     }
     handleJobCompletedEmailSent = () => {
         this.setState({
@@ -391,7 +421,6 @@ class RequestForm extends Component {
         });
     }
     handleFeedbackEmail = () => {
-        console.log('We are in email block');
         const templateParams = {
             from_name: "Ablah Library C-Space",
             rec_email: this.state.email !== '' ? this.state.email : null,
@@ -405,7 +434,6 @@ class RequestForm extends Component {
             }, (err) => {
                 console.log('FAILED...', err);
             });
-        console.log('We are out of email block');
     }
     handleFeedbackEmailSent = () => {
         this.setState({
@@ -692,6 +720,7 @@ class RequestForm extends Component {
                                     id="job_completed_GA"
                                     label="Completed GA"
                                     placeholder="Completed GA"
+                                    required={this.state.job_completed_check === true ? true : false}
                                     style={{ "width": "90%" }}
                                     className={classes.textField}
                                     margin="normal"
@@ -702,10 +731,11 @@ class RequestForm extends Component {
                             </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
                         {this.state.job_completed_check ?
                             <Grid item xs={12} sm={6} className={classes.grid_margin}>
-                                <Typography style={{ "width": "90%" }} className={classes.date_instructions}><b>Job Completion Date</b></Typography>
+                                <Typography style={{ "width": "90%" }} className={classes.date_instructions}><b>Job Completion Date *</b></Typography>
                                 <DatePicker
                                     id="job_completion_date"
                                     label="Job Completion Date"
+                                    required={this.state.job_completed_check === true ? true : false}
                                     placeholderText="mm/dd/yyyy"
                                     selected={this.state.job_completion_date}
                                     onChange={this.handleCompletedDateChange}
@@ -747,7 +777,7 @@ class RequestForm extends Component {
                                     control={
                                         <Checkbox
                                             id="job_delivered_check"
-                                            disabled={this.state.job_completed_check ? false : true}
+                                            disabled={this.state.job_completed_check === true ? false : true}
                                             checked={(this.state.job_completed_check && this.state.job_delivered_check) ? true : false}
                                             onChange={() => this.handleDeliveredChange()}
                                             color="primary"
@@ -764,6 +794,7 @@ class RequestForm extends Component {
                                 <TextField
                                     id="job_delivered_GA"
                                     label="Delivered GA"
+                                    required={this.state.job_delivered_check === true ? true : false}
                                     placeholder="Delivered GA"
                                     style={{ "width": "90%" }}
                                     className={classes.textField}
@@ -775,10 +806,11 @@ class RequestForm extends Component {
                             </Grid> : <Grid item xs={12} sm={6} className={classes.grid_margin} />}
                         {this.state.job_delivered_check ?
                             <Grid item xs={12} sm={6} className={classes.grid_margin}>
-                                <Typography style={{ "width": "90%" }} className={classes.date_instructions}><b>Job Delivery Date</b></Typography>
+                                <Typography style={{ "width": "90%" }} className={classes.date_instructions}><b>Job Delivery Date *</b></Typography>
                                 <DatePicker
                                     id="job_delivery_date"
                                     label="Job Delivery Date"
+                                    required={this.state.job_delivered_check === true ? true : false}
                                     placeholderText="mm/dd/yyyy"
                                     selected={this.state.job_delivery_date}
                                     onChange={this.handleDeliveredDateChange}
