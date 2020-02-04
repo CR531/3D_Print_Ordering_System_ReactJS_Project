@@ -285,6 +285,8 @@ class Orders extends Component {
                         {this.state.sorted_data &&
                             this.state.sorted_data.length > 0 &&
                             this.state.sorted_data.map((listValue, index) => {
+                                var cd_date = new Date(listValue.job_completion_date);
+                                var dd_date = new Date(listValue.job_delivery_date);
                                 return (
                                     <ExpansionPanel expanded={this.state.active_index === index}
                                         onChange={() => this.handleExpChange(index)}
@@ -348,7 +350,14 @@ class Orders extends Component {
                                                         <Typography className={classes.secondaryHeading}>Job Completion Date : </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={6}>
-                                                        <Typography className={classes.dataHeading}>{(listValue.job_completion_date && listValue.job_completion_date !== null) ? listValue.job_completion_date.toString().split("T")[0] : "N/A"}</Typography>
+                                                        {(listValue.job_completion_date && listValue.job_completion_date !== null) &&
+                                                            console.log("the fault date is :" + listValue.job_completion_date.toString())
+                                                        }
+                                                        <Typography className={classes.dataHeading}>{
+                                                            (listValue.job_completion_date && listValue.job_completion_date !== null && cd_date && cd_date !== null)
+                                                                ? (cd_date.getMonth() + 1).toString() + "-" + cd_date.getDate().toString() + "-" + cd_date.getFullYear().toString()
+                                                                : "N/A"
+                                                        }</Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={6}>
                                                     </Grid>
@@ -374,7 +383,13 @@ class Orders extends Component {
                                                         <Typography className={classes.secondaryHeading}>Job Delivery Date : </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={6}>
-                                                        <Typography className={classes.dataHeading}>{(listValue.job_delivery_date && listValue.job_delivery_date !== null) ? listValue.job_delivery_date.toString().split("T")[0] : "N/A"}</Typography>
+                                                        <Typography className={classes.dataHeading}>
+                                                            {
+                                                                (listValue.job_delivery_date && listValue.job_delivery_date !== null && dd_date && dd_date !== null)
+                                                                    ? (dd_date.getMonth() + 1).toString() + "-" + dd_date.getDate().toString() + "-" + dd_date.getFullYear().toString()
+                                                                    : "N/A"
+                                                            }
+                                                        </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} sm={6}>
                                                     </Grid>
