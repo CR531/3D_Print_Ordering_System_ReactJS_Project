@@ -279,13 +279,9 @@ class FormEdit extends Component {
                 this.handleUpdate();
             }
         }
-        if (this.state.job_delivered_check === true && this.state.job_completed_check === false) {
-            if (this.state.job_delivered_GA === "" || this.state.job_delivery_date === null) {
-                await this.setState({ ...this.state, required_snackbar: true });
-            } else {
-                await this.setState({ ...this.state, required_snackbar: false });
-                this.handleUpdate();
-            }
+        if (this.state.job_completed_check === false && this.state.job_delivered_check === true) {
+            await this.setState({ ...this.state, required_snackbar: false });
+            this.handleUpdate();
         }
         if (this.state.job_completed_check === true && this.state.job_delivered_check === true) {
             if (this.state.job_completed_GA === "" || this.state.job_completion_date === null
@@ -698,7 +694,7 @@ class FormEdit extends Component {
                                 <TextField
                                     id="job_delivered_GA"
                                     label="Delivered GA"
-                                    required={this.state.job_delivered_check === true ? true : false}
+                                    required={((this.state.job_completed_check === true) && (this.state.job_delivered_check === true)) ? true : false}
                                     placeholder="Delivered GA"
                                     style={{ "width": "30%" }}
                                     className={classes.textField}
@@ -716,7 +712,7 @@ class FormEdit extends Component {
                                             format="MM/dd/yyyy"
                                             placeholder='mm/dd/yyyy'
                                             margin="normal"
-                                            required={this.state.job_delivered_check === true ? true : false}
+                                            required={((this.state.job_completed_check === true) && (this.state.job_delivered_check === true)) ? true : false}
                                             id="job_delivery_date"
                                             label="Job Delivery Date"
                                             disabled={((this.state.job_completed_check === false) || (this.state.job_delivered_check === false)) ? true : false}
