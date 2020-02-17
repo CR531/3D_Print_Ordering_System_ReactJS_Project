@@ -140,6 +140,13 @@ class Orders extends Component {
             .catch(function (error) {
                 console.log(error);
             })
+        function sort_by_key(array, key) {
+            return array.sort(function (a, b) {
+                var x = a[key]; var y = b[key];
+                return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+            });
+        }
+        this.setState({ ...this.state, sorted_data: sort_by_key(this.state.sorted_data, 'id') })
     }
     handleExpChange = (index) => {
         this.setState({ ...this.state, active_index: this.state.active_index === index ? -1 : index })

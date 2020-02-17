@@ -406,7 +406,7 @@ class RequestForm extends Component {
             to_name: this.state.name !== '' ? this.state.name : null,
         };
 
-        emailjs.send('gmail', 'job_completed_email', templateParams, 'user_bLarFHLTfyHL5M51XRyq9')
+        emailjs.send('gmail', 'job_completed_email', templateParams, 'user_w4kn7eTBZHYxmroPYgwUv')
             .then((response) => {
                 console.log('SUCCESS!');
                 alert("Job Completed Email Sent Successfully")
@@ -427,7 +427,7 @@ class RequestForm extends Component {
             to_name: this.state.name !== '' ? this.state.name : null,
         };
 
-        emailjs.send('gmail', 'feedback_email', templateParams, 'user_bLarFHLTfyHL5M51XRyq9')
+        emailjs.send('gmail', 'feedback_email', templateParams, 'user_w4kn7eTBZHYxmroPYgwUv')
             .then((response) => {
                 console.log('SUCCESS!');
                 alert("Feedback Email Sent Successfully")
